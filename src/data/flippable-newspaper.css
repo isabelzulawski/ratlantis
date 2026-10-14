@@ -12,7 +12,7 @@
   padding: 48px 68px 66px;
   overflow: visible;
   transform: translate(-50%, -50%) scale(var(--paper-scale, 0.8));
-  background: transparent url("/art/newspaper-spread-v2.png") center/100% 100%
+  background: transparent url("/art/newspaper-spread-v2.webp") center/100% 100%
     no-repeat;
   color: #293333;
   font: 16px/1.36 var(--news-font);

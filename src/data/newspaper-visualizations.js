@@ -7,12 +7,23 @@ import { assetUrl } from "../art/assets.js";
 // Parse the supplied CSV once; each original chart keeps its own row conversion.
 let csvPromise;
 function loadInspections(convertRow) {
-  csvPromise ??= d3
-    .csv(assetUrl("data/rats_2025_initial.csv"))
-    .catch((error) => {
-      csvPromise = null; // Allow reopening to retry a failed download.
-      throw error;
-    });
+  // Transfer gzip bytes, then parse the identical CSV. No filtering/preaggregation.
+  csvPromise ??= (async () => {
+    if (!("DecompressionStream" in window))
+      return d3.csv(assetUrl("data/rats_2025_initial.csv"));
+    const response = await fetch(assetUrl("data/rats_2025_initial.csv.gz"));
+    if (!response.ok) throw new Error("Inspection CSV could not be loaded.");
+    // Some hosts send Content-Encoding:gzip and the browser already decodes it.
+    // Detect the gzip signature to avoid decompressing the CSV twice.
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (bytes[0] !== 0x1f || bytes[1] !== 0x8b)
+      return d3.csvParse(new TextDecoder().decode(bytes));
+    const decoded = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+    return d3.csvParse(await new Response(decoded).text());
+  })().catch((error) => {
+    csvPromise = null;
+    throw error;
+  });
   return csvPromise.then((rows) => rows.map(convertRow));
 }
 

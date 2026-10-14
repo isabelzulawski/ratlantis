@@ -13,6 +13,11 @@ export class Opening extends Phaser.Scene {
     super("Opening");
   }
   preload() {
+    this.load.on("progress", (value) => {
+      const indicator = document.querySelector("#loading-progress");
+      if (indicator)
+        indicator.textContent = `Opening Ratlantis… ${Math.round(value * 100)}%`;
+    });
     loadAssets(this);
   }
   create() {

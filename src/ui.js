@@ -38,7 +38,7 @@ export class UI {
   title() {
     const existing = load();
     this.panel(
-      `<h1><img class="wordmark" src="${assetUrl("art/title-wordmark-v2.png")}" alt="Ratlantis"></h1>${existing ? '<button id="continue">Continue</button><button class="secondary" id="new">New Game</button>' : '<button id="new">Begin</button>'}`,
+      `<h1><img class="wordmark" src="${assetUrl("art/title-wordmark-v2.webp")}" alt="Ratlantis"></h1>${existing ? '<button id="continue">Continue</button><button class="secondary" id="new">New Game</button>' : '<button id="new">Begin</button>'}`,
     );
     this.root.firstChild.classList.add("title-panel");
     this.root.querySelector("#continue")?.addEventListener("click", () => {
@@ -198,7 +198,7 @@ export class UI {
               .filter((id) => ITEMS[id])
               .map(
                 (id) =>
-                  `<${ITEMS[id].readable ? "button" : "div"} class="item ${ITEMS[id].readable ? "readable-item" : ""}" data-item="${id}"><img src="${ITEMS[id].readable ? assetUrl("art/newspaper-item-v2.png") : itemPicture(this.scene, ITEMS[id].picture)}" alt="${ITEMS[id].name}"><span>${ITEMS[id].name}</span>${ITEMS[id].readable ? "<small>Read</small>" : ""}</${ITEMS[id].readable ? "button" : "div"}>`,
+                  `<${ITEMS[id].readable ? "button" : "div"} class="item ${ITEMS[id].readable ? "readable-item" : ""}" data-item="${id}"><img src="${ITEMS[id].readable ? assetUrl("art/newspaper-item-v2.webp") : itemPicture(this.scene, ITEMS[id].picture)}" alt="${ITEMS[id].name}"><span>${ITEMS[id].name}</span>${ITEMS[id].readable ? "<small>Read</small>" : ""}</${ITEMS[id].readable ? "button" : "div"}>`,
               )
               .join("")
           : "<p>No items packed.</p>"

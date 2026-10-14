@@ -137,7 +137,7 @@ assert.equal(
 );
 assert.deepEqual(errors, []);
 const unavailable = await browser.newPage();
-await unavailable.route("**/data/rats_2025_initial.csv", (r) =>
+await unavailable.route("**/data/rats_2025_initial.csv*", (r) =>
   r.fulfill({ status: 503, body: "Unavailable" }),
 );
 await unavailable.goto(base + "?data=newspaper");
