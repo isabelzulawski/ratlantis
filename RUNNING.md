@@ -33,3 +33,13 @@ The production files are in `dist/`. Serve that directory using a static web ser
 - `tests/browser-check.mjs`: browser integration checks. Currently uses macOS Chrome at its standard installation path; change `executablePath` for another platform. Run while the dev server is running with `node tests/browser-check.mjs`.
 
 The original README remains the untouched design specification. See `BUILD-REPORT.md` for this section's implementation notes.
+
+# GitHub Pages
+
+The `Deploy Ratlantis to GitHub Pages` workflow builds and publishes `dist` on every push to `main`.
+In repository Settings → Pages, set Source to **GitHub Actions**. The live game is
+https://isabelzulawski.github.io/ratlantis/.
+
+The Pages build uses `/ratlantis/` as its asset base; local development continues to use `/`.
+To preview the Pages build locally, run `GITHUB_ACTIONS=true pnpm build` then
+`GITHUB_ACTIONS=true pnpm exec vite preview` and open `/ratlantis/` on the preview server.

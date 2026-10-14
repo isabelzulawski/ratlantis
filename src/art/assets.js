@@ -1,5 +1,6 @@
 // Raster art is loaded separately from collision geometry and interaction logic.
-export const ART = {
+export const assetUrl = (path) => `${import.meta.env.BASE_URL}${path}`;
+const artwork = {
   street: "/art/times-square-v3.png",
   neighborhood: "/art/neighborhood-v2.png",
   station: "/art/subway-v2.png",
@@ -12,6 +13,9 @@ export const ART = {
   tile: "/art/station-mosaic-v4.png",
   pipe: "/art/pipe-descent-v4.png",
 };
+export const ART = Object.fromEntries(
+  Object.entries(artwork).map(([key, path]) => [key, assetUrl(path.slice(1))]),
+);
 export const FUR_TINT = {
   Gray: 0xe1e2df,
   Brown: 0xc8aa88,

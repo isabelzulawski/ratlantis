@@ -1,5 +1,5 @@
 import { FURS, DIALOGUE, ITEMS } from "./data/config.js";
-import { FUR_FILTER, itemPicture } from "./art/assets.js";
+import { FUR_FILTER, itemPicture, assetUrl } from "./art/assets.js";
 import { fresh, load, dropItem } from "./state.js";
 export class UI {
   constructor(scene) {
@@ -35,7 +35,7 @@ export class UI {
   title() {
     const existing = load();
     this.panel(
-      `<h1><img class="wordmark" src="/art/title-wordmark-v2.png" alt="Ratlantis"></h1>${existing ? '<button id="continue">Continue</button><button class="secondary" id="new">New Game</button>' : '<button id="new">Begin</button>'}`,
+      `<h1><img class="wordmark" src="${assetUrl("art/title-wordmark-v2.png")}" alt="Ratlantis"></h1>${existing ? '<button id="continue">Continue</button><button class="secondary" id="new">New Game</button>' : '<button id="new">Begin</button>'}`,
     );
     this.root.firstChild.classList.add("title-panel");
     this.root.querySelector("#continue")?.addEventListener("click", () => {
