@@ -1,10 +1,12 @@
 // Illustrated backdrops never define collisions. Scene data remains the source
 // of truth for ledges; only those ledges get a readable painted upper edge.
-const FONT = "Avenir Next, Trebuchet MS, sans-serif";
+const FONT = "American Typewriter, Palatino, Georgia, serif";
 export function drawWorld(s, id, width) {
   s.add.rectangle(width / 2, 337, width, 675, 0x091a27).setDepth(-30);
   const placement = {
     street: ["street", 24, 675],
+    downtown: ["downtown", 24, 675],
+    park: ["park", 0, 740],
     station: ["station", 0, 825],
     arrivalStation: ["station", 0, 825],
     neighborhood: ["neighborhood", -4, 838],
@@ -19,6 +21,14 @@ export function drawWorld(s, id, width) {
       .setDisplaySize(width, h)
       .setDepth(-20);
     s.background.setTint(0xc4c6c9);
+    if (id === "arrivalStation") {
+      // Keep the source artwork's proportions; show a platform crop instead
+      // of squeezing the wide station into this shorter scene.
+      const source = s.textures.get(`art-${key}`).getSourceImage();
+      s.background
+        .setDisplaySize((source.width / source.height) * h, h)
+        .setX(-650);
+    }
   }
   if (id === "ride") {
     const g = s.add.graphics().setDepth(-18);
@@ -32,14 +42,12 @@ export function drawWorld(s, id, width) {
   if (id === "station") {
     // Actual stair geometry is drawn over the entrance cutaway and matches data.
     s.add
-      .image(235, 234, "art-tile", "__BASE")
+      .image(875, 315, "art-tile", "__BASE")
       .setDisplaySize(345, 93)
       .setDepth(-10);
   } else if (id === "arrivalStation") {
   } else if (id === "neighborhood") {
-    s.add
-      .rectangle(1920, 270, 270, 68, 0x0b1b27, 0.86)
-      .setStrokeStyle(1, 0xc5a469, 0.5);
+    s.add.image(1920, 270, "art-plaque").setDisplaySize(300, 135);
     label(s, 1920, 270, "ONWARD TRAVEL\nUnavailable in this build", 14)
       .setOrigin(0.5)
       .setAlign("center");
@@ -60,7 +68,7 @@ export function drawWorld(s, id, width) {
   }
   // Dust motes are decorative and have no input or collision bodies.
   s.motes = [];
-  if (["neighborhood", "sewer", "street"].includes(id))
+  if (["neighborhood", "sewer", "street", "park"].includes(id))
     for (let i = 0; i < 30; i++) {
       const x = (i * 139.3) % width,
         y = 110 + ((i * 83.7) % 370);
@@ -73,6 +81,7 @@ export function drawWorld(s, id, width) {
 export function label(s, x, y, text, size = 16) {
   return s.add.text(x, y, text, {
     fontFamily: FONT,
+    resolution: 2,
     fontSize: size,
     color: "#ebd7b0",
     stroke: "#091722",

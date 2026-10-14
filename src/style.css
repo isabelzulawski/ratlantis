@@ -109,7 +109,7 @@ button {
   box-shadow: 0 3px 0 #050c1222;
 }
 button:hover {
-  background: #f0ce8e;
+  background-color: #f0ce8e;
   transform: translateY(-1px);
   box-shadow: 0 3px 20px #c7984133;
 }
@@ -182,7 +182,7 @@ input:focus {
   backdrop-filter: blur(12px);
 }
 .hud button:hover {
-  background: #183344;
+  background-color: #183344;
 }
 .hud .location {
   padding: 8px 0;
@@ -276,7 +276,7 @@ input:focus {
   margin-right: 13px;
 }
 .choices button:hover {
-  background: #3b4d50;
+  background-color: #3b4d50;
   border-color: #d0b079;
 }
 .footer {
@@ -384,7 +384,7 @@ label {
   border-radius: 8px 11px 6px 9px;
 }
 .illustrated-dialogue .choices button:hover {
-  background: #435962;
+  background-color: #435962;
 }
 .illustrated-dialogue::after {
   content: "";
@@ -412,4 +412,103 @@ label {
     linear-gradient(110deg, #233a49ed, #354853e8),
     url("/art/dialogue-paper-v4.png");
   background-size: 100% 100%;
+}
+/* Dialogue belongs to a character in the world, rather than a modal card. */
+#overlay:has(.character-bubble) {
+  background: transparent;
+  z-index: 35;
+}
+.panel.character-bubble {
+  position: fixed;
+  width: min(370px, calc(100vw - 20px));
+  max-height: 75vh;
+  padding: 20px 24px;
+  background: #eee2c6;
+  border: 2px solid #6c624b;
+  border-radius: 35px 43px 32px 39px;
+  color: #293b42;
+  box-shadow: 2px 5px 0 #06152133;
+  overflow: visible;
+  text-align: left;
+  filter: none;
+}
+.character-bubble h2 {
+  font:
+    18px/1.5 Georgia,
+    serif;
+  letter-spacing: 0;
+  margin: 5px 0 12px;
+  color: #293b42;
+}
+.character-bubble .eyebrow {
+  color: #76664b;
+  font-size: 9px;
+  margin: 0 0 6px;
+  letter-spacing: 1px;
+}
+.character-bubble .choices {
+  gap: 3px;
+}
+.character-bubble .choices button {
+  background: #e4d4b0;
+  color: #263b43;
+  font:
+    14px/1.4 Georgia,
+    serif;
+  padding: 8px 11px;
+  margin: 2px 0;
+  border: 1px solid #b8a379;
+  border-radius: 14px;
+  box-shadow: none;
+}
+.character-bubble .choices button::before {
+  display: none;
+}
+.character-bubble::after,
+.character-bubble::before {
+  content: "";
+  position: absolute;
+  border: 2px solid #6c624b;
+  background: #eee2c6;
+  border-radius: 50%;
+  left: var(--bubble-anchor);
+  pointer-events: none;
+}
+.character-bubble::after {
+  width: 15px;
+  height: 11px;
+  bottom: -18px;
+}
+.character-bubble::before {
+  width: 7px;
+  height: 6px;
+  bottom: -30px;
+  transform: translateX(4px);
+}
+.world-thought-cue {
+  position: fixed;
+  z-index: 25;
+  font:
+    16px/1.4 Georgia,
+    serif;
+  color: #293b42;
+  background: #eee2c6;
+  border: 2px solid #6c624b;
+  border-radius: 25px 32px 24px 30px;
+  padding: 12px 18px;
+  box-shadow: 2px 4px 0 #06152133;
+}
+.world-thought-cue::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 8px;
+  left: 50%;
+  bottom: -15px;
+  background: #eee2c6;
+  border: 2px solid #6c624b;
+  border-radius: 50%;
+}
+.world-thought-cue[hidden] {
+  display: none;
 }

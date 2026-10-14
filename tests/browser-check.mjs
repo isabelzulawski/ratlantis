@@ -207,19 +207,86 @@ await page.getByRole("button", { name: "Close backpack" }).click();
 await click(1180, 440);
 assert.equal(await page.locator(".speech").count(), 0);
 await page.screenshot({ path: "tests/billboard-v3.png" });
-await at(1770, 550);
-await click(1760, 552);
+// Downtown travel leads to a separate, small park scene.
+await at(2010, 550);
+p = await screen(2180, 575);
+await page.mouse.move(p.x, p.y);
+await page.mouse.down();
+await page.waitForTimeout(1100);
+await page.mouse.up();
+assert.equal((await pos()).id, "downtown");
+await page.waitForTimeout(6400);
+assert.equal((await pos()).id, "park");
+await at(395, 550);
+await click(410, 550);
+for (const line of [
+  "Finally, another rodent! Can you help me find Broadway?",
+  "Ah yes, show biz! You need connections. Personally, the humans love me.",
+  "They do?",
+  "Of course, they bring me nuts. Very established relationship.",
+  "But you should see what they say about you rats. Check that lamppost to the right.",
+]) {
+  assert.ok(
+    (await page.locator(".speech").innerText()).includes(line.toUpperCase()),
+  );
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+}
+assert.equal(
+  await page.evaluate(() => ratlantis.state.inventory.includes("newspaper")),
+  false,
+);
+await at(1050, 550);
+const parked = await pos();
+await click(1310, 300);
+await page.locator(".newspaper-columns").waitFor();
+assert.equal(
+  await page.locator(".bar-row,.borough-controls,.metric-controls").count(),
+  0,
+);
+assert.equal((await pos()).x, parked.x);
+await page.getByRole("button", { name: "Close City Records" }).click();
+for (const line of [
+  "I never knew! Why are they so obsessed with us?",
+  "Beats me. I’ve never seen any bad press about me!",
+  "Here. Keep this extra newspaper in your backpack in case you need it.",
+  "Wow, thanks! Now I see why everyone loves squirrels.",
+]) {
+  assert.ok(
+    (await page.locator(".speech").innerText()).includes(line.toUpperCase()),
+  );
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+}
+assert.deepEqual(await page.evaluate(() => ratlantis.state.inventory), [
+  "pizza",
+  "newspaper",
+]);
+await page.reload();
+await page.getByRole("button", { name: "Continue", exact: true }).click();
+await page.waitForTimeout(600);
+assert.equal((await pos()).id, "park");
+assert.deepEqual(await page.evaluate(() => ratlantis.state.inventory), [
+  "pizza",
+  "newspaper",
+]);
+await at(1050, 550);
+await page.getByRole("button", { name: "Backpack", exact: true }).click();
+await page.locator("[data-item=newspaper]").click();
+await page.locator(".newspaper-columns").waitFor();
+await page.getByRole("button", { name: "Close City Records" }).click();
+await page.getByRole("button", { name: "Close backpack" }).click();
+await page.waitForTimeout(150);
+await click(1060, 560);
 await page.screenshot({ path: "tests/map-dialogue-v4.png" });
 assert.ok(
   (await page.locator(".speech").innerText()).includes(
-    "Hmm... Broadway-Lafayette station? Isn't Lafayette that guy from that other musical? Sounds like this is the way to go!",
+    "We're near Broadway-Lafayette station. Lafayette... like from that musical? Let's go!".toUpperCase(),
   ),
 );
 await page.getByRole("button", { name: "Continue", exact: true }).click();
 assert.ok(await page.evaluate(() => ratlantis.state.flags.map));
 // Natural walk-through exit, rather than relying on a label.
-await at(2010, 550);
-p = await screen(2180, 575);
+await at(1310, 550);
+p = await screen(1440, 575);
 await page.mouse.move(p.x, p.y);
 await page.mouse.down();
 await page.waitForTimeout(1100);
@@ -255,6 +322,7 @@ assert.equal(
 await page.waitForTimeout(1650);
 assert.equal((await pos()).id, "sewer");
 await page.waitForTimeout(500);
+await page.waitForFunction(() => ratlantis.player.body.blocked.down);
 p = await screen(390, 545);
 await page.mouse.move(p.x, p.y);
 await page.mouse.down();
@@ -262,8 +330,17 @@ await page.waitForTimeout(200);
 p = await screen(440, 370);
 await page.mouse.move(p.x, p.y);
 await page.mouse.up();
+await page.waitForTimeout(50);
 await page.waitForTimeout(1100);
-assert.ok((await pos()).x > 320, "boat jump reaches ledge");
+assert.equal(
+  await page.evaluate(() => Boolean(ratlantis.squirrel?.input?.enabled)),
+  false,
+  "departed park targets are destroyed, not invisible click blockers",
+);
+assert.ok(
+  await page.evaluate(() => ratlantis.player.body.right > 320),
+  "boat jump overlaps the safe ledge",
+);
 assert.ok(
   await page.evaluate(
     () =>
@@ -276,6 +353,7 @@ await page.waitForTimeout(150);
 assert.ok((await pos()).y < 665);
 assert.deepEqual(await page.evaluate(() => ratlantis.state.inventory), [
   "pizza",
+  "newspaper",
 ]);
 await at(1630, 480);
 await click(1710, 430);
@@ -283,7 +361,9 @@ await page.waitForTimeout(420);
 assert.equal((await pos()).id, "neighborhood");
 await page.screenshot({ path: "tests/neighborhood-v3.png" });
 await at(230, 500);
-await click(260, 440);
+await page
+  .getByRole("button", { name: "You can’t park that here!", exact: true })
+  .click();
 await page
   .getByRole("button", { name: "I’m trying to get to a Broadway audition." })
   .click();
@@ -295,6 +375,7 @@ await page.waitForTimeout(600);
 assert.equal((await pos()).id, "neighborhood");
 assert.deepEqual(await page.evaluate(() => ratlantis.state.inventory), [
   "pizza",
+  "newspaper",
 ]);
 assert.ok(await page.evaluate(() => ratlantis.state.flags.brooklyn));
 await page.getByRole("button", { name: "Pause / Help" }).click();

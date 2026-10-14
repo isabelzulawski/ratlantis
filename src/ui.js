@@ -1,10 +1,12 @@
 import { FURS, DIALOGUE, ITEMS } from "./data/config.js";
 import { FUR_FILTER, itemPicture, assetUrl } from "./art/assets.js";
 import { fresh, load, dropItem } from "./state.js";
+import { Newspaper } from "./data/Newspaper.js";
 export class UI {
   constructor(scene) {
     this.scene = scene;
     this.root = document.querySelector("#overlay");
+    this.records = new Newspaper(this);
     for (const event of [
       "pointerdown",
       "pointerup",
@@ -15,6 +17,7 @@ export class UI {
       this.root.addEventListener(event, (e) => e.stopPropagation());
   }
   clear() {
+    this.bubbleTarget = null;
     this.root.innerHTML = "";
     this.scene.objectPress = null;
     this.scene.inputBlockedUntil = performance.now() + 100;
@@ -56,7 +59,7 @@ export class UI {
   creation() {
     let fur = "Gray";
     this.panel(
-      `<h2>Create your rat</h2><div class="preview"></div><label for="name">Name</label><input id="name" maxlength="24" autocomplete="off" placeholder="Enter your name"><div class="colors">${Object.entries(
+      `<h2>Create your rat</h2><div class="preview"></div><label for="name">Name</label><input id="name" maxlength="24" autocomplete="off" placeholder="Enter your rat’s name"><div class="colors">${Object.entries(
         FURS,
       )
         .map(
@@ -95,34 +98,132 @@ export class UI {
       this.scene.enter("street");
     };
   }
-  dialogue(text, choices) {
+  dialogue(text, choices, target = null, speaker = null) {
     this.panel(
       `<p class="eyebrow">${this.scene.state.name.replace(/[<>&]/g, "")}</p><h2>${text}</h2><div class="choices">${choices.map((c, i) => `<button data-choice="${i}">${c.text}</button>`).join("")}</div>`,
     );
-    this.root.firstChild.classList.add("speech", "illustrated-dialogue");
-    this.root
-      .querySelectorAll("[data-choice]")
-      .forEach((b) => (b.onclick = () => choices[+b.dataset.choice].action()));
+    this.root.firstChild.classList.add("speech", "character-bubble");
+    this.bubbleTarget = target;
+    this.root.querySelector(".eyebrow").textContent =
+      speaker || this.scene.state.name;
+    this.positionBubble();
+    this.root.querySelectorAll("[data-choice]").forEach((b) => {
+      b.setAttribute("aria-label", choices[+b.dataset.choice].text);
+      b.onclick = () => choices[+b.dataset.choice].action();
+    });
   }
-  message(text, after = () => {}) {
-    this.dialogue(text, [
-      {
-        text: "Continue",
-        action: () => {
-          this.clear();
-          after();
+  positionBubble() {
+    this.positionCue();
+    const bubble = this.root.querySelector(".character-bubble");
+    if (!bubble || !this.scene.player) return;
+    const r = this.scene.game.canvas.getBoundingClientRect(),
+      camera = this.scene.cameras.main;
+    const target = this.bubbleTarget;
+    const x = target?.x ?? this.scene.player.body.center.x;
+    const y = target
+      ? target.y - (target.displayHeight || 70) * 0.75
+      : this.scene.player.body.bottom - 60;
+    const anchorX = r.left + ((x - camera.scrollX) * r.width) / 1200;
+    const anchorY = r.top + ((y - camera.scrollY) * r.height) / 675;
+    const left = Math.max(
+      10,
+      Math.min(
+        innerWidth - bubble.offsetWidth - 10,
+        anchorX - bubble.offsetWidth * 0.5,
+      ),
+    );
+    bubble.style.left = `${left}px`;
+    bubble.style.top = `${Math.max(10, anchorY - bubble.offsetHeight - 35)}px`;
+    bubble.style.setProperty(
+      "--bubble-anchor",
+      `${Math.max(25, Math.min(bubble.offsetWidth - 25, anchorX - left))}px`,
+    );
+  }
+  worldCue(target, text, action) {
+    document.querySelector("#world-cue")?.remove();
+    const cue = document.createElement("button");
+    cue.id = "world-cue";
+    cue.className = `world-thought-cue${text === "…" ? " quiet-cue" : ""}`;
+    cue.textContent = text;
+    for (const event of ["pointerdown", "pointerup", "mousedown", "mouseup"])
+      cue.addEventListener(event, (e) => e.stopPropagation());
+    cue.onclick = action;
+    document.body.append(cue);
+    this.cue = { element: cue, target };
+    this.positionCue();
+  }
+  positionCue() {
+    if (!this.cue) return;
+    const { element, target } = this.cue;
+    element.hidden = !!this.root.firstChild;
+    const r = this.scene.game.canvas.getBoundingClientRect(),
+      c = this.scene.cameras.main;
+    const x = r.left + ((target.x - c.scrollX) * r.width) / 1200,
+      y =
+        r.top +
+        ((target.y - (target.displayHeight || 70) * 0.8 - c.scrollY) *
+          r.height) /
+          675;
+    element.style.left = `${Math.max(10, x - element.offsetWidth * 0.5)}px`;
+    element.style.top = `${Math.max(10, y - element.offsetHeight - 15)}px`;
+  }
+  message(text, after = () => {}, target = null, speaker = null) {
+    this.dialogue(
+      text,
+      [
+        {
+          text: "Continue",
+          action: () => {
+            this.clear();
+            after();
+          },
         },
-      },
-    ]);
+      ],
+      target,
+      speaker,
+    );
   }
   backpack() {
     const state = this.scene.state;
     this.panel(
-      `<h2>Backpack</h2><p class="footer">Drag an item onto a nearby target to use it.</p><div id="items">${state.inventory.length ? state.inventory.map((id) => `<div class="item" data-item="${id}"><img src="${itemPicture(this.scene, "pizza")}" alt="${ITEMS[id].name}"><span>${ITEMS[id].name}</span></div>`).join("") : "<p>No items packed.</p>"}</div><p id="dropNotice" class="notice"></p><div class="journal"><h3>Journal</h3>${state.journal.length ? state.journal.map((t) => `<p>• ${t}</p>`).join("") : "<p>No directions learned yet.</p>"}</div><button id="close">Close backpack</button>`,
+      `<h2>Backpack</h2><p class="footer">Drag an item onto a nearby target to use it. Click the newspaper to read it.</p><div id="items">${
+        state.inventory.length
+          ? state.inventory
+              .filter((id) => ITEMS[id])
+              .map(
+                (id) =>
+                  `<${ITEMS[id].readable ? "button" : "div"} class="item ${ITEMS[id].readable ? "readable-item" : ""}" data-item="${id}"><img src="${ITEMS[id].readable ? assetUrl("art/newspaper-item-v2.png") : itemPicture(this.scene, ITEMS[id].picture)}" alt="${ITEMS[id].name}"><span>${ITEMS[id].name}</span>${ITEMS[id].readable ? "<small>Read</small>" : ""}</${ITEMS[id].readable ? "button" : "div"}>`,
+              )
+              .join("")
+          : "<p>No items packed.</p>"
+      }</div><p id="dropNotice" class="notice"></p><div class="journal"><h3>Journal</h3>${state.journal.length ? state.journal.map((t) => `<p>• ${t}</p>`).join("") : "<p>No directions learned yet.</p>"}</div><button id="close">Close backpack</button>`,
       true,
     );
     this.root.querySelector("#close").onclick = () => this.clear();
-    this.root.querySelectorAll(".item").forEach(
+    const card = this.root.firstChild;
+    card.classList.add("bag-panel");
+    const heading = card.querySelector("h2"),
+      items = card.querySelector("#items"),
+      notice = card.querySelector("#dropNotice"),
+      journal = card.querySelector(".journal"),
+      tip = card.querySelector(".footer"),
+      close = card.querySelector("#close");
+    const left = document.createElement("div");
+    left.className = "bag-pocket";
+    left.append(heading, items, tip, notice);
+    const right = document.createElement("div");
+    right.className = "bag-journal";
+    right.append(journal);
+    const layout = document.createElement("div");
+    layout.className = "bag-layout";
+    layout.append(left, right);
+    card.replaceChildren(layout, close);
+    this.root
+      .querySelector("[data-item='newspaper']")
+      ?.addEventListener("click", () =>
+        this.records.open("newspaper", () => this.backpack()),
+      );
+    this.root.querySelectorAll(".item:not(.readable-item)").forEach(
       (el) =>
         (el.onpointerdown = (e) => {
           e.preventDefault();
@@ -168,7 +269,9 @@ export class UI {
     const h = document.createElement("aside");
     h.id = "hud";
     h.className = "hud";
-    h.innerHTML = `<div class="location">${title.split(" · ")[0]}</div><div><button id="bag">Backpack</button><button id="help">Pause / Help</button><button id="sound">Sound: ${this.scene.state.sound ? "on" : "off"}</button></div>`;
+    h.innerHTML = `<div class="location">${title.split(" · ")[0]}</div><div><button id="bag" aria-label="Backpack"><img src="${itemPicture(this.scene, "backpack")}" alt=""><span>Backpack</span></button><button id="help" aria-label="Pause / Help">Pause / Help</button><button id="sound">Sound: ${this.scene.state.sound ? "on" : "off"}</button></div>`;
+    if (this.scene.id === "downtown")
+      h.querySelector(".location").style.visibility = "hidden";
     for (const event of ["pointerdown", "pointerup"])
       h.addEventListener(event, () => {
         this.scene.held = false;

@@ -1,0 +1,276 @@
+#overlay:has(.data-sheet) {
+  background: #03101dcc;
+  z-index: 50;
+}
+.panel.data-sheet {
+  width: min(1180px, 96vw);
+  max-height: 94vh;
+  text-align: left;
+  color: #172f3e;
+  background: #f4ead3;
+  border: 8px solid #c7b48d;
+  border-image: url("/art/records-border.svg") 9 stretch;
+  outline: 1px solid #e8d6ac;
+  border-radius: 5px 12px 8px 3px;
+  padding: 22px 32px;
+  box-shadow:
+    0 22px 100px #000b,
+    inset 0 0 28px #a57f3b25;
+  filter: none;
+}
+.data-sheet::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 35%;
+  height: 12px;
+  width: 95px;
+  background: #d5c39c88;
+  transform: rotate(-3deg);
+  pointer-events: none;
+}
+.records-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  border-bottom: 1px solid #b4a78e;
+}
+.records-header {
+  text-align: center;
+  border-bottom: 3px double #213945;
+  padding: 6px 0 18px;
+}
+.records-header h1 {
+  font:
+    700 clamp(25px, 3.7vw, 47px)/1.12 Georgia,
+    serif;
+  color: #172f3e;
+  text-shadow: none;
+  letter-spacing: -1px;
+  margin: 8px 0;
+}
+.data-sheet .edition {
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+.data-sheet p {
+  line-height: 1.6;
+  margin: 10px 0;
+  font-size: 14px;
+}
+.data-sheet h2 {
+  font:
+    700 23px/1.3 Georgia,
+    serif;
+  color: #172f3e;
+  margin: 16px 0 8px;
+  letter-spacing: 0;
+}
+.data-sheet button {
+  color: #213945;
+  background: #e8dcc3;
+  border: 1px solid #a89672;
+  box-shadow: none;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 9px 12px;
+  margin: 3px;
+}
+.data-sheet button[aria-pressed="true"] {
+  background: #d2ad66;
+  border: 2px solid #243a45;
+  font-weight: 700;
+  padding: 8px 11px;
+}
+.records-nav,
+.borough-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+  margin: 14px 0;
+}
+.factual-summary {
+  border-left: 3px solid #b58b48;
+  padding: 0 15px;
+  margin: 22px 0;
+}
+.records-columns {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.8fr);
+  gap: 30px;
+}
+.records-columns:not(:has(.map-section)) {
+  display: block;
+}
+.records-columns > * {
+  min-width: 0;
+}
+.comparison-section,
+.trend-section {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #b6aa92;
+}
+.chart {
+  background: #faf6ea;
+  border: 1px solid #d8ccb3;
+  margin-top: 14px;
+  overflow: auto;
+}
+.chart svg {
+  width: 100%;
+  min-width: 520px;
+  display: block;
+  height: auto;
+}
+.chart svg text {
+  font:
+    13px "Avenir Next",
+    Arial,
+    sans-serif;
+  fill: #172f3e;
+}
+.chart svg .axis text {
+  font-size: 12px;
+}
+.grid line {
+  stroke: #d8d1c2;
+  stroke-dasharray: 2 4;
+}
+.axis path,
+.axis line {
+  stroke: #68767a;
+}
+.chart [role="button"] {
+  cursor: pointer;
+}
+.chart [role="button"]:focus {
+  outline: none;
+  stroke: #a36f27;
+  stroke-width: 2;
+  fill: #ad8d4a22;
+}
+.chart-detail {
+  min-height: 60px;
+  padding: 11px 13px;
+  background: #e9dfc9;
+  border-left: 3px solid #aa7a35;
+  font-size: 13px !important;
+}
+.chart-caption {
+  font-size: 12px !important;
+  color: #465661;
+}
+.borough-map svg {
+  display: block;
+  width: 100%;
+  max-height: 390px;
+}
+.borough-map path {
+  cursor: pointer;
+  transition: fill 0.15s;
+}
+.borough-map path:hover,
+.borough-map path:focus {
+  fill: #d8b66f;
+  stroke-width: 3;
+  outline: none;
+}
+.map-name {
+  fill: #17313f;
+  font:
+    11px Arial,
+    sans-serif;
+  paint-order: stroke;
+  stroke: #f4ead3;
+  stroke-width: 3px;
+  pointer-events: none;
+}
+.map-section > p {
+  font-size: 12px;
+}
+.squirrel-margin {
+  margin: 25px 0;
+  padding: 18px;
+  border: 1px dashed #a18d6b;
+  transform: rotate(-2deg);
+}
+.squirrel-margin span {
+  font:
+    10px Arial,
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.squirrel-margin p {
+  font:
+    italic 21px/1.4 Georgia,
+    serif;
+  color: #65573f;
+}
+.records-method {
+  padding-top: 18px;
+  font-size: 12px;
+}
+.records-method p,
+.records-method li {
+  font-size: 12px;
+}
+.data-sheet summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 9px 0;
+}
+.data-sheet a {
+  color: #245468;
+  text-decoration: underline;
+}
+.data-sheet table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+.data-sheet th,
+.data-sheet td {
+  text-align: left;
+  border-bottom: 1px solid #c5bba6;
+  padding: 7px;
+}
+.table-scroll {
+  overflow: auto;
+}
+.data-sheet button:focus-visible {
+  outline: 3px solid #17313f;
+}
+.data-unavailable {
+  padding: 30px;
+  border: 1px solid #ae9873;
+}
+.return-adventure {
+  pointer-events: auto;
+  color: #f2d69c;
+  font-size: 20px;
+}
+.readable-item {
+  cursor: pointer;
+}
+.readable-item small {
+  color: #dec48e;
+}
+@media (max-width: 800px) {
+  .panel.data-sheet {
+    padding: 15px 13px;
+    border-width: 5px;
+  }
+  .records-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .borough-map svg {
+    max-height: 280px;
+  }
+  .records-top span {
+    max-width: 60%;
+  }
+}

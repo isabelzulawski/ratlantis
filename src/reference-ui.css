@@ -1,0 +1,386 @@
+/* Reference-derived paint, ink and stitched materials; live text remains accessible. */
+:root {
+  --font: "American Typewriter", "Palatino", Georgia, serif;
+}
+.panel {
+  background: transparent url("/art/dialogue-paper-v4.png") center/100% 100%
+    no-repeat;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 15px 20px #0008);
+  color: #263a42;
+  padding: 45px 50px;
+}
+.panel h2 {
+  font-family: var(--font);
+  color: #243942;
+}
+.panel p,
+.panel label,
+.panel .footer {
+  color: #4c4a39;
+}
+.panel input {
+  background: #e9ddbf;
+  color: #213541;
+  border: 1px solid #8c7651;
+  border-radius: 2px;
+  box-shadow: inset 1px 2px 4px #62553938;
+  font-family: var(--font);
+}
+button,
+.choices button,
+.hud button,
+button.secondary {
+  background: transparent url("/art/ui-control-v2.png") center/100% 175%
+    no-repeat;
+  color: #f0dbac;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font: 700 12px/1.4 var(--font);
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  padding: 17px 29px;
+  min-height: 48px;
+  transition:
+    filter 0.15s,
+    transform 0.15s;
+}
+button:hover,
+.choices button:hover,
+.hud button:hover {
+  background-color: transparent;
+  filter: brightness(1.14);
+  box-shadow: none;
+}
+.title-panel {
+  background: transparent url("/art/dialogue-paper-v4.png") center/100% 100%
+    no-repeat;
+  backdrop-filter: none;
+  padding: 45px 40px;
+}
+.swatch {
+  background-image: none;
+  width: 35px;
+  min-height: 35px;
+  padding: 0;
+  border: 3px solid #5f583f;
+  border-radius: 45% 52% 43% 50%;
+  box-shadow: 1px 2px 0 #74654b;
+}
+.swatch.selected {
+  border-color: #dbc082;
+  box-shadow: 0 0 0 3px #574c32;
+}
+.panel.character-bubble {
+  background: transparent url("/art/ui-cloud-v3.png") center top/100% 130%
+    no-repeat;
+  width: min(470px, calc(100vw - 20px));
+  padding: 85px 80px 75px;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 4px 3px #07162644);
+  overflow: visible;
+  min-height: 225px;
+}
+.character-bubble h2 {
+  font: 400 15px/1.65 "Palatino", "Book Antiqua", Georgia, serif;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+  color: #455052;
+  margin: 4px 0 12px;
+  text-align: center;
+}
+.character-bubble .eyebrow {
+  display: none;
+}
+.character-bubble .choices {
+  gap: 6px;
+}
+.character-bubble .choices button {
+  background: transparent url("/art/dialogue-paper-v4.png") center/100% 100%
+    no-repeat;
+  color: #505548;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font: 400 12px/1.5 "Palatino", "Book Antiqua", Georgia, serif;
+  letter-spacing: 0.3px;
+  padding: 16px 30px;
+  margin: 0;
+  min-height: 46px;
+  text-transform: uppercase;
+}
+.character-bubble .choices button:hover {
+  filter: brightness(0.97);
+  color: #35423d;
+}
+.character-bubble .choices button:focus-visible {
+  outline: 1px dashed #8e7852;
+  outline-offset: -9px;
+}
+.character-bubble::before {
+  display: none;
+}
+.character-bubble::after {
+  width: 65px;
+  height: 58px;
+  bottom: -52px;
+  left: var(--bubble-anchor);
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 0;
+  background: transparent url("/art/ui-thought-v2.png") -120px -127px/260px
+    174px no-repeat;
+  mask-image:
+    radial-gradient(ellipse 13px 12px at 24px 10px, #000 90%, transparent 100%),
+    radial-gradient(ellipse 10px 9px at 35px 26px, #000 90%, transparent 100%),
+    radial-gradient(ellipse 6px 6px at 41px 38px, #000 90%, transparent 100%);
+}
+.world-thought-cue {
+  background: transparent url("/art/ui-cloud-v3.png") center top/100% 130%
+    no-repeat;
+  border: 0;
+  border-radius: 0;
+  padding: 38px 48px 40px;
+  font: 400 12px/1.6 "Palatino", "Book Antiqua", Georgia, serif;
+  text-transform: uppercase;
+  color: #455052;
+  letter-spacing: 0.25px;
+  box-shadow: none;
+  max-width: 290px;
+  min-height: 100px;
+}
+.world-thought-cue.quiet-cue {
+  width: 160px;
+  min-height: 100px;
+  padding: 35px 30px 30px;
+  text-align: center;
+}
+
+.world-thought-cue::after {
+  width: 50px;
+  height: 48px;
+  border: 0;
+  border-radius: 0;
+  bottom: -38px;
+  transform: translateX(-50%);
+  background: transparent url("/art/ui-thought-v2.png") -98px -105px/215px 144px
+    no-repeat;
+  mask-image:
+    radial-gradient(ellipse 11px 10px at 20px 8px, #000 90%, transparent 100%),
+    radial-gradient(ellipse 8px 7px at 30px 21px, #000 90%, transparent 100%),
+    radial-gradient(ellipse 5px 5px at 36px 31px, #000 90%, transparent 100%);
+}
+.hud {
+  top: 12px;
+  left: 18px;
+  right: 18px;
+}
+.hud button {
+  font-size: 10px;
+  padding: 16px 20px;
+  min-height: 46px;
+  margin-left: 3px;
+  min-width: 90px;
+  backdrop-filter: none;
+}
+.hud .location {
+  background: transparent url("/art/ui-control-v2.png") center/100% 175%
+    no-repeat;
+  color: #ebd6a6;
+  font: 700 11px/1.4 var(--font);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 16px 28px;
+  text-shadow: none;
+}
+.hud .location::before {
+  display: none;
+}
+.hud #bag {
+  position: relative;
+  padding-left: 48px;
+}
+.hud #bag img {
+  position: absolute;
+  left: 9px;
+  top: 2px;
+  width: 40px;
+  height: 45px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 1px #0008);
+}
+.hint {
+  background: transparent url("/art/ui-control-v2.png") center/100% 175%
+    no-repeat;
+  border: 0;
+  border-radius: 0;
+  color: #e8d4a9;
+  padding: 15px 30px;
+  font: 10px var(--font);
+}
+.panel.bag-panel {
+  background: transparent url("/art/ui-backpack-v2.png") center/100% 100%
+    no-repeat;
+  width: min(900px, 96vw);
+  height: auto;
+  aspect-ratio: 3 / 2;
+  max-height: 90vh;
+  padding: 0;
+  overflow: visible;
+  filter: drop-shadow(0 18px 20px #0008);
+}
+.bag-layout {
+  position: absolute;
+  inset: 20% 8% 17% 16%;
+  display: grid;
+  grid-template-columns: 53% 40%;
+  gap: 7%;
+  text-align: left;
+}
+.bag-pocket,
+.bag-journal {
+  min-width: 0;
+  overflow: auto;
+  padding: 3px 5px;
+}
+.bag-pocket h2 {
+  font-size: 21px;
+  color: #312e21;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 5px 0 17px;
+}
+.bag-pocket .footer {
+  display: none;
+}
+.bag-pocket #items {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.bag-panel .item {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 5px;
+  color: #292d26;
+  gap: 5px;
+  font: 700 11px var(--font);
+  min-height: 0;
+  letter-spacing: 0.4px;
+}
+.bag-panel .item img {
+  width: 100px;
+  height: 83px;
+  filter: drop-shadow(2px 5px 2px #36281355);
+}
+.bag-panel .item span {
+  text-shadow: 0 1px #dac083;
+}
+.bag-journal .journal {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  color: #303a39;
+}
+.bag-journal h3 {
+  color: #303b3e;
+  font: 700 17px var(--font);
+  text-align: center;
+  letter-spacing: 1px;
+  margin: 7px 0 15px;
+}
+.bag-journal p {
+  font: 13px/1.7 var(--font);
+  color: #39443e;
+  margin: 10px 0;
+}
+.bag-panel #close {
+  position: absolute;
+  bottom: 2%;
+  left: 39%;
+  width: 24%;
+  padding: 16px 13px;
+}
+.bag-panel .notice {
+  color: #f0dbad;
+  font: 700 10px/1.5 var(--font);
+  background: transparent url("/art/ui-control-v2.png") center/100% 175%
+    no-repeat;
+  padding: 15px 25px;
+}
+.bag-panel .notice:empty {
+  display: none;
+}
+.newspaper-spread .paper-close {
+  background: transparent url("/art/ui-control-v2.png") center/100% 175%
+    no-repeat;
+  color: #eddbb1;
+  border: 0;
+  padding: 14px 24px;
+}
+.panel.newspaper-spread {
+  background: #eadfc6 url("/art/dialogue-paper-v4.png") center/100% 100%
+    no-repeat;
+  border: 0;
+  border-image: none;
+  padding: 45px 54px;
+  box-shadow: none;
+  filter: drop-shadow(0 17px 18px #0007);
+}
+@media (max-width: 600px) {
+  .hud .location {
+    font-size: 9px;
+    padding: 13px 18px;
+  }
+  .hud button {
+    min-width: 70px;
+    padding: 14px 12px;
+    font-size: 8px;
+  }
+  .hud #bag {
+    padding-left: 36px;
+  }
+  .hud #bag img {
+    width: 31px;
+    left: 4px;
+  }
+  .panel.character-bubble {
+    padding: 65px 50px 60px;
+  }
+  .character-bubble h2 {
+    font-size: 13px;
+  }
+  .character-bubble .choices button {
+    font-size: 10px;
+  }
+  .panel.bag-panel {
+    height: auto;
+  }
+  .bag-layout {
+    inset: 21% 8% 18% 16%;
+  }
+  .bag-panel .item img {
+    width: 65px;
+    height: 58px;
+  }
+  .bag-journal p {
+    font-size: 11px;
+  }
+  .bag-pocket h2 {
+    font-size: 14px;
+  }
+  .bag-pocket .footer {
+    font-size: 9px;
+  }
+  .bag-panel #close {
+    font-size: 9px;
+  }
+}

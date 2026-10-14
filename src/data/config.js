@@ -19,14 +19,43 @@ export const FURS = {
   "Rusty brown": "#98654e",
   "Blue-gray": "#738894",
 };
-export const ITEMS = { pizza: { name: "Pizza piece", picture: "pizza" } };
+export const ITEMS = {
+  pizza: { name: "Pizza piece", picture: "pizza" },
+  newspaper: {
+    name: "Discarded newspaper",
+    picture: "newspaper",
+    readable: true,
+  },
+};
 export const DIALOGUE = {
   billboard: [
     "Maybe I could try.",
     "I do look the part.",
     "Just a little closer look.",
   ],
-  map: "Hmm... Broadway-Lafayette station? Isn't Lafayette that guy from that other musical? Sounds like this is the way to go!",
+  map: "We're near Broadway-Lafayette station. Lafayette... like from that musical? Let's go!",
+  squirrel: [
+    ["Rat", "Finally, another rodent! Can you help me find Broadway?"],
+    [
+      "Squirrel",
+      "Ah yes, show biz! You need connections. Personally, the humans love me.",
+    ],
+    ["Rat", "They do?"],
+    ["Squirrel", "Of course, they bring me nuts. Very established relationship."],
+    [
+      "Squirrel",
+      "But you should see what they say about you rats. Check that lamppost to the right.",
+    ],
+  ],
+  squirrelAfterReading: [
+    ["Rat", "I never knew! Why are they so obsessed with us?"],
+    ["Squirrel", "Beats me. I’ve never seen any bad press about me!"],
+    [
+      "Squirrel",
+      "Here. Keep this extra newspaper in your backpack in case you need it.",
+    ],
+    ["Rat", "Wow, thanks! Now I see why everyone loves squirrels."],
+  ],
   dockChoices: [
     "Sorry. Where am I?",
     "Is there a way back up?",
@@ -49,6 +78,21 @@ export const SCENES = {
       [700, 510, 155, 70],
     ],
     exit: 2070,
+    next: "downtown",
+  },
+  downtown: {
+    title: "Downtown · on the way",
+    width: 2200,
+    spawn: [130, 535],
+    platforms: [[0, 580, 2200, 90]],
+    next: "park",
+  },
+  park: {
+    title: "Washington Square Park",
+    width: 1450,
+    spawn: [95, 535],
+    platforms: [[0, 580, 1450, 90]],
+    exit: 1370,
     next: "station",
   },
   station: {

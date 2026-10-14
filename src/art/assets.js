@@ -1,7 +1,10 @@
 // Raster art is loaded separately from collision geometry and interaction logic.
 export const assetUrl = (path) => `${import.meta.env.BASE_URL}${path}`;
 const artwork = {
-  street: "/art/times-square-v3.png",
+  park: "/art/washington-square-v2.png",
+  squirrel: "/art/squirrel-v1.png",
+  street: "/art/times-square-v4.png",
+  downtown: "/art/downtown-travel-v1.png",
   neighborhood: "/art/neighborhood-v2.png",
   station: "/art/subway-v2.png",
   sewer: "/art/sewer-arrival-v2.png",
@@ -9,9 +12,9 @@ const artwork = {
   rat: "/art/rat-poses-v2.png",
   props: "/art/props-v2.png",
   details: "/art/street-props-v3.png",
-  broadway: "/art/broadway-poster-v4.png",
   tile: "/art/station-mosaic-v4.png",
   pipe: "/art/pipe-descent-v4.png",
+  plaque: "/art/ui-control-v2.png",
 };
 export const ART = Object.fromEntries(
   Object.entries(artwork).map(([key, path]) => [key, assetUrl(path.slice(1))]),

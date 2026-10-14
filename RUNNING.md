@@ -32,7 +32,15 @@ The production files are in `dist/`. Serve that directory using a static web ser
 - `tests/state.test.js`: movement decision and progress invariants.
 - `tests/browser-check.mjs`: browser integration checks. Currently uses macOS Chrome at its standard installation path; change `executablePath` for another platform. Run while the dev server is running with `node tests/browser-check.mjs`.
 
-The original README remains the untouched design specification. See `BUILD-REPORT.md` for this section's implementation notes.
+See `BUILD-REPORT.md` for the original opening's implementation notes.
+The README now includes the implemented Washington Square Park route and City Records methodology. See `PARK-DATA-REPORT.md` for the extension's creative decisions and validation.
+
+## Local data presentation
+The current presentation is a static newspaper. D3 graphs and selection controls are disconnected for collaborative editing; see SECTION-POLISH.md for the retained source files. `tests/data-browser.mjs` verifies the static paper; `tests/data-browser-d3.mjs` is the previous interactive UI reference, not a current runnable acceptance check.
+
+Open the local server's `/?data=newspaper` URL for the Data Visualization class. This mode does not start a game or alter saves. Normal `/` is the adventure entry.
+
+Run `npm run data:refresh` to retrieve and preprocess real NYC records, or `npm run data:cached` to reproduce the existing cached snapshot. The game only loads local summaries. Run `node tests/data-browser.mjs` alongside the existing adventure browser check; `RATLANTIS_TEST_URL` selects a different local server.
 
 # GitHub Pages
 

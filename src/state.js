@@ -17,6 +17,12 @@ export function collectPizza(state) {
   state.inventory.push("pizza");
   return true;
 }
+export function collectNewspaper(state) {
+  if (state.flags.newspaperReceived) return false;
+  state.flags.newspaperReceived = true;
+  if (!state.inventory.includes("newspaper")) state.inventory.push("newspaper");
+  return true;
+}
 export function learn(state, flag, text) {
   if (state.flags[flag]) return false;
   state.flags[flag] = true;

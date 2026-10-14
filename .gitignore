@@ -4,3 +4,4 @@ test-results/
 .pnpm-store/
 .DS_Store
 tests/*.png
+.data-cache/

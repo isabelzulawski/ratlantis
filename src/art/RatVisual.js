@@ -56,7 +56,7 @@ export class RatVisual {
       frame ||
       (grounded
         ? Math.abs(speed) > 8
-          ? Math.floor(this.phase / 14) % 2
+          ? Math.floor(this.phase / 28) % 2
             ? "walk-a"
             : "walk-b"
           : "idle"

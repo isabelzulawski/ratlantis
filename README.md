@@ -1,7 +1,11 @@
 Ratlantis
+Latest visual update: the Broadway billboard, smaller advertisements, downtown direction and park notices are painted into their backgrounds. Interfaces now use reference-derived illustrated cloud, canvas-backpack, paper and brass-sign assets. Dialogue displays in uppercase with corrected grammar. See REFERENCE-ART-PASS.md for current artwork, verification and provisional details; it supersedes the visual implementation descriptions in SECTION-POLISH.md.
+Current presentation update: dialogue is now anchored to characters as thought bubbles. The squirrel directs the player to the lamppost, then gives the newspaper after the post-reading exchange. Posters and newspaper currently use a static editorial spread with no data controls; the D3 implementation described in section 18 is retained separately for collaborative graph work, not connected to the game UI. See SECTION-POLISH.md for the current implementation and code locations. This update supersedes the older interaction/conversation descriptions below.
 Project status
-This README is a concept and design specification, not an implementation. No code is requested yet.
-It consolidates the decisions made for Ratlantis and will become the basis for a detailed code-generation prompt.
+This project implements the opening adventure through the initial Ratlantis neighborhood, now including Washington Square Park and optional City Records data reading. Run instructions are in RUNNING.md. Later mentor lessons, ferry, Queens theater and the final audition-room vent remain design plans, not implemented scenes.
+The current route is Times Square → animated downtown travel → Washington Square Park → Broadway–Lafayette subway and train → accidental drainage descent → Ratlantis. No humans appear. The Broadway misunderstanding remains unresolved.
+Normal entry is `/`; Data Visualization presentation entry is `/?data=newspaper`. The direct data entry never loads, overwrites or advances a saved game.
+The sections below retain the full adventure design, with the revised park and data component described in sections 8 and 18. Current technical values and approved opening dialogue live in `src/data/config.js`.
 Throughout this document:
 - Confirmed means the direction was agreed upon.
 - Working default means a suggested detail that can be used in the draft but still needs review.
@@ -177,18 +181,20 @@ Exact routes, transition lengths, and which travel scenes are playable remain un
 7. Main story progression
 Stage	Location	Main event
 1	Times Square	Explore, interact with pizza, discover the musical billboard
-2	Surface directions	Inspect a discarded subway map
-3	Broadway–Lafayette subway	Mistake the station name for a route to Broadway
-4	Drainage passage	Accidentally slide into the sewers
-5	Ratlantis arrival	Land in an abandoned tin-can boat
-6	Underground neighborhood	Discover homes, businesses, and working rats
-7	Bridge to Brooklyn	Travel to the retired busker
-8	Brooklyn	Exchange food for a singing lesson
-9	Brooklyn departure	Receive a ferry ticket as a gift
-10	Ferry	Help the ferry worker and learn to dance
-11	Queens	Design a costume and learn acting
-12	Return toward Manhattan	Follow the director’s directions
-13	Audition building	Crawl through a pipe to a vent overlooking the audition room
+2	Downtown travel	A short animated transition to Washington Square Park
+3	Washington Square Park	Meet the squirrel; receive a newspaper; optional data posters
+4	Park directions	Inspect the discarded Broadway–Lafayette subway map
+5	Broadway–Lafayette subway	Mistake the station name for a route to Broadway; board a train
+6	Drainage passage	Accidentally slide into the sewers
+7	Ratlantis arrival	Land in an abandoned tin-can boat
+8	Underground neighborhood	Discover homes, businesses, and working rats
+9	Bridge to Brooklyn	Travel to the retired busker (planned)
+10	Brooklyn	Exchange food for a singing lesson (planned)
+11	Brooklyn departure	Receive a ferry ticket as a gift (planned)
+12	Ferry	Help the ferry worker and learn to dance (planned)
+13	Queens	Design a costume and learn acting (planned)
+14	Return toward Manhattan	Follow the director’s directions (planned)
+15	Audition building	Crawl to a vent overlooking the audition room (planned)
 
 
 The mentor order is fixed, but completed locations can be revisited.
@@ -211,11 +217,22 @@ It announces open auditions.
 No human performer appears on the billboard. An illustrated rat can represent the production.
 The player chooses a thought-bubble response that expresses interest in auditioning. All available choices lead to the same goal.
 Exact billboard design and response text remain unresolved.
-Subway map
-The player finds a discarded subway map and notices Broadway–Lafayette.
+Washington Square Park and subway map
+After seeing the billboard, the player travels downtown into a small nighttime park with a bench, tree, poster-covered lamppost and the arch in the background. Background art, interactive papers, characters and collisions are separate. The rat stays small relative to human infrastructure. The squirrel is a local who confidently treats humans feeding him nuts as established connections; he does not teach a performance skill or resolve the audition misunderstanding.
+
+Conversation (click to advance):
+- Rat: “Another rodent! I’m looking for Broadway. There’s an audition.”
+- Squirrel: “Ah, my favorite, good old-fashioned show biz! Good connections help. Personally, I know several humans.”
+- Rat: “You do?”
+- Squirrel: “They bring me nuts. Very established relationship.”
+- Squirrel, offering the newspaper: “You should know what they’re saying about rats.”
+- Squirrel, pointing out the pole: “They keep putting up notices about you. Never seen one about me.”
+
+The supplied “goold” typo was corrected to “good”; the final two lines are unchanged. The newspaper is a persistent, readable backpack item; repeat conversations and reloads cannot duplicate it. Click its picture to read. Food still uses the existing drag-to-target interaction. The encounter and data reading are optional, and the map remains accessible without reading charts.
+The player finds a discarded subway map beyond the squirrel and notices Broadway–Lafayette.
 The rat mistakes “Broadway” in the station name for the theatrical destination.
-A Hamilton/Lafayette joke is desired, but its final wording remains unresolved.
-Times Square and Broadway–Lafayette should be treated as separate locations, connected by a transition rather than presented as geographically adjacent.
+The existing line is preserved: “Hmm... Broadway-Lafayette station? Isn't Lafayette that guy from that other musical? Sounds like this is the way to go!”
+Inspecting it records Broadway–Lafayette in the journal. Exiting the park transitions to the separate subway scene. Times Square, the park and the station are not depicted as adjacent pieces of the same street.
 9. Subway and sewer entry
 The subway must be visibly included before the sewer reveal.
 Confirmed elements:
@@ -223,7 +240,7 @@ Confirmed elements:
 - A deserted platform.
 - A rat-sized opening leading toward drainage infrastructure.
 - An accidental descent into Ratlantis.
-A short deserted train ride was discussed but has not been firmly selected.
+A short deserted train ride with a skip control is implemented before the drainage passage.
 Arrival
 The rat lands in an abandoned tin-can boat.
 The entry pipe is too high to reach, preventing immediate return by the same route.
@@ -465,46 +482,61 @@ A map shortcut becomes available for previously visited destinations.
 The travel map and the data visualization map are separate functions and should not be confused.
 Optional discoveries must not block completion.
 18. City Records data visualization
-An optional noticeboard integrates NYC rodent inspection data into the world.
-The board contains both:
-1. A borough map.
-2. A rat newspaper.
-Map
-- Select a borough.
-- Explore inspection results.
-- Show contextual labels and a legend.
-- Preserve readability within the illustrated interface.
+The planned City Records component is now presented through Washington Square Park's overlapping weathered paper posters and the squirrel's discarded newspaper, rather than a separate underground dashboard. All views share one local cleaned dataset and one in-memory borough selection. Data reading never gates skills or travel. Closing a poster restores the same scene and position; closing the newspaper returns to the still-paused backpack. UI interactions cannot move or jump the rat.
+
+Poster 1: “WHERE ARE THEY LOOKING?”
+- Subtitle: “Initial rodent inspections by borough · 2025”.
+- Five horizontal bars start at zero and stay in Bronx, Brooklyn, Manhattan, Queens, Staten Island order.
+- Switch between number of initial inspections and percentage recording active rat signs. Axis units, marks and caption update together.
+- Prompt: “Does more looking mean more finding?”
+- Hover, keyboard focus, click or tap reveals exact active-sign counts, all-initial denominators, percentages and unknown outcomes. Selection has an outline and a diamond label as well as an amber fill.
+
+Poster 2: “A YEAR ABOVEGROUND”
+- Citywide or selected-borough monthly recorded-active percentages for January–December 2025.
+- D3 renders real SVG lines and point marks; missing months create gaps and an explicit missing marker, not zeros.
+- Clicking, tapping or focusing a month reveals month, active-sign inspection count, total initial count and percentage. A readable table provides the same values.
+
 Newspaper
-- Short headlines.
-- Interactive charts.
-- Dry humor in editorial text.
-- Accurate labels and explanations.
-Working topics:
-- Borough comparisons.
-- Inspection outcomes.
-- Changes over time.
-Connected views
-Selecting a borough on the map also selects it in the newspaper.
-The player can switch between views without leaving the noticeboard.
-Closing the board returns to the same game position.
-Data requirements
-- Use real, cleaned NYC Open Data.
-- Do not generate fake findings.
-- Do not present inspection counts as rat population counts.
-- State the dataset source.
-- State the selected date range.
-- Explain important limitations.
-- Define outcome categories and denominators where needed.
-- Distinguish repeat inspections from unique inspected locations if both are used.
-The dataset has not been loaded or analyzed for this specification.
-Exact fields, cleaning rules, chart forms, dates, and headlines remain unresolved.
-Role in the game
-The board is optional.
-- No quiz required for story progression.
-- No performance skill locked behind the data.
-- No interruption of the Broadway quest.
-- It should feel like a natural piece of the underground city.
-The game is primarily the Interactive Design project. The noticeboard provides a meaningful data-focused component that can be developed and presented separately for Data Visualization.
+- An accurate selectable NYC borough map linked to the comparison, monthly trend and factual summary; Citywide resets the selection.
+- Official NYC DCP borough boundaries, 2026 release (water areas excluded). All vertices and polygon topology are retained; coordinates are rounded to five decimal places. Geography is contextual, not a claim about 2025 boundary revisions.
+- Factual summaries are deterministic descriptions of the actual local counts and monthly extrema, with no causal or population claims.
+- “Still no squirrel section.” is a clearly marked fictional handwritten margin annotation.
+- Navy ink, cream paper, restrained amber highlights, crisp chart panels and readable methodology. On narrow screens, the spread stacks vertically and charts/tables scroll in their own containers so labels stay readable.
+
+Source and methodology
+Source: [NYC DOHMH Rodent Inspection](https://data.cityofnewyork.us/Health/Rodent-Inspection/p937-wjvj/about_data), including the current schema and attached data dictionary. The schema's older description refers to “Active Rat Signs”; actual 2025 results and the current dictionary use the failure categories below. Retrieval completed October 13, 2026 in New York (October 14 UTC); the exact UTC timestamp and raw-data SHA-256 are in `public/data/inspections-2025.json`.
+
+- Date range: `inspection_date >= 2025-01-01` and `< 2026-01-01`, using the dataset's calendar-date field, not approval dates or inferred dates.
+- Inspection type: the actual exact value `Initial`; other values found were `Compliance`, `Treatments`, `Stoppage`, `Clean Ups`.
+- Numerator: exact results `Failed for Rat Activity` plus `Failed for Rat Activity and Other Reason`. The combined category counts once. Observations do not override result categories.
+- Denominator: **all included initial inspection events**, including unknown or missing outcomes if present. Unknown outcomes are separately reported, never silently removed or described as negative findings. The measure is the share with *recorded* active signs, not rat prevalence; incomplete outcomes would limit interpretation. This snapshot has no unknown outcomes.
+- Recognized other results: `Passed` and `Failed for Other Reason`. The four observed result values and their counts are retained in the audit.
+- Borough names are matched after trimming and case normalization against five official names. Missing/unrecognized boroughs are excluded, without inferring from addresses or BBL codes. Citywide means the five included boroughs.
+- Exact duplicates are defined by equality across **all 24 published noncomputed fields**, not by BBL, case ID, address or date alone. One identical initial row and two identical treatment/stoppage rows were removed. Different visits to the same property are retained. Identical published rows lack a separate public event identifier; treating them as duplicates is a documented cleaning decision.
+- The 2025 retrieval had 216,767 rows: 3 exact duplicates removed, 72,451 remaining non-initial rows excluded, 144,313 initial events included. No included initial events were missing a valid date, borough or result. Date-less source records cannot be assigned to 2025; an all-years audit found 15 `Initial` and 2 `Compliance` rows with missing dates, which were excluded from year-based analysis.
+- 97,152 distinct known BBL tax lots, 37,651 with repeated included initial visits; 4,041 included visits lacked a usable BBL. These are audit figures, not the chart's unit. Missing BBL does not exclude an event from the inspection charts.
+- An independent server query by borough/result matched all downloaded raw initial groups: 144,314 raw initial rows, reduced to 144,313 after the one exact initial duplicate.
+
+Snapshot findings (events, not individual rats):
+
+| Borough | Initial inspections | Active-sign inspections | Recorded-active percentage |
+| --- | ---: | ---: | ---: |
+| Bronx | 30,326 | 5,939 | 19.6% |
+| Brooklyn | 57,893 | 10,058 | 17.4% |
+| Manhattan | 47,602 | 7,725 | 16.2% |
+| Queens | 7,355 | 1,883 | 25.6% |
+| Staten Island | 1,137 | 72 | 6.3% |
+| Citywide | 144,313 | 25,677 | 17.8% |
+
+Limitations: inspected properties are not a random NYC sample; initial inspections can be complaint-driven or proactive. More recorded findings can reflect more inspections. An uninspected location does not demonstrate an absence of rats. Active signs are evidence recorded at a particular visit, not a count of individual rats, an ongoing property condition, or proof of causes behind monthly changes.
+
+Reproducibility and availability
+- Run `npm run data:refresh` (Node 20.19+/22.12+ with internet) to retrieve all 2025 records in ordered pages, audit duplicates/missing values, independently cross-check server aggregates, retrieve official geometry, and write local summaries. This is development-time work only.
+- Raw pages are stored in ignored `.data-cache/`; the browser loads the roughly 10 KB inspection summary and local borough geometry, not raw inspection events or the entire NYC dataset.
+- `npm run data:cached` exactly rebuilds summaries from cached retrieval files. `node scripts/preprocess-data.mjs --resume` retries interrupted retrieval using existing pages; start a fresh refresh when source changes. NYC updates the source daily, so fresh historical snapshots can change.
+- A failed acquisition exits with an error and writes `public/data/retrieval-error.json`; it does not invent numbers or replace a previous successful snapshot. If local summaries cannot be loaded, the panel displays “Records unavailable” and the adventure remains playable.
+- Direct class presentation entry: `/?data=newspaper` locally, or `/ratlantis/?data=newspaper` under a project-path build. It starts the newspaper without creating a Phaser game or reading/writing story progress. Normal `/` remains the adventure entry.
+- Verification commands: `npm test`, `node tests/browser-check.mjs` and `node tests/data-browser.mjs` while a local server runs. Use `RATLANTIS_TEST_URL` to point browser tests at another local build.
 19. Sound and interface
 Audio
 Confirmed direction:

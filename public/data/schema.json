@@ -1,0 +1,149 @@
+{
+  "description": "Dataset contains information on rat inspections.\n\nRat Information Portal Data Release Notes        April 20, 2015\n\nThe Rat Information Portal (RIP) is a web-based mapping application where users can view rat inspection data. \n\nData sources: NYC Department of Health and Mental Hygiene (DOHMH), Division of Environmental Health Pest Control Database\n\nNotes on data limitations: Please note that if a property/taxlot does not appear in the file, that does not indicate an absence of rats - rather just that it has not been inspected. Similarly, neighborhoods with higher numbers properties with active rat signs may not actually have higher rat populations but simply have more inspections. \n\nSee our Data Disclaimer:\nhttp://www.nyc.gov/rats",
+  "columns": [
+    {
+      "name": "JOB ID / CASE ID",
+      "field": "job_id",
+      "type": "text",
+      "description": "Internal DOHMH administrative number to identify a job, Case ID"
+    },
+    {
+      "name": "INSPECTION DATE",
+      "field": "inspection_date",
+      "type": "calendar_date",
+      "description": "Date of the inspection.\n"
+    },
+    {
+      "name": "INSPECTION TYPE",
+      "field": "inspection_type",
+      "type": "text",
+      "description": "Includes the types of inspections and health department actions: Initial Inspection - Inspection conducted in response to a 311 complaint, or a proactive inspection conducted through our neighborhood indexing program. Compliance Inspection - If a property fails its initial inspection, the Health Department will conduct a follow up (Compliance) inspection. Baiting - Application of rodenticide, or monitoring visit by a Health Department Pest Control Professional. Clean Up - The removal of garbage and clutter from a property by the Health Department."
+    },
+    {
+      "name": "HOUSE NUMBER",
+      "field": "house_number",
+      "type": "text",
+      "description": "The address number of a building on the tax lot that was inspected."
+    },
+    {
+      "name": "STREET NAME",
+      "field": "street_name",
+      "type": "text",
+      "description": "The street name portion of the address of the tax lot that was inspected."
+    },
+    {
+      "name": "ZIP CODE",
+      "field": "zip_code",
+      "type": "text",
+      "description": "The postal zipcode of the tax lot that was inspected."
+    },
+    {
+      "name": "BOROUGH",
+      "field": "borough",
+      "type": "text",
+      "description": "The name of the NYC borough."
+    },
+    {
+      "name": "RESULT",
+      "field": "result",
+      "type": "text",
+      "description": "Result of the inspection, including: Active Rat Signs (ARS) - ARS include any of six different signs: 1) fresh tracks, 2) fresh droppings, 3) active burrows, 4) active runways and rub marks, 5) fresh gnawing marks, and 6) live rats. Problem Conditions - Problem conditions include garbage (poor containerization of food waste resulting in the feeding of rats), harborage (clutter and dense vegetation promoting the nesting of rats), and mice."
+    },
+    {
+      "name": "LETTER TYPE",
+      "field": "letter_type",
+      "type": "text",
+      "description": "Records any violation notices or orders to address rat conditions that were issued following an inspection."
+    },
+    {
+      "name": "OBSERVATIONS",
+      "field": "observations",
+      "type": "text",
+      "description": "All inspector observations of rat activity or conditions that attract rats, from the inspection."
+    },
+    {
+      "name": "BBL",
+      "field": "bbl",
+      "type": "number",
+      "description": "Borough, Block, and Lot code, which is a unique identifier of NYC Taxlots. Every NYC property has its own BBL code, and inspections are conducted at the taxlot level. This dataset can be mapped by joining these inspectional results to a taxlot geography file such as the Department of City Planning’s PLUTO dataset.\n"
+    },
+    {
+      "name": "BORO CODE",
+      "field": "boro_code",
+      "type": "number",
+      "description": "The code assigned to the NYC borough, this code can also be found as the first digit in the BBL tax lot code above. "
+    },
+    {
+      "name": "BLOCK",
+      "field": "block",
+      "type": "text",
+      "description": "The block number for the inspected tax lot; block numbers repeat in different boroughs."
+    },
+    {
+      "name": "LOT",
+      "field": "lot",
+      "type": "text",
+      "description": "The lot number for the inspected tax lot; lot numbers can repeat in different blocks."
+    },
+    {
+      "name": "X COORD",
+      "field": "x_coord",
+      "type": "number",
+      "description": "X coordinate of the inspected tax lot in NY State Plane Long Island Coordinate system."
+    },
+    {
+      "name": "Y COORD",
+      "field": "y_coord",
+      "type": "number",
+      "description": "Y coordinate of the inspected tax lot in NY State Plane Long Island Coordinate system."
+    },
+    {
+      "name": "LATITUDE",
+      "field": "latitude",
+      "type": "number",
+      "description": "Latitude in decimal degrees of the inspected tax lot (WGS 1984)."
+    },
+    {
+      "name": "LONGITUDE",
+      "field": "longitude",
+      "type": "number",
+      "description": "Longitude in decimal degrees of the inspected tax lot (WGS 1984)."
+    },
+    {
+      "name": "LOCATION",
+      "field": "location",
+      "type": "location",
+      "description": "Coordinates (latitude, longitude) of the inspected tax lot (WGS 1984)."
+    },
+    {
+      "name": "COMMUNITY BOARD",
+      "field": "community_board",
+      "type": "text",
+      "description": "Community Board of the location."
+    },
+    {
+      "name": "COUNCIL DISTRICT",
+      "field": "council_district",
+      "type": "text",
+      "description": "Council District of the location."
+    },
+    {
+      "name": "CENSUS TRACT",
+      "field": "census_tract",
+      "type": "text",
+      "description": "Census Tract of the location."
+    },
+    {
+      "name": "BIN",
+      "field": "bin",
+      "type": "text",
+      "description": "Department of Buildings (DOB) Building Identification Number."
+    },
+    {
+      "name": "NTA",
+      "field": "nta",
+      "type": "text",
+      "description": "NTA (Neighborhood Tabulation Area) code of the location."
+    }
+  ]
+}

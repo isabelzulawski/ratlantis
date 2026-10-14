@@ -4,7 +4,7 @@ import { SCENES, MOVEMENT, DIALOGUE } from "../data/config.js";
 import { loadAssets, setupArtFrames, FUR_TINT } from "../art/assets.js";
 import { RatVisual } from "../art/RatVisual.js";
 import { drawWorld, label, surface } from "../art/world.js";
-import { save, learn, releaseAction } from "../state.js";
+import { save, learn, releaseAction, collectNewspaper } from "../state.js";
 import { Movement } from "../input/Movement.js";
 import { Pizza } from "../objects/Pizza.js";
 import { UI } from "../ui.js";
@@ -50,18 +50,24 @@ export class Opening extends Phaser.Scene {
     this.pizzaControl = null;
     this.objectPress = null;
     this.collider?.destroy();
+    this.collider = null;
     this.platforms?.clear(true, true);
+    this.platforms = null;
     this.rideMaskShape?.destroy();
     this.rideMaskShape = null;
     this.time.removeAllEvents();
     this.tweens.killAll();
-    this.children.removeAll(true);
+    // DisplayList.removeAll(true) skips callbacks; it does not destroy objects.
+    // Destroy them so departed props cannot remain invisible input/physics targets.
+    [...this.children.getChildren()].forEach((child) => child.destroy());
     this.commuters = [];
     this.motes = [];
     this.player = null;
     this.transitioning = false;
     document.querySelector("#hud")?.remove();
     document.querySelector(".hint")?.remove();
+    document.querySelector("#world-cue")?.remove();
+    this.ui.cue = null;
   }
   enter(id) {
     this.resetWorld();
@@ -175,8 +181,7 @@ export class Opening extends Phaser.Scene {
     );
   }
   tryStreetExit() {
-    if (this.state.flags.map && this.state.flags.audition)
-      this.transitionTo("station");
+    if (this.state.flags.audition) this.transitionTo("downtown");
     else if (!this.exitPrompted) {
       this.exitPrompted = true;
       this.ui.message("I should take another look around.");
@@ -185,51 +190,37 @@ export class Opening extends Phaser.Scene {
   setupProps() {
     if (this.id === "street") {
       this.pizzaControl = new Pizza(this);
-      this.billboard = this.add
-        .image(1565, 266, "art-broadway", "__BASE")
-        .setDisplaySize(505, 300)
-        .setDepth(2);
+      // The art is already painted into the facade; only its exact quadrilateral is interactive.
+      this.billboard = this.add.zone(0, 0, 2200, 675).setOrigin(0);
       if (!this.state.flags.audition) {
-        this.billboard.setInteractive({
-          pixelPerfect: true,
-          alphaTolerance: 120,
-          useHandCursor: true,
-        });
+        this.billboard.setInteractive(
+          new Phaser.Geom.Polygon([1272, 189, 1856, 110, 1861, 380, 1280, 432]),
+          Phaser.Geom.Polygon.Contains,
+        );
+        this.billboard.input.cursor = "pointer";
         this.bindObject(this.billboard, () => this.inspectBillboard());
       }
-      this.map = this.add
-        .image(1760, 580, "art-props", "map")
-        .setOrigin(0.5, 1)
-        .setDisplaySize(139, 70)
-        .setDepth(8)
-        .setInteractive({
-          pixelPerfect: true,
-          alphaTolerance: 80,
-          useHandCursor: true,
-        });
-      this.bindObject(this.map, () =>
-        this.ui.message(DIALOGUE.map, () => {
-          learn(
-            this.state,
-            "map",
-            "Next destination: Broadway–Lafayette station.",
-          );
-          this.persist();
-        }),
-      );
-      this.map.on("pointerover", () => this.map.setTint(0xfff0bf));
-      this.map.on("pointerout", () => this.map.clearTint());
-      this.entrance = this.add
-        .image(2060, 583, "art-details", "entrance")
-        .setOrigin(0.5, 1)
-        .setDisplaySize(235, 226)
-        .setDepth(7)
-        .setInteractive({
-          pixelPerfect: true,
-          alphaTolerance: 80,
-          useHandCursor: true,
-        });
-      this.bindObject(this.entrance, () => this.tryStreetExit());
+      this.interactive(2045, 312, 150, 53, null, () => this.tryStreetExit());
+    } else if (this.id === "downtown") {
+      this.freeze();
+      this.player.body.setAllowGravity(false);
+      this.player.setY(580 - 23.27);
+      this.travelPreviousX = this.player.x;
+      this.tweens.add({
+        targets: this.player,
+        x: 1940,
+        duration: 6000,
+        ease: "Linear",
+        onComplete: () => this.transitionTo("park"),
+      });
+      const skip = label(this, 1030, 81, "Skip →", 15)
+        .setScrollFactor(0)
+        .setInteractive({ useHandCursor: true });
+      skip.on("pointerup", () => {
+        if (!this.ui.root.firstChild) this.transitionTo("park");
+      });
+    } else if (this.id === "park") {
+      this.setupPark();
     } else if (this.id === "station") {
       this.interactive(1640, 290, 150, 290, null, () =>
         this.transitionTo("ride"),
@@ -290,7 +281,7 @@ export class Opening extends Phaser.Scene {
         this.transitionTo("neighborhood"),
       );
     } else if (this.id === "neighborhood") {
-      this.add
+      this.dockworker = this.add
         .image(245, 535, "rat-atlas", "react")
         .setOrigin(238 / 436, 442 / 512)
         .setTint(FUR_TINT.Brown)
@@ -301,43 +292,38 @@ export class Opening extends Phaser.Scene {
         .setOrigin(0.5, 1)
         .setDisplaySize(25, 16)
         .setDepth(13);
-      const bubble = this.add.graphics().setDepth(11);
-      bubble.fillStyle(0xede0bd, 0.94).fillRoundedRect(150, 420, 258, 39, 12);
-      bubble.fillTriangle(238, 458, 250, 458, 243, 469);
-      this.add
-        .text(163, 430, "“You can’t park that here!”", {
-          fontFamily: "Avenir Next, sans-serif",
-          fontSize: 14,
-          color: "#3f372a",
-        })
-        .setDepth(12);
-      this.interactive(150, 420, 258, 48, null, () =>
+      this.ui.worldCue(this.dockworker, "You can’t park that here!", () =>
         this.ui.dialogue(
-          "You can’t park that here!",
+          "…",
           DIALOGUE.dockChoices.map((text, i) => ({
             text,
             action: () =>
-              this.ui.message(DIALOGUE.dockReplies[i], () => {
-                if (i === 2)
-                  learn(
-                    this.state,
-                    "brooklyn",
-                    "Lead: a retired singer in Brooklyn may help. Onward travel is unavailable in this build.",
-                  );
-                if (i === 0)
-                  learn(
-                    this.state,
-                    "ratlantis",
-                    "This underground neighborhood is Ratlantis.",
-                  );
-                if (i === 1)
-                  learn(
-                    this.state,
-                    "pipe",
-                    "The entry pipe is too high to reach again.",
-                  );
-                this.persist();
-              }),
+              this.ui.message(
+                DIALOGUE.dockReplies[i],
+                () => {
+                  if (i === 2)
+                    learn(
+                      this.state,
+                      "brooklyn",
+                      "Lead: a retired singer in Brooklyn may help. Onward travel is unavailable in this build.",
+                    );
+                  if (i === 0)
+                    learn(
+                      this.state,
+                      "ratlantis",
+                      "This underground neighborhood is Ratlantis.",
+                    );
+                  if (i === 1)
+                    learn(
+                      this.state,
+                      "pipe",
+                      "The entry pipe is too high to reach again.",
+                    );
+                  this.persist();
+                },
+                this.dockworker,
+                "Dockworker",
+              ),
           })),
         ),
       );
@@ -354,6 +340,97 @@ export class Opening extends Phaser.Scene {
           .setDepth(12);
         this.commuters.push({ r, parcel, x, phase: i });
       });
+    }
+  }
+  setupPark() {
+    this.squirrel = this.add
+      .image(410, 586, "art-squirrel")
+      .setOrigin(0.5, 1)
+      .setDisplaySize(91, 105)
+      .setDepth(12)
+      .setInteractive({
+        pixelPerfect: true,
+        alphaTolerance: 80,
+        useHandCursor: true,
+      });
+    this.bindObject(this.squirrel, () => this.squirrelConversation());
+    this.map = this.add
+      .image(1060, 587, "art-props", "map")
+      .setOrigin(0.5, 1)
+      .setDisplaySize(115, 58)
+      .setAngle(-7)
+      .setDepth(8)
+      .setInteractive({
+        pixelPerfect: true,
+        alphaTolerance: 80,
+        useHandCursor: true,
+      });
+    this.bindObject(this.map, () =>
+      this.ui.message(DIALOGUE.map, () => {
+        learn(
+          this.state,
+          "map",
+          "Next destination: Broadway–Lafayette station.",
+        );
+        this.persist();
+      }),
+    );
+    // Hit areas follow the notices and enamel sign painted into the lamppost.
+    this.posters = [
+      this.interactive(1271, 261, 81, 91, null, () =>
+        this.ui.records.open("comparison", () => this.afterLamppost()),
+      ),
+      this.interactive(1278, 350, 79, 75, null, () =>
+        this.ui.records.open("trend", () => this.afterLamppost()),
+      ),
+    ];
+    this.interactive(1290, 509, 89, 40, null, () => this.tryParkExit());
+  }
+  squirrelConversation() {
+    const lines = this.state.flags.lamppostInvited
+      ? [DIALOGUE.squirrel.at(-1)]
+      : DIALOGUE.squirrel;
+    this.conversation(lines, () => {
+      this.state.flags.lamppostInvited = true;
+      this.persist();
+    });
+  }
+  conversation(lines, after = () => {}) {
+    let line = 0;
+    const next = () => {
+      if (line >= lines.length) {
+        this.ui.clear();
+        after();
+        return;
+      }
+      const [speaker, text] = lines[line++];
+      this.ui.dialogue(
+        text,
+        [{ text: "Continue", action: next }],
+        speaker === "Squirrel" ? this.squirrel : null,
+        speaker,
+      );
+    };
+    next();
+  }
+  afterLamppost() {
+    if (!this.state.flags.lamppostInvited || this.state.flags.newspaperReceived)
+      return;
+    this.conversation(DIALOGUE.squirrelAfterReading, () => {
+      collectNewspaper(this.state);
+      learn(
+        this.state,
+        "squirrel",
+        "A park squirrel gave me a newspaper. I can read it from my backpack.",
+      );
+      this.persist();
+    });
+  }
+  tryParkExit() {
+    if (this.state.flags.map) this.transitionTo("station");
+    else if (!this.exitPrompted) {
+      this.exitPrompted = true;
+      this.ui.message("I should take another look around.");
     }
   }
   drawCursor(p) {
@@ -383,9 +460,27 @@ export class Opening extends Phaser.Scene {
   }
   update(time, delta) {
     if (!this.player) return;
+    this.ui.positionBubble();
     const p = this.input.activePointer.positionToCamera(this.cameras.main),
       panelOpen = !!this.ui.root.firstChild;
     this.drawCursor(p);
+    if (this.id === "downtown") {
+      const speed = panelOpen
+        ? 0
+        : Math.max(
+            0,
+            ((this.player.x - this.travelPreviousX) * 1000) /
+              Math.max(1, delta),
+          );
+      this.travelPreviousX = this.player.x;
+      this.rat.update(
+        delta,
+        this.player.body.center.x,
+        this.player.body.bottom,
+        { speed, grounded: true, paused: panelOpen },
+      );
+      return;
+    }
     if (this.id === "ride") {
       if (!panelOpen) this.rideElapsed += Math.min(delta, 50);
       this.rideTunnel.tilePositionX = this.rideElapsed * 0.5;
@@ -465,6 +560,8 @@ export class Opening extends Phaser.Scene {
         if (this.id === "street" && b.center.x > 2080) this.tryStreetExit();
         if (this.id === "street" && b.center.x < 1900)
           this.exitPrompted = false;
+        if (this.id === "park" && b.center.x > 1370) this.tryParkExit();
+        if (this.id === "park" && b.center.x < 1300) this.exitPrompted = false;
         if (this.id === "station" && b.center.x > 1670)
           this.transitionTo("ride");
         if (this.id === "arrivalStation" && b.center.x > 1215)
