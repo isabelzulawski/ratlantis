@@ -1,0 +1,415 @@
+* {
+  box-sizing: border-box;
+}
+:root {
+  --ink: #0b1821;
+  --gold: #dfb56c;
+  --paper: #efe0bd;
+  --soft: #a6b4b9;
+  --font: "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+}
+body {
+  margin: 0;
+  background: #07131d;
+  color: var(--paper);
+  font-family: var(--font);
+  font-size: 15px;
+}
+#game {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+#overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: background 0.3s;
+}
+#overlay:has(.panel) {
+  background: linear-gradient(90deg, #04101a77, #04101a22, #04101a77);
+}
+.panel {
+  pointer-events: auto;
+  position: relative;
+  background: linear-gradient(135deg, #162c36f7, #0b1b26fa);
+  border: 1px solid #b497614d;
+  border-radius: 22px 10px 25px 12px;
+  padding: 32px 38px;
+  width: min(520px, 92vw);
+  box-shadow:
+    0 25px 100px #0009,
+    inset 0 0 50px #deae4b06;
+  text-align: center;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.panel.wide {
+  width: min(650px, 94vw);
+}
+h1 {
+  font-family: "Chalkboard SE", var(--font);
+  font-size: clamp(58px, 7vw, 84px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 5px 0 18px;
+  color: #f2d099;
+  letter-spacing: -3px;
+  text-shadow:
+    2px 3px #091621,
+    0 0 45px #d9ad4d22;
+}
+h2 {
+  margin: 0 0 22px;
+  font-size: 27px;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+}
+h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+p {
+  line-height: 1.75;
+  margin: 15px 0;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  background: #d9b16e;
+  color: #15242a;
+  border: 1px solid #e8c88a88;
+  padding: 12px 22px;
+  border-radius: 10px 6px 11px 7px;
+  cursor: pointer;
+  margin: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 3px 0 #050c1222;
+}
+button:hover {
+  background: #f0ce8e;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 20px #c7984133;
+}
+button.secondary {
+  background: #ffffff07;
+  color: #b7c7cc;
+  border-color: #c1c9ba26;
+}
+input {
+  padding: 12px 15px;
+  background: #081721;
+  border: 1px solid #bfa87944;
+  color: #f3dfb8;
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+input:focus {
+  outline: 2px solid #d9b16e77;
+}
+.colors {
+  display: flex;
+  justify-content: center;
+  gap: 11px;
+  margin: 24px 0 12px;
+}
+.swatch {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  border: 3px solid #101d26;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #b9b4a844;
+}
+.swatch.selected {
+  border: 3px solid #e7c68e;
+  box-shadow: 0 0 0 3px #e7c68e30;
+}
+.preview {
+  width: 190px;
+  height: 135px;
+  margin: auto;
+}
+.preview svg,
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.hud {
+  position: fixed;
+  top: 20px;
+  left: 26px;
+  right: 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  font-family: var(--font);
+}
+.hud button {
+  pointer-events: auto;
+  background: #0b1c29dd;
+  color: #ddc89f;
+  border: 1px solid #b0a5803b;
+  font-weight: 500;
+  font-size: 12px;
+  padding: 10px 16px;
+  margin: 0 0 0 7px;
+  backdrop-filter: blur(12px);
+}
+.hud button:hover {
+  background: #183344;
+}
+.hud .location {
+  padding: 8px 0;
+  color: #ece0c1;
+  font-size: 14px;
+  text-shadow: 0 2px 6px #000;
+  letter-spacing: 0.3px;
+}
+.hud .location::before {
+  content: "◈";
+  color: #d6b778;
+  margin-right: 12px;
+}
+.hint {
+  position: fixed;
+  bottom: 19px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #091722cf;
+  padding: 9px 20px;
+  border: 1px solid #b0a58022;
+  border-radius: 7px;
+  font: 11px var(--font);
+  color: #b8c4c5;
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: #243c4544;
+  border: 1px solid #c59c5e44;
+  padding: 18px;
+  border-radius: 12px;
+  touch-action: none;
+  cursor: grab;
+  gap: 8px;
+}
+.item img {
+  width: 100px;
+  height: 75px;
+  object-fit: contain;
+}
+.journal {
+  text-align: left;
+  border-top: 1px solid #8d754e44;
+  margin-top: 24px;
+  padding-top: 12px;
+  color: #cad0c7;
+}
+.ghost {
+  position: fixed;
+  width: 90px;
+  pointer-events: none;
+  z-index: 20;
+}
+.notice {
+  color: #eec886;
+  font-size: 13px;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #bca26f;
+}
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.choices button {
+  text-align: left;
+  background: #263a41;
+  color: #e7dec6;
+  border-color: #c0a97533;
+  font-weight: 500;
+  padding: 14px 18px;
+}
+.choices button::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c6a672;
+  color: #c6a672;
+  margin-right: 13px;
+}
+.choices button:hover {
+  background: #3b4d50;
+  border-color: #d0b079;
+}
+.footer {
+  font-size: 11px;
+  color: #95a9ad;
+}
+button:focus-visible {
+  outline: 3px solid #eddb9d;
+  outline-offset: 3px;
+}
+.speech {
+  border-radius: 26px 18px 23px 10px;
+}
+.speech h2 {
+  font-size: 24px;
+}
+.title-panel {
+  background: #071725b8;
+  border-color: #d6b16b40;
+  padding: 40px 32px;
+  backdrop-filter: blur(6px);
+}
+.title-panel .footer {
+  margin-top: 24px;
+}
+.title-panel button {
+  min-width: 130px;
+}
+label {
+  color: #a9bab9;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.title-panel h1 {
+  line-height: 0;
+  letter-spacing: 0;
+  margin: 18px 0 24px;
+}
+.wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 3px 5px #061322);
+}
+
+.title-panel {
+  background: linear-gradient(135deg, #0d223080, #081724b0);
+  padding: 36px 32px 28px;
+  border-color: #dcc48c26;
+}
+.first-hint {
+  animation: gentle-hint 8s forwards;
+}
+@keyframes gentle-hint {
+  0%,
+  70% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.speech .eyebrow {
+  letter-spacing: 1px;
+}
+
+.poster-inspection {
+  display: block;
+  height: min(65vh, 480px);
+  max-width: 100%;
+  object-fit: contain;
+  margin: 0 auto 16px;
+}
+
+/* A tactile page under lamplight, rather than a generic app modal. */
+.illustrated-dialogue {
+  background: #eaddbb url("/art/dialogue-paper-v4.png") center / 100% 100%
+    no-repeat;
+  border: 0;
+  border-radius: 16px 23px 11px 19px;
+  color: #3e392f;
+  padding: 42px 38px 38px;
+  box-shadow: 0 20px 65px #0008;
+}
+.illustrated-dialogue .eyebrow {
+  color: #81704d;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+.illustrated-dialogue h2 {
+  font-family: "Palatino", "Book Antiqua", Georgia, serif;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+.illustrated-dialogue .choices button {
+  background: #30444d;
+  color: #eee0bc;
+  border: 1px solid #203742;
+  box-shadow: 1px 3px 0 #8a744d22;
+  border-radius: 8px 11px 6px 9px;
+}
+.illustrated-dialogue .choices button:hover {
+  background: #435962;
+}
+.illustrated-dialogue::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 55px;
+  width: 24px;
+  height: 24px;
+  background: #eaddbb;
+  transform: translateY(50%) rotate(45deg);
+  box-shadow: 5px 5px 8px #0002;
+  z-index: -1;
+}
+.illustrated-dialogue {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 14px 22px #0007);
+}
+.illustrated-dialogue::after {
+  display: none;
+}
+.illustrated-dialogue .choices button {
+  background-image:
+    linear-gradient(110deg, #233a49ed, #354853e8),
+    url("/art/dialogue-paper-v4.png");
+  background-size: 100% 100%;
+}

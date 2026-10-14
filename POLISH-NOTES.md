@@ -1,5 +1,7 @@
 # Opening polish pass
 
+**Latest revision:** [THEME-UPDATE.md](THEME-UPDATE.md) supersedes the halo, crossfade, curb alignment, poster-preview and dialogue styling notes below.
+
 ## Current behavior
 
 - Title screen now contains just the illustrated Ratlantis wordmark and Begin / Continue / New Game controls. The top dash, tagline and prototype copy are gone.

@@ -1,0 +1,11 @@
+import {chromium} from '@playwright/test';
+import {DIALOGUE} from '../src/data/config.js';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1200,height:675}}),errors=[];
+page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:4173');
+await page.getByRole('button',{name:'Begin',exact:true}).click();await page.locator('#name').fill('Pip');await page.getByRole('button',{name:'Explore'}).click();await page.waitForTimeout(800);
+await page.evaluate(text=>ratlantis.ui.message(text),DIALOGUE.map);await page.waitForTimeout(450);await page.screenshot({path:'tests/map-dialogue-v4.png'});
+assert.ok(await page.locator('.speech').evaluate(el=>el.scrollHeight<=el.clientHeight));await page.getByRole('button',{name:'Continue',exact:true}).click();
+await page.evaluate(()=>ratlantis.enter('fall'));await page.waitForTimeout(450);await page.screenshot({path:'tests/pipe-v4.png'});
+assert.deepEqual(errors,[]);console.log('Final paper dialogue and pipe render pass.');await browser.close();
