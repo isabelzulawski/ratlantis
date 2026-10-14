@@ -51,3 +51,5 @@ https://isabelzulawski.github.io/ratlantis/.
 The Pages build uses `/ratlantis/` as its asset base; local development continues to use `/`.
 To preview the Pages build locally, run `GITHUB_ACTIONS=true pnpm build` then
 `GITHUB_ACTIONS=true pnpm exec vite preview` and open `/ratlantis/` on the preview server.
+
+Current newspaper: open /?data=newspaper to preview the supplied three-page D3 component. See NEWSPAPER-INTEGRATION.md. Run `node tests/data-browser.mjs` with the dev server running to check it, or set RATLANTIS_TEST_URL to a production preview URL ending with /ratlantis/.

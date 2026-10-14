@@ -147,7 +147,11 @@ export class UI {
     cue.textContent = text;
     for (const event of ["pointerdown", "pointerup", "mousedown", "mouseup"])
       cue.addEventListener(event, (e) => e.stopPropagation());
-    cue.onclick = action;
+    cue.onclick = () => {
+      if (this.cue?.element === cue) this.cue.dismissed = true;
+      cue.hidden = true;
+      action();
+    };
     document.body.append(cue);
     this.cue = { element: cue, target };
     this.positionCue();
@@ -155,16 +159,18 @@ export class UI {
   positionCue() {
     if (!this.cue) return;
     const { element, target } = this.cue;
-    element.hidden = !!this.root.firstChild;
     const r = this.scene.game.canvas.getBoundingClientRect(),
       c = this.scene.cameras.main;
+    const offscreen = target.x < c.scrollX || target.x > c.scrollX + c.width;
+    element.hidden = !!this.root.firstChild || this.cue.dismissed || offscreen;
+    if (element.hidden) return;
     const x = r.left + ((target.x - c.scrollX) * r.width) / 1200,
       y =
         r.top +
         ((target.y - (target.displayHeight || 70) * 0.8 - c.scrollY) *
           r.height) /
           675;
-    element.style.left = `${Math.max(10, x - element.offsetWidth * 0.5)}px`;
+    element.style.left = `${x - element.offsetWidth * 0.5}px`;
     element.style.top = `${Math.max(10, y - element.offsetHeight - 15)}px`;
   }
   message(text, after = () => {}, target = null, speaker = null) {

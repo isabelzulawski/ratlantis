@@ -1,0 +1,22 @@
+# Isabel’s newspaper integration
+
+The component supplied in Desktop/newspaper is now the game’s readable newspaper. Article wording, numerical values, captions, source notes and explanations are preserved. The supplied `rats_2025_initial.csv` is copied byte for byte to `public/data/rats_2025_initial.csv`. It contains 144,314 initial inspection visits; this intentionally replaces the earlier static spread’s 144,313-row snapshot. No extra deduplication or substitute dataset is applied to Isabel’s code.
+
+Edit these separate files:
+
+- `src/data/newspaper-articles.js`: the supplied article HTML and shared source notes. Container IDs remain `borough-chart`, `monthly-chart`, `inspection-map`, `status` and `map-status`. A `monthly-status` element was added for the existing error handler.
+- `src/data/newspaper-visualizations.js`: Isabel’s commented D3 functions. Their rollups, date parser, rat-activity classification, denominators, missing-month gaps, axes, labels, native hover titles and coordinate filter are preserved. The integration imports bundled D3 and caches one shared CSV read rather than downloading it three times. Bar ink and serif fonts are adjusted; map blue/red point encodings and legend remain unchanged.
+- `src/data/Newspaper.js`: opening, closing, Previous/Next, page numbering and reduced-motion-aware page turn. Pages render their charts once they become visible; SVG viewBoxes and the canvas make revisiting/resizing reliable.
+- `src/data/flippable-newspaper.css`: cream paper, worn illustrated outer edges and a clear inner printing area. Small screens can scroll charts horizontally to preserve readable axis labels rather than shrinking them excessively.
+
+Official borough geometry is loaded from the existing local `public/data/boroughs.geojson`, so map rendering does not depend on a live NYC API call. CSV and geometry URLs use Vite’s BASE_URL for `/ratlantis/` GitHub Pages builds. No D3 CDN is needed.
+
+After the squirrel gift conversation, the newspaper opens automatically and the unique persistent backpack item is awarded. It can be reopened from the backpack or either painted lamppost notice. Movement, scene timers and physics pause while reading; closing restores the previous world position. Closing a backpack-opened newspaper returns to the backpack first, where movement stays paused until that panel closes. Direct `?data=newspaper` entry never reads or alters game saves.
+
+Verified: supplied CSV equality; all article text preserved; five borough bars match the CSV rollups; all 60 monthly points match counts; map shown/excluded and positive counts match the original coordinate filter; previous/next and revisiting; narrow-screen containment; honest CSV unavailable state; direct-entry save isolation; production build with GitHub Pages base URLs. The full opening test covers lamppost reading, squirrel award, inventory/reload, reopening and resumed controls. The existing unit tests remain relevant to adventure saves and the retained earlier data model.
+
+The source code’s native SVG hover tooltips are retained. Charts are live SVG/Canvas marks from the CSV, not static images. No article editorial claims were added. The integration is included in the repository and deployed by the existing GitHub Pages workflow.
+
+Presentation revision: each article now occupies two facing leaves, with copy/source notes on the left and the live chart on the right. Bottom-corner turn icons replace top Previous/Next labels; paired page numbers and keyboard navigation remain. The complete 1440×920 print layout scales to the viewport without scrolling. Chart typography is enlarged serif ink and the map background matches the printing area. Small phone screens scale the full spread, so desktop or landscape viewing provides larger type. Articles and original calculations remain unchanged.
+
+Artwork revision: `public/art/newspaper-spread-v2.png` is a transparent-edged, torn cream paper spread with curls painted directly into its corners. The navigation hit areas align with those curls, and the separate rectangular article backgrounds are removed. Column text and chart labels use Times-style serif printing with justified article columns. Artwork was created with built-in imagegen; the full prompt is in `public/art/newspaper-spread-prompt.json`. Data marks remain live and all three articles/source notes fit without scrolling.

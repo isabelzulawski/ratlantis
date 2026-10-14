@@ -1,0 +1,194 @@
+/* One transparent-edged illustrated sheet. Text and live marks print directly
+   onto it; there are no rectangular cards beneath the articles or charts. */
+.panel.newspaper-spread.flippable-newspaper {
+  --news-font: "Times New Roman", Times, serif;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 1440px;
+  height: 920px;
+  max-width: none;
+  max-height: none;
+  padding: 48px 68px 66px;
+  overflow: visible;
+  transform: translate(-50%, -50%) scale(var(--paper-scale, 0.8));
+  background: transparent url("/art/newspaper-spread-v2.png") center/100% 100%
+    no-repeat;
+  color: #293333;
+  font: 16px/1.36 var(--news-font);
+  border: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 10px 14px #0007);
+}
+.flippable-newspaper .newspaper-masthead {
+  margin: 0 0 16px;
+  padding: 5px 0;
+  border-top: 1px solid #5b5949;
+  border-bottom: 3px double #5b5949;
+}
+.flippable-newspaper .newspaper-masthead h1 {
+  font: bold 54px/1.1 var(--news-font);
+  margin: 4px 0;
+  letter-spacing: -1px;
+  text-shadow: none;
+}
+.flippable-newspaper .newspaper-masthead div {
+  font: 11px var(--news-font);
+  letter-spacing: 1.4px;
+}
+.flippable-newspaper .paper-pages {
+  height: 660px;
+}
+.flippable-newspaper .paper-page {
+  height: 100%;
+  padding: 8px 0;
+  transform-origin: left center;
+  background: transparent;
+}
+.paper-page[hidden] {
+  display: none;
+}
+.flippable-newspaper article {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+}
+.flippable-newspaper .paper-copy,
+.flippable-newspaper .paper-visual {
+  min-height: 0;
+  background: transparent;
+  padding: 14px 14px;
+}
+.flippable-newspaper .paper-copy {
+  display: flex;
+  flex-direction: column;
+}
+.flippable-newspaper .paper-visual {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.flippable-newspaper article h1,
+.flippable-newspaper article h2 {
+  font: bold 29px/1.08 var(--news-font);
+  color: #253238;
+  margin: 0 0 12px;
+  text-shadow: none;
+  letter-spacing: -0.25px;
+}
+.flippable-newspaper article p {
+  font: 16px/1.36 var(--news-font);
+  margin: 8px 0;
+  color: #303b3b;
+  text-align: justify;
+  hyphens: auto;
+}
+.flippable-newspaper article header p {
+  text-align: left;
+  font-style: italic;
+}
+.flippable-newspaper .paper-copy p:empty {
+  display: none;
+}
+.flippable-newspaper footer {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 3px double #6b6e61;
+}
+.flippable-newspaper footer h2 {
+  font: bold 16px/1.2 var(--news-font);
+  margin: 0 0 6px;
+}
+.flippable-newspaper footer p {
+  font: 12px/1.3 var(--news-font);
+  margin: 5px 0;
+  color: #303b3b;
+}
+.flippable-newspaper figure {
+  margin: 0;
+  padding: 12px 0;
+  overflow: visible;
+  border-top: 1px solid #aaa08a;
+  border-bottom: 1px solid #aaa08a;
+}
+.flippable-newspaper figcaption {
+  font: italic 16px/1.35 var(--news-font);
+  color: #454d48;
+  margin-top: 14px;
+}
+.flippable-newspaper svg {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.flippable-newspaper svg text,
+.flippable-newspaper svg .tick text {
+  fill: #253238;
+  font-family: var(--news-font);
+  font-size: 20px;
+}
+.flippable-newspaper #inspection-map {
+  display: block;
+  max-height: none;
+}
+.flippable-newspaper [role="status"]:empty {
+  display: none;
+}
+/* Hit areas follow the curls baked into the artwork, never separate triangles. */
+.flippable-newspaper .paper-navigation {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 17px;
+  height: 98px;
+  border: 0;
+  padding: 0;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 5;
+}
+.flippable-newspaper .paper-navigation button {
+  pointer-events: auto;
+  position: relative;
+  width: 100px;
+  height: 98px;
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+.flippable-newspaper .paper-navigation button::before {
+  display: none;
+}
+.flippable-newspaper .paper-navigation button:hover {
+  background: transparent;
+  transform: none;
+  filter: none;
+}
+.flippable-newspaper .paper-navigation button:disabled {
+  visibility: hidden;
+}
+.flippable-newspaper .paper-navigation button:focus-visible {
+  outline: 2px dashed #74603c;
+  outline-offset: -12px;
+}
+.flippable-newspaper .paper-number {
+  font: 14px var(--news-font);
+  align-self: end;
+  margin-bottom: 10px;
+}
+.flippable-newspaper .paper-close {
+  top: 26px;
+  right: 40px;
+  font-size: 13px;
+}
+.flippable-newspaper .paper-close { position: absolute; top: 46px; right: 70px; z-index: 6; float: none; }

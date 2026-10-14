@@ -238,7 +238,7 @@ assert.equal(
 await at(1050, 550);
 const parked = await pos();
 await click(1310, 300);
-await page.locator(".newspaper-columns").waitFor();
+await page.locator(".paper-pages").waitFor();
 assert.equal(
   await page.locator(".bar-row,.borough-controls,.metric-controls").count(),
   0,
@@ -256,6 +256,7 @@ for (const line of [
   );
   await page.getByRole("button", { name: "Continue", exact: true }).click();
 }
+await page.getByRole("button", { name: "Close City Records" }).click();
 assert.deepEqual(await page.evaluate(() => ratlantis.state.inventory), [
   "pizza",
   "newspaper",
@@ -271,7 +272,7 @@ assert.deepEqual(await page.evaluate(() => ratlantis.state.inventory), [
 await at(1050, 550);
 await page.getByRole("button", { name: "Backpack", exact: true }).click();
 await page.locator("[data-item=newspaper]").click();
-await page.locator(".newspaper-columns").waitFor();
+await page.locator(".paper-pages").waitFor();
 await page.getByRole("button", { name: "Close City Records" }).click();
 await page.getByRole("button", { name: "Close backpack" }).click();
 await page.waitForTimeout(150);

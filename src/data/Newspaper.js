@@ -1,46 +1,104 @@
 import { assetUrl } from "../art/assets.js";
-import { BOROUGHS } from "./records-model.js";
-import "./records.css";
+import { ARTICLES, SOURCE_NOTES } from "./newspaper-articles.js";
+import {
+  makeBoroughChart,
+  makeMonthlyChart,
+  makeInspectionMap,
+} from "./newspaper-visualizations.js";
 import "./newspaper.css";
-const number = (n) => n.toLocaleString("en-US");
+import "./flippable-newspaper.css";
+
+// Presentation only: chart calculations live in newspaper-visualizations.js.
 export class Newspaper {
   constructor(ui = null) {
     this.ui = ui;
     this.root = ui?.root || document.querySelector("#overlay");
   }
-  async open(view = "newspaper", after = null) {
+  open(view = "newspaper", after = null) {
     this.after = after;
     this.opened = true;
+    this.page = view === "trend" ? 1 : 0;
     if (this.ui) this.ui.panel("", true);
     else this.root.innerHTML = '<section class="panel"></section>';
     this.sheet = this.root.firstChild;
-    this.sheet.className = "panel newspaper-spread";
+    this.sheet.className = "panel newspaper-spread flippable-newspaper";
     this.sheet.setAttribute("role", "dialog");
+    this.sheet.setAttribute("aria-modal", "true");
     this.sheet.setAttribute("aria-label", "Discarded newspaper");
+    this.sheet.innerHTML = `<button class="paper-close" aria-label="Close City Records">Fold away ×</button><header class="newspaper-masthead"><div>NEW YORK CITY · 2025 INSPECTION RECORDS</div><h1>The City Records</h1></header><nav class="paper-navigation" aria-label="Newspaper pages"><button class="paper-previous" aria-label="Previous" title="Turn back"> </button><span class="paper-number" aria-live="polite"></span><button class="paper-next" aria-label="Next" title="Turn page"> </button></nav><div class="paper-pages">${ARTICLES.map((a, i) => `<section class="paper-page" data-page="${i}" hidden>${a}${i === 1 ? '<p id="monthly-status" role="status">Loading monthly data…</p>' : ""}${SOURCE_NOTES}</section>`).join("")}</div>`;
+    // Each article is printed across two facing leaves: copy on the left,
+    // its live visualization on the right. No article content is discarded.
+    for (const page of this.sheet.querySelectorAll(".paper-page")) {
+      const article = page.querySelector("article");
+      const copy = document.createElement("div");
+      copy.className = "paper-copy";
+      const visual = document.createElement("div");
+      visual.className = "paper-visual";
+      for (const child of [...article.children]) {
+        (child.tagName === "FIGURE" || child.hasAttribute("role")
+          ? visual
+          : copy
+        ).append(child);
+      }
+      copy.append(page.querySelector("footer"));
+      const monthlyStatus = page.querySelector("#monthly-status");
+      if (monthlyStatus) visual.append(monthlyStatus);
+      article.append(copy, visual);
+    }
+    this.fit = () =>
+      this.sheet.style.setProperty(
+        "--paper-scale",
+        Math.min((innerWidth - 20) / 1440, (innerHeight - 20) / 920, 1),
+      );
+    this.fit();
+    window.addEventListener("resize", this.fit);
+    this.sheet.querySelector(".paper-close").onclick = () => this.close();
+    this.sheet.querySelector(".paper-previous").onclick = () => this.turn(-1);
+    this.sheet.querySelector(".paper-next").onclick = () => this.turn(1);
     this.sheet.onkeydown = (e) => {
       if (e.key === "Escape") this.close();
+      if (e.key === "ArrowRight") this.turn(1);
+      if (e.key === "ArrowLeft") this.turn(-1);
     };
-    this.render();
-    try {
-      const response = await fetch(assetUrl("data/inspections-2025.json"));
-      if (!response.ok) throw new Error("Unavailable");
-      this.data = await response.json();
-      if (this.data.status !== "available") throw new Error("Unavailable");
-    } catch {
-      this.error = true;
+    this.drawn = new Set();
+    this.turn(0);
+    this.sheet.querySelector(".paper-close").focus();
+  }
+  turn(direction) {
+    const next = Math.max(0, Math.min(2, this.page + direction));
+    if (direction && next === this.page) return;
+    this.page = next;
+    if (direction) this.sheet.scrollTop = 0;
+    const pages = [...this.sheet.querySelectorAll(".paper-page")];
+    pages.forEach((el, i) => (el.hidden = i !== this.page));
+    this.sheet.querySelector(".paper-number").textContent =
+      `Pages ${this.page * 2 + 1}–${this.page * 2 + 2} · ${this.page + 1} / 3`;
+    this.sheet.querySelector(".paper-previous").disabled = this.page === 0;
+    this.sheet.querySelector(".paper-next").disabled = this.page === 2;
+    const page = pages[this.page];
+    if (direction && !matchMedia("(prefers-reduced-motion: reduce)").matches)
+      page.animate(
+        [
+          {
+            opacity: 0.4,
+            transform: `perspective(1000px) rotateY(${direction * 4}deg)`,
+          },
+          { opacity: 1, transform: "perspective(1000px) rotateY(0deg)" },
+        ],
+        { duration: 240, easing: "ease-out" },
+      );
+    if (!this.drawn.has(this.page)) {
+      this.drawn.add(this.page);
+      [makeBoroughChart, makeMonthlyChart, makeInspectionMap][this.page]();
     }
-    if (this.opened) this.render();
   }
   close() {
+    if (!this.opened) return;
     this.opened = false;
+    window.removeEventListener("resize", this.fit);
     if (this.ui) this.ui.clear();
     else
-      this.root.innerHTML = `<a class="return-adventure" href="${location.pathname}">Return to the adventure</a>`;
+      this.root.innerHTML = `<a class="return-adventure" href="${assetUrl("")}">Return to the adventure</a>`;
     this.after?.();
-  }
-  render() {
-    const d = this.data;
-    this.sheet.innerHTML = `<button class="paper-close" aria-label="Close City Records">Fold away ×</button><header class="newspaper-masthead"><div>NEW YORK CITY · PUBLIC RECORDS EDITION</div><h1>The City Records</h1><div class="paper-date">2025 INSPECTION REVIEW · DOHMH RECORDS</div></header>${this.error ? "<article><h2>Records unavailable</h2><p>The local inspection record could not be loaded. No figures have been substituted.</p></article>" : !d ? '<p role="status">Unfolding the newspaper…</p>' : `<div class="newspaper-columns"><article class="lead-story"><p class="paper-kicker">ABOVEGROUND</p><h2>${number(d.citywide.total)} visits.<br>One city.</h2><p class="paper-deck">The year’s initial rodent inspections tell a story about where the city looked.</p><img class="paper-rat" src="${assetUrl("art/newspaper-item-v2.png")}" alt="Illustrated folded City Records newspaper"><p class="drop-cap">City inspectors recorded ${number(d.citywide.total)} initial inspection events during 2025. ${number(d.citywide.active)} recorded active rat signs—${d.citywide.percent.toFixed(1)}% of the included inspections.</p><p>Brooklyn had the most initial inspections, at ${number(d.boroughs.Brooklyn.total)}. These are visits, not individual rats. Returning to the same property can produce another inspection event.</p><h3>Where the city looked</h3><table><thead><tr><th>Borough</th><th>Visits</th><th>Active signs</th></tr></thead><tbody>${BOROUGHS.map((b) => `<tr><th>${b}</th><td>${number(d.boroughs[b].total)}</td><td>${number(d.boroughs[b].active)}</td></tr>`).join("")}</tbody></table></article><article><p class="paper-kicker">A YEAR ABOVEGROUND</p><h2>A record of visits,<br>not a rat census</h2><p>Initial inspections follow complaints or proactive neighborhood indexing. Inspected properties are not a random sample of New York City.</p><p>More recorded findings can reflect more looking. An uninspected location is not evidence of no rats. Monthly differences alone do not establish their causes.</p><h3>What the inspectors recorded</h3><p>The active-sign total combines “Failed for Rat Activity” and “Failed for Rat Activity and Other Reason.” Each event is counted once. The denominator includes all included initial inspection events.</p><p>This snapshot has ${number(d.citywide.unknown)} missing or unrecognized outcomes. Unknown outcomes are reported separately and are never treated as negative findings.</p><aside class="handwritten"><small>A SQUIRREL’S MARGIN NOTE</small><p>“Still no squirrel section.”</p></aside><h3>From the records desk</h3><p class="paper-source">Source: NYC Open Data, Rodent Inspection, Department of Health and Mental Hygiene. January–December 2025; exact inspection type “Initial.” ${d.audit.exactDuplicateRows} identical published rows removed across all source fields; repeat property visits retained. Retrieved ${d.retrievedAt.slice(0, 10)} UTC.</p></article></div>`}`;
-    this.sheet.querySelector(".paper-close").onclick = () => this.close();
   }
 }

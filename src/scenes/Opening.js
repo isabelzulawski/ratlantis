@@ -327,6 +327,10 @@ export class Opening extends Phaser.Scene {
           })),
         ),
       );
+      this.bindObject(
+        this.dockworker.setInteractive({ useHandCursor: true }),
+        () => this.ui.cue?.element.click(),
+      );
       [600, 1070, 1450, 1810].forEach((x, i) => {
         const r = this.add
           .image(x, 535, "rat-atlas", "walk-a")
@@ -424,6 +428,7 @@ export class Opening extends Phaser.Scene {
         "A park squirrel gave me a newspaper. I can read it from my backpack.",
       );
       this.persist();
+      this.ui.records.open("newspaper");
     });
   }
   tryParkExit() {

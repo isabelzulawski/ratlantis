@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>NYC Rat Inspection Stories</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Load D3 before our chart functions. -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"
+    defer
+  ></script>
+  <script src="newspaper.js" defer></script>
+</head>
+
+<body>
+  <main>
+
+    <!-- ARTICLE 1: Borough comparison -->
+    <article id="borough-article">
+      <header>
+        <h1>
+          <h1>
+            Queens Takes the Lead! 2025 Records Reveal Highest Rat-Finding Rate
+          </h1>
+        </h1>
+
+        <p><em>
+          Borough rankings reveal an interesting story about the pests.
+        </em></p>
+      </header>
+
+      <p>
+        <p>
+            While Brooklyn had the most initial inspection visits in 2025,
+            Queens led the city in the share of initial inspections
+            finding rat activity. More than one in four initial inspection
+            visits in Queens found rat activity!
+            Inspectors recorded findings
+            at 25.6% of its 7,355 initial visits, ahead of the Bronx at
+            19.6%, Brooklyn at 17.4%, Manhattan at 16.2%, and
+            Staten Island at 6.3%.
+        </p>
+      </p>
+
+      <figure>
+        <svg
+          id="borough-chart"
+          role="img"
+          aria-label="Percentage of initial inspections finding rat activity by borough in 2025"
+          style="width: 100%; max-width: 900px;"
+        ></svg>
+
+        <figcaption>
+          Percentage of initial inspections finding rat activity,
+          January–December 2025.
+        </figcaption>
+      </figure>
+
+      <p id="status" role="status">Loading borough data…</p>
+
+      <p>
+        <p>
+            At a whopping 57,893 initial inspections, Brooklyn accounted
+            for the largest number of initial inspection visits in 2025.
+            Those visits produced 10,058 rat-activity findings, compared
+            with 1,883 in Queens. Do not be fooled by this disparity:
+            Brooklyn had more recorded findings, but Queens had the
+            higher percentage of inspections finding rat activity.
+        </p>
+      </p>
+
+      <p>
+        So which borough has the most rats? These records cannot
+        settle that question. They describe inspection visits,
+        and the properties selected for inspection may differ
+        across boroughs. A property can also appear more than
+        once. Queens tops the rate among inspected locations—not
+        a citywide rat census.
+      </p>
+    </article>
+
+    <hr>
+
+    <!-- ARTICLE 2: Monthly patterns -->
+    <article id="monthly-article">
+      <header>
+        <h2>December Jump in Queens Raises Questions</h2>
+
+        <p><em>
+          Inspection counts add context to a striking turn
+          in the chart.
+        </em></p>
+      </header>
+
+      <p>
+        Queens’ share of initial inspections finding rat activity
+        rose from 19.3% in November to 38.3% in December 2025.
+        December’s figure (the borough’s highest monthly
+        percentage of the year) represented 110 findings across
+        287 initial inspections.
+      </p>
+
+      <figure>
+        <svg
+          id="monthly-chart"
+          role="img"
+          aria-label="Monthly percentages of initial inspections finding rat activity by borough in 2025"
+          style="width: 100%; max-width: 900px;"
+        ></svg>
+
+        <figcaption>
+          Monthly percentage of initial inspections finding rat
+          activity. Each line represents one borough.
+        </figcaption>
+      </figure>
+
+      <p>
+        Yet the month with the highest percentage was not the
+        month with the most findings. In August, Queens recorded
+        433 findings across 2,400 inspections. Its rate was just
+        18.0%, but its finding count was nearly four times
+        December’s.
+      </p>
+
+      <p>
+        The boroughs did not follow a single calendar.
+        Brooklyn’s highest monthly rate came in September,
+        while Manhattan’s came in October. The Bronx peaked
+        in February.
+      </p>
+
+      <p>
+        These differences invite investigation, rather than a
+        simple seasonal explanation. Changes in the number and
+        locations of inspections could influence the pattern.
+        The records alone do not show whether weather, rat
+        behavior, or a shift in inspection coverage drove a
+        monthly rise.
+      </p>
+    </article>
+
+    <hr>
+
+    <!-- ARTICLE 3: Inspection map -->
+    <article id="map-article">
+      <header>
+        <h2>A Hotspot on the Map—but of What?</h2>
+
+        <p><em>
+          Overlapping inspection visits reveal where the city
+          looked and what it found.
+        </em></p>
+      </header>
+
+      <p>
+        The blue dots mark initial inspection visits across
+        New York City in 2025. Red dots identify visits that
+        found rat activity, drawn over the blue inspection layer.
+      </p>
+
+      <figure>
+        <p>
+          <span aria-hidden="true" style="color: #2d536f;">●</span>
+          All initial inspections
+
+          &nbsp;&nbsp;
+
+          <span aria-hidden="true" style="color: #c63c28;">●</span>
+          Rat-activity findings, overlaid on all inspections
+        </p>
+
+        <div style="max-width: 850px;">
+          <canvas
+            id="inspection-map"
+            width="850"
+            height="650"
+            role="img"
+            aria-label="NYC inspection map showing all initial inspections in blue and rat-activity findings in red"
+            style="width: 100%; height: auto;"
+          ></canvas>
+        </div>
+
+        <figcaption>
+          Initial inspection locations, January–December 2025.
+          Red findings are a subset of the blue inspection layer.
+        </figcaption>
+      </figure>
+
+      <p id="map-status" role="status">Loading map…</p>
+
+      <p>
+        Read the colors together. A concentration of red points
+        shows repeated recorded findings in an area, while the
+        blue layer provides context about inspection coverage.
+        Where inspectors make more visits, there are also more
+        opportunities to document rat activity.
+      </p>
+
+      <p>
+        Each dot represents a visit, not a rat or necessarily a
+        unique property. Repeat inspections can overlap at the
+        same location, making an area appear darker. The colors
+        do not measure rat populations or calculate a
+        neighborhood’s finding rate.
+      </p>
+
+      <p>
+        Empty space requires equal care: it may reflect a lack
+        of inspections, rather than a lack of rats. Records with
+        missing or unusable coordinates are excluded from the
+        map, but remain in the borough and monthly charts.
+      </p>
+    </article>
+
+    <hr>
+
+    <!-- Shared source and calculation notes -->
+    <footer>
+      <h2>About the Records</h2>
+
+      <p>
+        This analysis uses 144,314 initial inspection visits dated
+        January–December 2025 from the NYC DOHMH Rodent Inspection
+        dataset.
+      </p>
+
+      <p>
+        Rat-activity findings include
+        “Failed for Rat Activity” and
+        “Failed for Rat Activity and Other Reason.”
+        Percentages are findings divided by initial inspections
+        within each borough or borough-month.
+        The dataset records inspections; it is not a census of rats.
+      </p>
+
+      <p>
+        Map outlines: NYC Department of City Planning
+        borough boundaries.
+      </p>
+    </footer>
+
+  </main>
+</body>
+</html>
