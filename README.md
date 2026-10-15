@@ -1,3 +1,9 @@
+## Exploration and interface update — October 15
+
+Added forgiving crate steps and ledges in Times Square, Washington Square Park and Brooklyn. Brooklyn’s upper ledge holds the existing optional pendant, which joins the reusable wardrobe when collected. Journal notes are shortened for old and new saves and paginated inside the backpack. Click the player rat for a short current-story reminder; the first sewer landing also explains the accidental arrival. Completed director visits reopen costume selection without repeating onward directions. The illustrated shader is always enabled on WebGL, help uses the revised movement instructions, and character creation places Back left and Explore right.
+
+Editable provisional additions: platform positions in `src/data/config.js`; brief contextual thoughts in `src/data/plot-thoughts.js`; shortened journal presentation in `src/data/journal.js`. No new story destination or item has been introduced. Existing saves, newspaper charts and movement rules remain supported.
+
 ## Latest local art and ending revision — October 15
 
 All world backgrounds now have a quieter, more muted illustrated pass guided by the subway scenes, with the largest reductions in the opening street, Ratlantis neighborhood and cabinet theater. The director has natural rat proportions and gives revised pipe directions. The ending now connects the service pipe to a warm-lit grille that opens onto an empty audition-room view; the room remains visible while the rat stays at the vent. No humans or resolution of the misunderstanding are added. Existing saves remain compatible. See `QUIET-ART-ENDING.md` for source artwork, prompts, staging choices and verification. This supersedes earlier descriptions of the ending fading to black.

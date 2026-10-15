@@ -112,9 +112,15 @@ export function surface(s, x, y, w, h) {
     // The painted metal pipe lip is the platform; do not add a wooden plank.
     return s.add.graphics().setDepth(2).lineStyle(1, 0xcbb586, 0.25).lineBetween(x, y, x + w, y);
   }
+  if ((s.id === "brooklyn" && w < 600) || (s.id === "street" && x === 1090)) {
+    const floor = s.id === "street" ? 580 : 535;
+    const height = floor - y;
+    return s.add.image(x, floor, "art-details", height < 70 ? "box" : "stack")
+      .setOrigin(0,1).setDisplaySize(w,height).setDepth(3);
+  }
   if (s.id === "street" && w < 600) {
     return s.add
-      .image(x, y + h, "art-details", x === 420 ? "box" : "stack")
+      .image(x, y + h, "art-details", x === 420 || x === 960 ? "box" : "stack")
       .setOrigin(0, 1)
       .setDisplaySize(w, h)
       .setDepth(6);
@@ -124,6 +130,8 @@ export function surface(s, x, y, w, h) {
     edge.lineStyle(1, 0xe2c28a, 0.2).lineBetween(x, y, x + w, y);
     return edge;
   }
+  if (s.id === "park" && x === 420)
+    return s.add.image(x, y + h, "art-details", "box").setOrigin(0,1).setDisplaySize(w,h).setDepth(3);
   if (s.id === "station")
     return s.add
       .image(x, y, "art-details", "step")

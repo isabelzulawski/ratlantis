@@ -323,6 +323,10 @@ assert.equal(
 await page.waitForTimeout(1650);
 assert.equal((await pos()).id, "sewer");
 await page.waitForTimeout(500);
+if (await page.locator('[data-plot-thought="arrival"]').count()) {
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.waitForTimeout(150);
+}
 await page.waitForFunction(() => ratlantis.player.body.blocked.down);
 p = await screen(390, 545);
 await page.mouse.move(p.x, p.y);
@@ -362,9 +366,7 @@ await page.waitForTimeout(420);
 assert.equal((await pos()).id, "neighborhood");
 await page.screenshot({ path: "tests/neighborhood-v3.png" });
 await at(230, 500);
-await page
-  .getByRole("button", { name: "You can’t park that here!", exact: true })
-  .click();
+await click(245, 510);
 await page
   .getByRole("button", { name: "I’m trying to get to a Broadway audition." })
   .click();

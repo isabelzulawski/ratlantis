@@ -1,3 +1,4 @@
+import { plotThought } from "../data/plot-thoughts.js";
 import Phaser from "phaser";
 import { installIllustratedLook } from "../rendering/IllustratedPipeline.js";
 import { validObjectClick } from "../interaction.js";
@@ -147,6 +148,31 @@ export class Opening extends Phaser.Scene {
     this.chapter.setup();
     this.finale.setup();
     this.audioToggle();
+    // Clicking the protagonist offers a short present-tense plot reminder.
+    this.bindObject(this.rat.sprite.setInteractive({pixelPerfect:true,useHandCursor:true}), () =>
+      this.ui.message(plotThought(this.state, this.id)),
+    ).setDepth(17);
+    const ratInput = this.rat.sprite.input;
+    const pixelHit = ratInput.hitAreaCallback;
+    ratInput.hitAreaCallback = (area, x, y, object) => {
+      const point = this.input.activePointer.positionToCamera(this.cameras.main);
+      // NPCs, food and pickups always win when the rat stands in front of them.
+      const otherTarget = this.children.list.some(other => {
+        if (other === object || !other.input?.enabled || !other.visible || !other.getLocalPoint) return false;
+        const local = other.getLocalPoint(point.x, point.y);
+        return other.input.hitAreaCallback(other.input.hitArea, local.x, local.y, other);
+      });
+      return !otherTarget && pixelHit(area, x, y, object);
+    };
+    if (id === "sewer" && !this.state.flags.arrivalThoughtSeen) {
+      this.time.delayedCall(500, () => {
+        if (this.id !== "sewer" || this.locked) return;
+        this.state.flags.arrivalThoughtSeen = true;
+        this.persist();
+        this.ui.message(plotThought(this.state, "sewer"));
+        this.ui.root.firstChild.dataset.plotThought = "arrival";
+      });
+    }
   }
   transitionTo(id, spawn = null) {
     if (this.transitioning) return;
@@ -195,7 +221,7 @@ export class Opening extends Phaser.Scene {
       return;
     }
     this.ui.dialogue(
-      "Open Auditions…",
+      "An audition for a rat? Maybe I could try.",
       DIALOGUE.billboard.map((text) => ({
         text,
         action: () => {
@@ -321,7 +347,7 @@ export class Opening extends Phaser.Scene {
         .setDepth(13);
       this.ui.worldCue(this.dockworker, "You can’t park that here!", () =>
         this.ui.dialogue(
-          "…",
+          "That fall brought me here in a boat. I should ask where I am.",
           DIALOGUE.dockChoices.map((text, i) => ({
             text,
             action: () =>

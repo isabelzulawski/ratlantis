@@ -15,19 +15,14 @@ try {
  assert.equal(await page.evaluate(()=>ratlantis.cameras.main.postPipelines.length),1);
  await page.screenshot({path:'tests/shader-on.png'});
  await page.locator('#help').click();
- await page.locator('#look').click();
- assert.equal(await page.evaluate(()=>ratlantis.cameras.main.postPipelines.length),0);
+ assert.equal(await page.locator('#look').count(),0);
  await page.locator('#resume').click();
- await page.screenshot({path:'tests/shader-off.png'});
- await page.reload();
- await page.locator('#continue').click();
- assert.equal(await page.evaluate(()=>ratlantis.illustratedLook.enabled),false);
- await page.locator('#help').click();
- await page.locator('#look').click();
- await page.locator('#resume').click();
+ await page.evaluate(()=>localStorage.setItem('ratlantis-illustrated-look','off'));
+ await page.reload(); await page.locator('#continue').click();
+ assert.equal(await page.evaluate(()=>ratlantis.illustratedLook.enabled),true);
  await page.evaluate(()=>ratlantis.enter('park'));
  await page.waitForTimeout(200);
  assert.equal(await page.evaluate(()=>ratlantis.cameras.main.postPipelines.length),1);
  assert.deepEqual(errors,[]);
- console.log('WebGL shader compilation, toggle, preference reload and scene transition pass.');
+ console.log('WebGL shader compilation, always-on preference override/reload and scene transition pass.');
 } finally {await browser.close();}

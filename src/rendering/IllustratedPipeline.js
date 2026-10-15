@@ -9,7 +9,6 @@ export const LOOK = {
   vignette: 0.065,
 };
 const KEY = "RatlantisIllustrated";
-const PREFERENCE = "ratlantis-illustrated-look";
 
 const fragment = `
 precision mediump float;
@@ -54,22 +53,11 @@ class IllustratedPipeline extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline
 export function installIllustratedLook(scene) {
   const renderer = scene.game.renderer;
   const supported = renderer.type === Phaser.WEBGL;
-  let enabled = true;
-  try { enabled = localStorage.getItem(PREFERENCE) !== "off"; } catch {}
-  if (supported) renderer.pipelines.addPostPipeline(KEY, IllustratedPipeline);
-  const apply = () => {
+  if (supported) {
+    renderer.pipelines.addPostPipeline(KEY, IllustratedPipeline);
     scene.cameras.main.removePostPipeline(KEY);
-    if (supported && enabled) scene.cameras.main.setPostPipeline(KEY);
-  };
-  apply();
-  return {
-    supported,
-    get enabled() { return supported && enabled; },
-    toggle() {
-      enabled = !enabled;
-      apply();
-      try { localStorage.setItem(PREFERENCE, enabled ? "on" : "off"); } catch {}
-      return this.enabled;
-    },
-  };
+    scene.cameras.main.setPostPipeline(KEY);
+  }
+  // Always enabled when WebGL is available. Canvas keeps the original artwork.
+  return { supported, enabled: supported };
 }

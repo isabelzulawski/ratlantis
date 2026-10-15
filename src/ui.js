@@ -1,3 +1,4 @@
+import { journalNotes } from "./data/journal.js";
 import { FURS, DIALOGUE, ITEMS } from "./data/config.js";
 import { FUR_FILTER, itemPicture, assetUrl } from "./art/assets.js";
 import { fresh, load } from "./state.js";
@@ -74,7 +75,7 @@ export class UI {
         )
         .join(
           "",
-        )}</div><p id="colorName">Gray</p><button id="start">Explore →</button><button id="back" class="secondary">Back</button><p id="error" class="notice"></p>`,
+        )}</div><p id="colorName">Gray</p><div class="creation-actions"><button id="back" class="secondary">Back</button><button id="start">Explore →</button></div><p id="error" class="notice"></p>`,
     );
     const preview = () =>
       (this.root.querySelector(".preview").innerHTML =
@@ -208,7 +209,7 @@ export class UI {
               )
               .join("")
           : "<p>No items packed.</p>"
-      }</div><p id="dropNotice" class="notice"></p><div class="journal"><h3>Journal</h3>${state.journal.length ? state.journal.map((t) => `<p>• ${t}</p>`).join("") : "<p>No directions learned yet.</p>"}</div><button id="close">Close backpack</button>`,
+      }</div><p id="dropNotice" class="notice"></p><div class="journal"><h3>Journal</h3><div class="journal-notes"></div><div class="journal-paging"></div></div><button id="close">Close backpack</button>`,
       true,
     );
     this.root.querySelector("#close").onclick = () => this.clear();
@@ -226,6 +227,28 @@ export class UI {
     const right = document.createElement("div");
     right.className = "bag-journal";
     right.append(journal);
+    const notes = journalNotes(state);
+    let journalPage = 0;
+    const journalSize = innerWidth < 650 ? 2 : 4;
+    const drawJournal = () => {
+      const list = journal.querySelector(".journal-notes");
+      list.replaceChildren();
+      for (const text of notes.slice(journalPage * journalSize, journalPage * journalSize + journalSize)) {
+        const p = document.createElement("p"); p.textContent = `• ${text}`; list.append(p);
+      }
+      if (!notes.length) list.textContent = "No notes yet.";
+      const paging = journal.querySelector(".journal-paging");
+      paging.replaceChildren();
+      if (notes.length > journalSize) {
+        const newer = document.createElement("button"), older = document.createElement("button"), page = document.createElement("span");
+        newer.textContent = "←"; newer.setAttribute("aria-label", "Newer notes"); newer.disabled = journalPage === 0;
+        older.textContent = "→"; older.setAttribute("aria-label", "Earlier notes"); older.disabled = (journalPage + 1) * journalSize >= notes.length;
+        page.textContent = `${journalPage + 1} / ${Math.ceil(notes.length / journalSize)}`;
+        newer.onclick = () => {journalPage--; drawJournal();}; older.onclick = () => {journalPage++; drawJournal();};
+        paging.append(newer, page, older);
+      }
+    };
+    drawJournal();
     const layout = document.createElement("div");
     layout.className = "bag-layout";
     layout.append(left, right);
@@ -310,19 +333,8 @@ export class UI {
 
   help() {
     this.panel(
-      '<h2>Pause & help</h2><p>Hold the mouse button to move toward the pointer.<br>Release with the pointer above your rat to jump.<br>Release elsewhere to stop.</p><p>The cursor previews JUMP or STOP. Click the billboard or folded map to inspect. Hold and drag the pizza: your rat grips the crust and pulls it along the pavement. Open the backpack to drag items. Falls return you to safe ground.</p><p class="footer">Progress saves automatically. Travel to Brooklyn over the maintenance ledge. The ferry and Queens theater are reachable after their lessons.</p><button id="look">Illustrated look</button><button id="resume">Resume</button><button id="title" class="secondary">Title screen</button>',
+      '<h2>Pause & help</h2><p>Hold the mouse button to move toward the pointer.</p><p>Release with the pointer above your rat to jump.</p><p>Release elsewhere to stop.</p><p>The cursor previews JUMP or STOP. Click objects to inspect. Open the backpack to drag items. Falls return you to safe ground. Progress saves automatically.</p><button id="resume">Resume</button><button id="title" class="secondary">Title screen</button>',
     );
-    const look = this.scene.illustratedLook;
-    const lookButton = this.root.querySelector("#look");
-    const updateLookLabel = () => {
-      lookButton.textContent = look?.supported
-        ? `Illustrated look: ${look.enabled ? "on" : "off"}`
-        : "Illustrated look unavailable in this renderer";
-      lookButton.disabled = !look?.supported;
-      lookButton.setAttribute("aria-pressed", String(!!look?.enabled));
-    };
-    lookButton.onclick = () => { look.toggle(); updateLookLabel(); };
-    updateLookLabel();
     this.root.querySelector("#resume").onclick = () => this.clear();
     this.root.querySelector("#title").onclick = () => {
       this.scene.persist();

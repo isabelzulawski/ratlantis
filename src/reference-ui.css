@@ -407,3 +407,12 @@ button:hover,
 #overlay.inventory-dragging .panel * {
   pointer-events: none;
 }
+.creation-actions { display:flex; justify-content:space-between; align-items:center; gap:18px; }
+.creation-actions button { flex:1; }
+.bag-journal .journal { height:100%; display:flex; flex-direction:column; }
+.bag-journal .journal-notes { min-height:0; flex:1; overflow-y:auto; overflow-wrap:anywhere; }
+.bag-journal .journal h3, .bag-journal .journal-paging { flex-shrink:0; }
+.bag-journal .journal-notes p { margin:7px 0; line-height:1.45; }
+.bag-journal .journal-paging { display:flex; align-items:center; justify-content:center; gap:8px; }
+.bag-journal .journal-paging button { min-width:36px; padding:7px; font-size:12px; }
+.bag-journal .journal-paging span { font-size:11px; }

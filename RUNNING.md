@@ -62,13 +62,13 @@ Full route checks: `node tests/finale-browser.mjs` and `node tests/accessories-b
 
 The WebGL camera uses a single subtle color/texture pass: restrained saturation,
 navy shadows, warm highlights, static fine grain and a light edge vignette.
-Pause & Help → Illustrated look toggles it for comparison or performance; the
-preference is stored separately from adventure saves. Canvas renderers retain
+The look is always enabled with WebGL; the old toggle and saved off preference
+are no longer used. Canvas renderers retain
 original artwork. HTML dialogue, backpack and newspaper/D3 are not filtered.
 Edit `src/rendering/IllustratedPipeline.js` (`LOOK` strengths and GLSL) to tune it.
 No bloom, blur, flashing grain or sprite halos are applied.
 Run `node tests/shader-browser.mjs` with a server on port 5182 (or set
-`RATLANTIS_TEST_URL`) for the WebGL/toggle/reload/scene-transition check.
+`RATLANTIS_TEST_URL`) for the WebGL/always-on/reload/scene-transition check.
 
 Fitted costumes: edit attachment points in `src/art/costume-registration.js`;
 shared preview/world composition is in `src/art/costume-fit.js`. Full generated

@@ -28,31 +28,31 @@ export const EMOTIONS = [
     emotion: "joy",
     request: "The royal breadcrumb has been found. Show me joy.",
     choices: [
-      "My crumb! Oh, what a wonderful day!",
       "All that searching, and now it is gone.",
+      "My crumb! Oh, what a wonderful day!",
       "Who dared touch my breadcrumb?",
     ],
-    correct: 0,
+    correct: 1,
   },
   {
     emotion: "sorrow",
     request: "The breadcrumb has fallen into the drain. Show me sorrow.",
     choices: [
       "A crumb fit for a celebration!",
-      "My little crumb. I shall miss you.",
       "Bring it back this instant!",
+      "My little crumb. I shall miss you.",
     ],
-    correct: 1,
+    correct: 2,
   },
   {
     emotion: "anger",
     request: "Someone has stolen the last breadcrumb. Show me anger.",
     choices: [
+      "Who took it? Return my breadcrumb!",
       "What a lovely surprise!",
       "There is nothing left for me.",
-      "Who took it? Return my breadcrumb!",
     ],
-    correct: 2,
+    correct: 0,
   },
 ];
 export const FINAL_DIALOGUE = {

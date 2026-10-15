@@ -37,7 +37,7 @@ export class FinalChapters {
       .setVisible(false);
     if (s.id === "neighborhood") this.accessory("glasses", 915, 435);
     if (s.id === "brooklyn") {
-      this.accessory("pendant", 1350, 535);
+      this.accessory("pendant", 1385, 380);
       s.add.image(1490, 325, "art-plaque").setDisplaySize(195, 85);
       s.add
         .text(1490, 325, "FERRY →", {
@@ -105,9 +105,9 @@ export class FinalChapters {
       if (
         Math.hypot(s.player.body.center.x - x, s.player.body.bottom - y) >
           135 ||
-        (id === "glasses" && s.player.body.bottom > 480)
+        (s.player.body.bottom > y + 50)
       ) {
-        s.ui.message("Something glints on the high shelf.");
+        s.ui.message("Something glints up there.");
         return;
       }
       discoverAccessory(s.state, id);
@@ -116,7 +116,7 @@ export class FinalChapters {
       s.ui.message(
         `Found: ${id === "glasses" ? "crooked jewelry-ring glasses" : id === "pendant" ? "a subway-token pendant" : id === "cap" ? "a bottle-cap hat" : "a little scarf"}.`,
       );
-    });
+    }).setDepth(22);
   }
   board() {
     const s = this.s;
@@ -162,7 +162,7 @@ export class FinalChapters {
   directorTalk() {
     const s = this.s;
     if (s.state.flags.acting) {
-      s.ui.message(TEXT.directorDone, () => {}, s.director, "Director");
+      s.ui.message("Try anything on the rack. There is no wrong outfit.", () => openWardrobe(s), s.director, "Director");
       return;
     }
     s.state.flags.wardrobe = true;
