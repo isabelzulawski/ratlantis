@@ -1,5 +1,5 @@
 import { FUR_TINT } from "./assets.js";
-const POSE = {
+export const POSE = {
   idle: { foot: [308, 438], mouth: [436, 150] },
   "walk-a": { foot: [335, 436], mouth: [510, 273] },
   "walk-b": { foot: [290, 434], mouth: [480, 278] },
@@ -63,6 +63,8 @@ export class RatVisual {
         : vy < 0
           ? "jump"
           : "fall");
+    const texture = this.scene.state?.outfit?.body === "vest" ? "art-waistcoat" : "rat-atlas";
+    if (this.sprite.texture.key !== texture) this.sprite.setTexture(texture, this.current);
     if (next !== this.current) {
       this.current = next;
       this.sprite.setFrame(next);

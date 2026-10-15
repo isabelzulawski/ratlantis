@@ -5,6 +5,13 @@ export function drawWorld(s, id, width) {
   s.add.rectangle(width / 2, 337, width, 675, 0x091a27).setDepth(-30);
   const placement = {
     street: ["street", 24, 675],
+    ferry: ["ferry", 0, 735],
+    queens: ["queens", 0, 815],
+    auditionPipe: ["conduit", 0, 795],
+    vent: ["vent", 0, 675],
+    auditionRoom: ["auditionRoom", 0, 675],
+    bridge: ["bridge", 0, 850],
+    brooklyn: ["brooklyn", 0, 720],
     downtown: ["downtown", 24, 675],
     park: ["park", 0, 740],
     station: ["station", 0, 825],
@@ -21,6 +28,16 @@ export function drawWorld(s, id, width) {
       .setDisplaySize(width, h)
       .setDepth(-20);
     s.background.setTint(0xc4c6c9);
+    if (id === "vent") {
+      // Crop uniformly so the pipe floor meets the y=535 collision surface and
+      // the small horizontal opening sits ahead of the approaching rat.
+      s.background.setDisplaySize(1511, 850).setPosition(-300, -48);
+    }
+    if (id === "auditionRoom") {
+      // Uniform scale, then crop: match the painted vent lip to y=535 without
+      // squeezing the human-scale room into a narrow game viewport.
+      s.background.setDisplaySize(1600, 900).setPosition(-65, -85);
+    }
     if (id === "arrivalStation") {
       // Keep the source artwork's proportions; show a platform crop instead
       // of squeezing the wide station into this shorter scene.
@@ -48,7 +65,7 @@ export function drawWorld(s, id, width) {
   } else if (id === "arrivalStation") {
   } else if (id === "neighborhood") {
     s.add.image(1920, 270, "art-plaque").setDisplaySize(300, 135);
-    label(s, 1920, 270, "ONWARD TRAVEL\nUnavailable in this build", 14)
+    label(s, 1920, 270, "BROOKLYN BRIDGE →", 14)
       .setOrigin(0.5)
       .setAlign("center");
   } else if (id === "sewer") {
@@ -91,6 +108,10 @@ export function label(s, x, y, text, size = 16) {
 }
 export function surface(s, x, y, w, h) {
   if (s.id === "ride") return;
+  if (s.id === "auditionRoom") {
+    // The painted metal pipe lip is the platform; do not add a wooden plank.
+    return s.add.graphics().setDepth(2).lineStyle(1, 0xcbb586, 0.25).lineBetween(x, y, x + w, y);
+  }
   if (s.id === "street" && w < 600) {
     return s.add
       .image(x, y + h, "art-details", x === 420 ? "box" : "stack")

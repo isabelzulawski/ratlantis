@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { installIllustratedLook } from "../rendering/IllustratedPipeline.js";
 import { validObjectClick } from "../interaction.js";
 import { SCENES, MOVEMENT, DIALOGUE } from "../data/config.js";
 import { loadAssets, setupArtFrames, FUR_TINT } from "../art/assets.js";
@@ -8,6 +9,8 @@ import { save, learn, releaseAction, collectNewspaper } from "../state.js";
 import { Movement } from "../input/Movement.js";
 import { Pizza } from "../objects/Pizza.js";
 import { UI } from "../ui.js";
+import { FinalChapters } from "../chapters/FinalChapters.js";
+import { BrooklynChapter } from "../chapters/BrooklynChapter.js";
 export class Opening extends Phaser.Scene {
   constructor() {
     super("Opening");
@@ -22,7 +25,10 @@ export class Opening extends Phaser.Scene {
   }
   create() {
     setupArtFrames(this);
+    this.illustratedLook = installIllustratedLook(this);
     this.ui = new UI(this);
+    this.chapter = new BrooklynChapter(this);
+    this.finale = new FinalChapters(this);
     this.locked = true;
     this.held = false;
     this.movement = new Movement(this);
@@ -51,6 +57,8 @@ export class Opening extends Phaser.Scene {
     this.player?.body.setVelocityX(0);
   }
   resetWorld() {
+    this.chapter?.cleanup();
+    this.finale?.cleanup();
     this.pizzaControl?.cancel();
     this.pizzaControl = null;
     this.objectPress = null;
@@ -74,10 +82,22 @@ export class Opening extends Phaser.Scene {
     document.querySelector("#world-cue")?.remove();
     this.ui.cue = null;
   }
-  enter(id) {
+  enter(id, spawn = null) {
     this.resetWorld();
     this.id = id;
     this.state.scene = id;
+    this.state.journal = this.state.journal.map((line) =>
+      line.replace(
+        "Onward travel is unavailable in this build.",
+        "Take the bridge maintenance ledge past the delivery depot.",
+      ),
+    );
+    this.state.journal = this.state.journal.map((line) =>
+      line.replace(
+        "Ferry travel is not available yet.",
+        "Follow the ferry boarding passage at the right of the Brooklyn alcove.",
+      ),
+    );
     this.persist();
     this.locked = false;
     this.movement.reset();
@@ -93,7 +113,7 @@ export class Opening extends Phaser.Scene {
       this.platforms.add(body);
     });
     this.player = this.physics.add
-      .sprite(...def.spawn, "rat-atlas", 0)
+      .sprite(...(spawn || def.spawn), "rat-atlas", 0)
       .setScale(0.13)
       .setAlpha(0);
     this.player.body
@@ -114,7 +134,7 @@ export class Opening extends Phaser.Scene {
     );
     this.rat = new RatVisual(this, this.state.fur);
     this.playerArt = this.rat.sprite;
-    this.safe = { x: def.spawn[0], y: def.spawn[1] };
+    this.safe = { x: (spawn || def.spawn)[0], y: (spawn || def.spawn)[1] };
     this.cameras.main
       .resetFX()
       .setBounds(0, 0, def.width, 675)
@@ -124,15 +144,17 @@ export class Opening extends Phaser.Scene {
     this.cursor = this.add.graphics().setDepth(40);
     this.ui.hud(def.title);
     this.setupProps();
+    this.chapter.setup();
+    this.finale.setup();
     this.audioToggle();
   }
-  transitionTo(id) {
+  transitionTo(id, spawn = null) {
     if (this.transitioning) return;
     this.transitioning = true;
     this.freeze();
     this.cameras.main.fadeOut(160, 7, 18, 26);
     this.time.delayedCall(160, () => {
-      this.enter(id);
+      this.enter(id, spawn);
       this.cameras.main.fadeIn(230, 7, 18, 26);
     });
   }
@@ -310,7 +332,7 @@ export class Opening extends Phaser.Scene {
                     learn(
                       this.state,
                       "brooklyn",
-                      "Lead: a retired singer in Brooklyn may help. Onward travel is unavailable in this build.",
+                      "Lead: a retired busker in Brooklyn may help. Follow the bridge maintenance ledge past the delivery depot.",
                     );
                   if (i === 0)
                     learn(
@@ -471,6 +493,13 @@ export class Opening extends Phaser.Scene {
   update(time, delta) {
     if (!this.player) return;
     this.ui.positionBubble();
+    this.finale.update(time);
+    const singing =
+      this.singingActor && performance.now() < this.singingActor.until
+        ? this.singingActor.who
+        : null;
+    if (this.busker)
+      this.busker.setFrame(singing === "busker" ? "singing" : "idle");
     const p = this.input.activePointer.positionToCamera(this.cameras.main),
       panelOpen = !!this.ui.root.firstChild;
     this.drawCursor(p);
@@ -541,14 +570,30 @@ export class Opening extends Phaser.Scene {
       this.pizzaControl?.pressed &&
       this.pizzaControl.dragged &&
       this.pizzaControl.attached;
-    this.rat.update(delta, b.center.x, b.bottom, {
+    const performing =
+      this.performance && performance.now() < this.performance.until
+        ? this.performance
+        : null;
+    const lift =
+      performing && ["jump", "joy"].includes(performing.action)
+        ? Math.sin(((performance.now() - performing.start) / 600) * Math.PI) *
+          24
+        : 0;
+    this.rat.update(delta, b.center.x, b.bottom - lift, {
       speed: b.velocity.x,
       vy: b.velocity.y,
       grounded: b.blocked.down,
       facing: tug ? -1 : undefined,
-      frame: tug && Math.abs(b.velocity.x) < 8 ? "walk-a" : undefined,
+      frame: performing
+        ? performing.frame
+        : singing === "player"
+          ? "react"
+          : tug && Math.abs(b.velocity.x) < 8
+            ? "walk-a"
+            : undefined,
       paused: panelOpen,
     });
+    this.finale.updateAppearance();
     if (!panelOpen) {
       this.motes.forEach(({ mote, x, y, phase }) => {
         mote.x = x + Math.sin(time / 3700 + phase) * 9;
@@ -567,6 +612,8 @@ export class Opening extends Phaser.Scene {
         parcel.x = r.x + (left ? 7 : -7);
       });
       if (!this.locked && this.held && b.blocked.down) {
+        this.chapter.travel();
+        this.finale.travel();
         if (this.id === "street" && b.center.x > 2080) this.tryStreetExit();
         if (this.id === "street" && b.center.x < 1900)
           this.exitPrompted = false;
@@ -582,6 +629,10 @@ export class Opening extends Phaser.Scene {
     }
   }
   audioToggle() {
+    if (["vent", "auditionRoom"].includes(this.id)) {
+      if (this.gain) this.gain.gain.value = 0;
+      return;
+    }
     if (this.state.sound) {
       try {
         this.audio ??= new AudioContext();
@@ -598,6 +649,34 @@ export class Opening extends Phaser.Scene {
         this.gain.gain.value = 0.012;
       } catch {}
     } else if (this.gain) this.gain.gain.value = 0;
+  }
+  performPlayer(action) {
+    const frame =
+      action === "jump" ? "jump" : action === "sorrow" ? "fall" : "react";
+    this.performance = {
+      frame,
+      action,
+      start: performance.now(),
+      until: performance.now() + 600,
+    };
+    if (action === "left" || action === "right")
+      this.rat.facing = action === "left" ? -1 : 1;
+  }
+  playLessonNote(hz, duration) {
+    if (!this.state.sound) return;
+    this.audioToggle();
+    if (!this.audio) return;
+    const oscillator = this.audio.createOscillator(),
+      gain = this.audio.createGain();
+    oscillator.type = "triangle";
+    oscillator.frequency.value = hz;
+    const now = this.audio.currentTime;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.09, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    oscillator.connect(gain).connect(this.audio.destination);
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.04);
   }
   squeak() {
     if (!this.state.sound || !this.audio) return;

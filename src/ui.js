@@ -1,7 +1,8 @@
 import { FURS, DIALOGUE, ITEMS } from "./data/config.js";
 import { FUR_FILTER, itemPicture, assetUrl } from "./art/assets.js";
-import { fresh, load, dropItem } from "./state.js";
+import { fresh, load } from "./state.js";
 import { Newspaper } from "./data/Newspaper.js";
+import { BUSKER } from "./data/brooklyn.js";
 export class UI {
   constructor(scene) {
     this.scene = scene;
@@ -28,6 +29,11 @@ export class UI {
     this.scene.held = false;
   }
   panel(html, wide = false) {
+    // Opening another interface cancels lesson playback; completed rounds stay saved.
+    if (this.scene.chapter?.lessonUI?.card?.isConnected)
+      this.scene.chapter.lessonUI.cancel();
+    if (this.scene.finale?.dance?.card?.isConnected)
+      this.scene.finale.dance.cancel();
     this.scene.freeze();
     this.scene.physics.pause();
     this.scene.time.paused = true;
@@ -198,7 +204,7 @@ export class UI {
               .filter((id) => ITEMS[id])
               .map(
                 (id) =>
-                  `<${ITEMS[id].readable ? "button" : "div"} class="item ${ITEMS[id].readable ? "readable-item" : ""}" data-item="${id}"><img src="${ITEMS[id].readable ? assetUrl("art/newspaper-item-v2.webp") : itemPicture(this.scene, ITEMS[id].picture)}" alt="${ITEMS[id].name}"><span>${ITEMS[id].name}</span>${ITEMS[id].readable ? "<small>Read</small>" : ""}</${ITEMS[id].readable ? "button" : "div"}>`,
+                  `<${ITEMS[id].readable ? "button" : "div"} class="item ${ITEMS[id].readable ? "readable-item" : ""}" data-item="${id}"><img src="${id === "newspaper" ? assetUrl("art/newspaper-item-v2.webp") : itemPicture(this.scene, ITEMS[id].picture)}" alt="${ITEMS[id].name}"><span>${ITEMS[id].name}</span>${ITEMS[id].readable ? "<small>Read</small>" : ""}</${ITEMS[id].readable ? "button" : "div"}>`,
               )
               .join("")
           : "<p>No items packed.</p>"
@@ -226,42 +232,97 @@ export class UI {
     card.replaceChildren(layout, close);
     this.root
       .querySelector("[data-item='newspaper']")
-      ?.addEventListener("click", () =>
-        this.records.open("newspaper", () => this.backpack()),
-      );
-    this.root.querySelectorAll(".item:not(.readable-item)").forEach(
-      (el) =>
-        (el.onpointerdown = (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const ghost = document.createElement("img");
-          ghost.src = itemPicture(this.scene, "pizza");
-          ghost.className = "ghost";
-          document.body.append(ghost);
-          const move = (ev) => {
-            ghost.style.left = ev.clientX - 40 + "px";
-            ghost.style.top = ev.clientY - 30 + "px";
-          };
-          move(e);
-          this.root.firstChild.style.opacity = ".45";
-          const end = (ev) => {
-            dropItem(state, el.dataset.item, null);
-            ghost.remove();
-            this.root.firstChild.style.opacity = "1";
+      ?.addEventListener("click", () => {
+        if (performance.now() < (this.suppressReadUntil || 0)) return;
+        this.records.open("newspaper", () => this.backpack());
+      });
+    this.root
+      .querySelector('[data-item="ticket"]')
+      ?.addEventListener("click", () => {
+        if (performance.now() < (this.suppressReadUntil || 0)) return;
+        this.message(`On the back: “${BUSKER.ticketBack}.”`, () =>
+          this.backpack(),
+        );
+      });
+    this.root.querySelectorAll(".item").forEach((el) => {
+      el.onpointerdown = (e) => {
+        e.stopPropagation();
+        if (e.button !== 0) return;
+        const start = { x: e.clientX, y: e.clientY };
+        let dragged = false,
+          ghost = null;
+        const move = (ev) => {
+          if (
+            !dragged &&
+            Math.hypot(ev.clientX - start.x, ev.clientY - start.y) > 7
+          ) {
+            dragged = true;
+            ghost = document.createElement("img");
+            ghost.src = el.querySelector("img").src;
+            ghost.className = "ghost";
+            document.body.append(ghost);
+            this.root.classList.add("inventory-dragging");
+          }
+          if (ghost) {
+            ghost.style.left = `${ev.clientX - 40}px`;
+            ghost.style.top = `${ev.clientY - 30}px`;
+          }
+        };
+        const end = (ev) => {
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", end, true);
+          window.removeEventListener("pointercancel", end, true);
+          window.removeEventListener("blur", end);
+          ghost?.remove();
+          this.root.classList.remove("inventory-dragging");
+          this.scene.held = false;
+          this.scene.objectPress = null;
+          this.scene.inputBlockedUntil = performance.now() + 200;
+          if (!dragged) return;
+          this.suppressReadUntil = performance.now() + 300;
+          const rect = this.scene.game.canvas.getBoundingClientRect(),
+            camera = this.scene.cameras.main;
+          const x =
+            ((ev.clientX - rect.left) * 1200) / rect.width + camera.scrollX;
+          const y =
+            ((ev.clientY - rect.top) * 675) / rect.height + camera.scrollY;
+          const accepted = this.scene.chapter?.drop(el.dataset.item, x, y);
+          if (accepted) {
+            this.clear();
+            this.scene.chapter.afterFood();
+          } else
             this.root.querySelector("#dropNotice").textContent =
               "No suitable target here. The item returned to your backpack.";
-            window.removeEventListener("pointermove", move);
-            window.removeEventListener("pointerup", end);
-          };
-          window.addEventListener("pointermove", move);
-          window.addEventListener("pointerup", end, { once: true });
-        }),
-    );
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", end, {
+          once: true,
+          capture: true,
+        });
+        window.addEventListener("pointercancel", end, {
+          once: true,
+          capture: true,
+        });
+        window.addEventListener("blur", end, { once: true });
+      };
+    });
   }
+
   help() {
     this.panel(
-      '<h2>Pause & help</h2><p>Hold the mouse button to move toward the pointer.<br>Release with the pointer above your rat to jump.<br>Release elsewhere to stop.</p><p>The cursor previews JUMP or STOP. Click the billboard or folded map to inspect. Hold and drag the pizza: your rat grips the crust and pulls it along the pavement. Open the backpack to drag items. Falls return you to safe ground.</p><p class="footer">Progress saves automatically. Onward travel is unavailable in this build.</p><button id="resume">Resume</button><button id="title" class="secondary">Title screen</button>',
+      '<h2>Pause & help</h2><p>Hold the mouse button to move toward the pointer.<br>Release with the pointer above your rat to jump.<br>Release elsewhere to stop.</p><p>The cursor previews JUMP or STOP. Click the billboard or folded map to inspect. Hold and drag the pizza: your rat grips the crust and pulls it along the pavement. Open the backpack to drag items. Falls return you to safe ground.</p><p class="footer">Progress saves automatically. Travel to Brooklyn over the maintenance ledge. The ferry and Queens theater are reachable after their lessons.</p><button id="look">Illustrated look</button><button id="resume">Resume</button><button id="title" class="secondary">Title screen</button>',
     );
+    const look = this.scene.illustratedLook;
+    const lookButton = this.root.querySelector("#look");
+    const updateLookLabel = () => {
+      lookButton.textContent = look?.supported
+        ? `Illustrated look: ${look.enabled ? "on" : "off"}`
+        : "Illustrated look unavailable in this renderer";
+      lookButton.disabled = !look?.supported;
+      lookButton.setAttribute("aria-pressed", String(!!look?.enabled));
+    };
+    lookButton.onclick = () => { look.toggle(); updateLookLabel(); };
+    updateLookLabel();
     this.root.querySelector("#resume").onclick = () => this.clear();
     this.root.querySelector("#title").onclick = () => {
       this.scene.persist();
@@ -275,7 +336,7 @@ export class UI {
     const h = document.createElement("aside");
     h.id = "hud";
     h.className = "hud";
-    h.innerHTML = `<div class="location">${title.split(" · ")[0]}</div><div><button id="bag" aria-label="Backpack"><img src="${itemPicture(this.scene, "backpack")}" alt=""><span>Backpack</span></button><button id="help" aria-label="Pause / Help">Pause / Help</button><button id="sound">Sound: ${this.scene.state.sound ? "on" : "off"}</button></div>`;
+    h.innerHTML = `<div class="location">${title.split(" · ")[0]}</div><div><button id="bag" aria-label="Backpack"><img src="${itemPicture(this.scene, "backpack")}" alt=""><span>Backpack</span></button><button id="help" aria-label="Pause / Help">Pause / Help</button><button id="wardrobe">Wardrobe</button><button id="travel">Paths</button><button id="sound">Sound: ${this.scene.state.sound ? "on" : "off"}</button></div>`;
     if (this.scene.id === "downtown")
       h.querySelector(".location").style.visibility = "hidden";
     for (const event of ["pointerdown", "pointerup"])
@@ -285,6 +346,8 @@ export class UI {
         this.scene.player?.body.setVelocityX(0);
       });
     document.body.append(h);
+    h.querySelector("#wardrobe").onclick = () => this.scene.finale.wardrobe();
+    h.querySelector("#travel").onclick = () => this.scene.finale.map();
     h.querySelector("#bag").onclick = () => this.backpack();
     h.querySelector("#help").onclick = () => this.help();
     h.querySelector("#sound").onclick = () => {

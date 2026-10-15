@@ -1,0 +1,127 @@
+.panel.singing-panel {
+  width: min(800px, 96vw);
+  min-height: 540px;
+  padding: 110px 115px 100px;
+  background: transparent url("/art/singing-board-v1.webp") center/100% 100%
+    no-repeat;
+  text-align: center;
+  filter: drop-shadow(0 8px 18px #0009);
+}
+.singing-panel h2 {
+  font:
+    bold 24px/1.25 Palatino,
+    Georgia,
+    serif;
+  margin: 0 0 12px;
+}
+.singing-panel p {
+  font:
+    16px/1.4 Palatino,
+    Georgia,
+    serif;
+  color: #34413d;
+}
+.singing-panel .lesson-status {
+  min-height: 46px;
+}
+.note-controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.singing-panel .note-controls button {
+  background: transparent url("/art/brooklyn-items-v1.webp") right center/300%
+    100% no-repeat;
+  width: 100px;
+  height: 100px;
+  min-height: 100px;
+  padding: 20px 12px;
+  color: #f7e6b9;
+  font:
+    bold 24px/1.1 Georgia,
+    serif;
+  text-shadow: 0 1px 2px #061824;
+}
+.note-controls button span {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+.singing-panel .note-controls button:disabled {
+  opacity: 0.9;
+  cursor: default;
+}
+.singing-panel .note-controls button.lit {
+  filter: brightness(1.7);
+  outline: 2px dashed #9e7038;
+  outline-offset: -13px;
+}
+.lesson-actions {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.singing-panel .lesson-actions button {
+  background: transparent url("/art/dialogue-paper-v4.webp") center/100% 100%
+    no-repeat;
+  color: #34413d;
+  font-size: 11px;
+  padding: 14px;
+}
+@media (max-width: 600px) {
+  .panel.singing-panel {
+    padding: 80px 55px 70px;
+    min-height: 490px;
+  }
+  .singing-panel h2 {
+    font-size: 19px;
+  }
+  .singing-panel p {
+    font-size: 13px;
+  }
+  .singing-panel .note-controls button {
+    width: 65px;
+    height: 75px;
+    min-height: 75px;
+    font-size: 18px;
+  }
+  .note-controls {
+    gap: 0;
+  }
+}
+.lesson-performers img {
+  position: absolute;
+  top: 135px;
+  width: 72px;
+  height: 100px;
+  object-fit: contain;
+  transition: transform 0.15s;
+}
+.lesson-performers .busker-portrait {
+  left: 22px;
+}
+.lesson-performers .player-portrait {
+  right: 22px;
+}
+.lesson-performers img.singing {
+  transform: translateY(-4px) rotate(-3deg);
+}
+@media (max-width: 600px) {
+  .lesson-performers img {
+    width: 42px;
+    height: 65px;
+  }
+  .lesson-performers .busker-portrait {
+    left: 7px;
+  }
+  .lesson-performers .player-portrait {
+    right: 7px;
+  }
+}
+.singing-panel .note-controls button {
+  background-image: var(--note-art);
+  background-size: 100% 100%;
+  background-position: center;
+}

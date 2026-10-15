@@ -1,9 +1,25 @@
+## Latest local art and ending revision — October 15
+
+All world backgrounds now have a quieter, more muted illustrated pass guided by the subway scenes, with the largest reductions in the opening street, Ratlantis neighborhood and cabinet theater. The director has natural rat proportions and gives revised pipe directions. The ending now connects the service pipe to a warm-lit grille that opens onto an empty audition-room view; the room remains visible while the rat stays at the vent. No humans or resolution of the misunderstanding are added. Existing saves remain compatible. See `QUIET-ART-ENDING.md` for source artwork, prompts, staging choices and verification. This supersedes earlier descriptions of the ending fading to black.
+
+## Latest local wardrobe revision — October 15
+
+The director’s introduction is now “Every audition needs a costume! Try anything on the rack. There is no wrong outfit.” The wardrobe heading “The dressing rail” is removed. New generated portraits show the player wearing each of the nine rack items. Pose-specific fitted artwork replaces the loose icon overlays in both the preview and world; saved mix-and-match outfits remain supported. See `FULL-GAME-REPORT.md` for assets, prompts, editable attachment points and verification.
+
+## Latest local chapter revisions — October 14
+
+The neighborhood sign now reads “Brooklyn Bridge →”. The bridge has no scarf or crown collectibles, and its painted right arrow has no bridge pictogram. The busker opens with “I don’t perform anymore.” His ticket gift is “Good luck. Have this ferry ticket.” There is no follow-up ticket-back dialogue bubble; the ticket remains readable in the backpack.
+
+The ferry no longer contains loose sliding objects or an object-storage prerequisite. Click the worker to hear “This ferry has always had great rhythm. Want to see what I mean?” Choose “I guess so” to begin “Find the rhythm of the sea”, or “I’m not so sure...” to return to exploring. Completion directs the player through the passage to Queens. These changes supersede the earlier planning notes about securing deck objects and bridge accessories below. Existing saves remain compatible.
+
 Ratlantis
+Full Level One update: the playable route now continues through the Staten Island ferry’s rat-maintained deck, Queens electrical-cabinet theater, Manhattan service conduit and silent audition-room vent. Dance practice/eight-cue rehearsal, all nine freely selectable costume pieces, three emotion challenges, optional accessories, wardrobe and visited-path shortcuts are implemented. Existing saves remain compatible. See FULL-GAME-REPORT.md for verification, editable settings and provisional creative choices; it supersedes historical “planned” or unavailable-chapter descriptions below.
+Brooklyn chapter update: the neighborhood now connects to a playable bridge maintenance ledge and the retired busker’s Brooklyn alcove. Both routes support return travel. Bread beside the underground café is a collectible alternative to pizza; either food must be dragged manually from the backpack onto the nearby busker. Three fixed 3/4/5-note rounds earn singing, then the supplied ferry-ticket exchange and “Ask for the rat with the mop” lead end this chapter. Existing version-1 saves remain compatible; completed rounds, food exchange, skill and gift are saved. See BROOKLYN-CHAPTER.md for editable settings, provisional creative details and verification. This supersedes the “planned” Brooklyn status and unresolved decisions below.
 Current newspaper integration: the three articles and D3 visualizations supplied in Desktop/newspaper now replace the static editorial spread. Previous/Next buttons flip between borough, monthly and inspection-map pages. The supplied CSV is preserved byte for byte, with original calculations and filters. See NEWSPAPER-INTEGRATION.md for editable files and verification. This supersedes the historical static-newspaper notes below.
 Latest visual update: the Broadway billboard, smaller advertisements, downtown direction and park notices are painted into their backgrounds. Interfaces now use reference-derived illustrated cloud, canvas-backpack, paper and brass-sign assets. Dialogue displays in uppercase with corrected grammar. See REFERENCE-ART-PASS.md for current artwork, verification and provisional details; it supersedes the visual implementation descriptions in SECTION-POLISH.md.
 Historical presentation update: dialogue is now anchored to characters as thought bubbles. The squirrel directs the player to the lamppost, then gives the newspaper after the post-reading exchange. Posters and newspaper currently use a static editorial spread with no data controls; the D3 implementation described in section 18 is retained separately for collaborative graph work, not connected to the game UI. See SECTION-POLISH.md for the current implementation and code locations. This update supersedes the older interaction/conversation descriptions below.
 Project status
-This project implements the opening adventure through the initial Ratlantis neighborhood, now including Washington Square Park and optional City Records data reading. Run instructions are in RUNNING.md. Later mentor lessons, ferry, Queens theater and the final audition-room vent remain design plans, not implemented scenes.
+This project implements the opening adventure through the initial Ratlantis neighborhood, now including Washington Square Park and optional City Records data reading. Run instructions are in RUNNING.md. The singing, dancing and acting chapters and the final vent ending are implemented locally. The newspaper/data experience remains optional and unchanged.
 The current route is Times Square → animated downtown travel → Washington Square Park → Broadway–Lafayette subway and train → accidental drainage descent → Ratlantis. No humans appear. The Broadway misunderstanding remains unresolved.
 Normal entry is `/`; Data Visualization presentation entry is `/?data=newspaper`. The direct data entry never loads, overwrites or advances a saved game.
 The sections below retain the full adventure design, with the revised park and data component described in sections 8 and 18. Current technical values and approved opening dialogue live in `src/data/config.js`.
@@ -189,13 +205,13 @@ Stage	Location	Main event
 6	Drainage passage	Accidentally slide into the sewers
 7	Ratlantis arrival	Land in an abandoned tin-can boat
 8	Underground neighborhood	Discover homes, businesses, and working rats
-9	Bridge to Brooklyn	Travel to the retired busker (planned)
-10	Brooklyn	Exchange food for a singing lesson (planned)
-11	Brooklyn departure	Receive a ferry ticket as a gift (planned)
-12	Ferry	Help the ferry worker and learn to dance (planned)
-13	Queens	Design a costume and learn acting (planned)
-14	Return toward Manhattan	Follow the director’s directions (planned)
-15	Audition building	Crawl to a vent overlooking the audition room (planned)
+9	Bridge to Brooklyn	Travel to the retired busker
+10	Brooklyn	Exchange food for a singing lesson
+11	Brooklyn departure	Receive a ferry ticket as a gift
+12	Ferry	Help the ferry worker and learn to dance
+13	Queens	Design a costume and learn acting
+14	Return toward Manhattan	Follow the director’s directions
+15	Audition building	Crawl to a vent overlooking the audition room
 
 
 The mentor order is fixed, but completed locations can be revisited.

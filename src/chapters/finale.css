@@ -1,0 +1,220 @@
+.dance-track {
+  position: relative;
+  height: 90px;
+  overflow: hidden;
+  border-bottom: 2px solid #9b8049;
+  margin: 15px 0;
+  background: #e8dbbc55;
+}
+.beat-line {
+  position: absolute;
+  left: 20%;
+  height: 100%;
+  width: 4px;
+  background: #ad7d28;
+  box-shadow: 0 0 0 4px #c69a3d33;
+}
+.dance-cue {
+  position: absolute;
+  top: 20px;
+  font: bold 36px Georgia;
+  color: #243c49;
+  transform: translateX(-50%);
+}
+.dance-cue.ready {
+  outline: 2px dashed #98702a;
+  border-radius: 50%;
+  color: #81581a;
+}
+.dance-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.dance-controls button small {
+  display: block;
+  font-size: 11px;
+}
+.dance-controls button.lit {
+  filter: brightness(1.6);
+}
+.panel.wardrobe-panel {
+  width: min(900px, 96vw);
+  max-height: 94vh;
+  padding: 65px 75px;
+  background-image: url("/art/singing-board-v1.webp");
+  text-align: center;
+}
+.wardrobe-layout {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+}
+.wardrobe-preview {
+  position: relative;
+  height: 250px;
+  align-self: center;
+}
+.wardrobe-preview > img {
+  width: 170px;
+  height: 230px;
+  object-fit: contain;
+}
+.wardrobe-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+}
+.wardrobe-options button {
+  width: 110px;
+  padding: 8px;
+  min-height: 95px;
+  font-size: 9px;
+  background-image: url("/art/dialogue-paper-v4.webp");
+  color: #293d43;
+}
+.wardrobe-options img {
+  width: 65px;
+  height: 55px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+.wardrobe-options button.selected {
+  outline: 2px dashed #997239;
+  outline-offset: -6px;
+}
+.wardrobe-panel h3 {
+  color: #36423d;
+}
+.wardrobe-panel .footer {
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .panel.wardrobe-panel {
+    padding: 55px 35px;
+  }
+  .wardrobe-layout {
+    grid-template-columns: 95px 1fr;
+  }
+  .wardrobe-preview > img {
+    width: 95px;
+  }
+  .wardrobe-options button {
+    width: 74px;
+  }
+  .wardrobe-options img {
+    width: 45px;
+  }
+}
+.panel.wardrobe-panel {
+  padding: 100px 80px 55px;
+  max-height: 96vh;
+  overflow: auto;
+}
+.wardrobe-panel h2 {
+  font-size: 23px;
+  margin: 0 0 8px;
+}
+.wardrobe-panel h3 {
+  font-size: 12px;
+  margin: 6px 0;
+  letter-spacing: 1px;
+}
+.wardrobe-panel .wardrobe-options button {
+  min-height: 66px;
+  width: 105px;
+  padding: 6px;
+  font-size: 9px;
+}
+.wardrobe-panel .wardrobe-options img {
+  width: 52px;
+  height: 35px;
+}
+.wardrobe-panel [data-accessory],
+.wardrobe-panel [data-clear-accessories] {
+  min-height: 35px !important;
+}
+.wardrobe-panel p.footer {
+  margin: 6px 0;
+  font-size: 11px;
+}
+.wardrobe-panel .wardrobe-preview {
+  height: 230px;
+}
+.wardrobe-panel [data-ready],
+.wardrobe-panel [data-close] {
+  padding: 12px 20px;
+  font-size: 11px;
+  min-height: 40px;
+}
+.panel.wardrobe-panel {
+  width: min(850px, 96vw);
+  padding: 105px 78px 80px;
+}
+.wardrobe-panel .wardrobe-layout {
+  grid-template-columns: 165px 1fr;
+  gap: 14px;
+}
+.wardrobe-panel h2 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+.wardrobe-panel h3 {
+  font-size: 11px;
+  margin: 4px 0;
+}
+.wardrobe-panel .wardrobe-options button {
+  width: 98px;
+  min-height: 54px;
+  padding: 4px;
+  font-size: 8px;
+}
+.wardrobe-panel .wardrobe-options img {
+  height: 26px;
+  width: 45px;
+}
+.wardrobe-panel .wardrobe-options p {
+  font-size: 12px;
+  margin: 4px;
+}
+.wardrobe-panel [data-clear-accessories] {
+  min-height: 30px !important;
+}
+.wardrobe-panel .footer {
+  line-height: 1.2 !important;
+  margin: 3px 0 !important;
+}
+.wardrobe-panel .wardrobe-preview {
+  height: 230px;
+}
+/* Base rat and fitted costume frames share one square pose coordinate system. */
+.wardrobe-panel .wardrobe-preview > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.wardrobe-panel .wardrobe-options img {
+  width: 54px;
+  height: 45px;
+}
+/* Keep the final room visible and the rat explorable at the vent ledge. */
+.ending-caption {
+  position: fixed;
+  right: 3vw;
+  bottom: 4vh;
+  padding: 25px 35px;
+  max-width: 300px;
+  z-index: 8;
+  text-align: center;
+  color: #303c3f;
+  font: 18px Georgia, serif;
+  background: url("/art/dialogue-paper-v4.webp") center / 100% 100% no-repeat;
+  border: 0;
+}
+.ending-caption p { margin: 0 0 12px; }
+.ending-caption button { font-size: 11px; }

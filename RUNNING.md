@@ -53,3 +53,24 @@ To preview the Pages build locally, run `GITHUB_ACTIONS=true pnpm build` then
 `GITHUB_ACTIONS=true pnpm exec vite preview` and open `/ratlantis/` on the preview server.
 
 Current newspaper: open /?data=newspaper to preview the supplied three-page D3 component. See NEWSPAPER-INTEGRATION.md. Run `node tests/data-browser.mjs` with the dev server running to check it, or set RATLANTIS_TEST_URL to a production preview URL ending with /ratlantis/.
+
+Brooklyn chapter checks: `node tests/brooklyn-browser.mjs` while the local server runs (or set RATLANTIS_TEST_URL to a production preview). Editable dialogue, pitches and melodies are in src/data/brooklyn.js. See BROOKLYN-CHAPTER.md.
+
+Full route checks: `node tests/finale-browser.mjs` and `node tests/accessories-browser.mjs` with the server running. Final chapter dialogue/cue settings: src/data/finale.js. See FULL-GAME-REPORT.md for provisional details and new artwork.
+
+### Illustrated shader look
+
+The WebGL camera uses a single subtle color/texture pass: restrained saturation,
+navy shadows, warm highlights, static fine grain and a light edge vignette.
+Pause & Help → Illustrated look toggles it for comparison or performance; the
+preference is stored separately from adventure saves. Canvas renderers retain
+original artwork. HTML dialogue, backpack and newspaper/D3 are not filtered.
+Edit `src/rendering/IllustratedPipeline.js` (`LOOK` strengths and GLSL) to tune it.
+No bloom, blur, flashing grain or sprite halos are applied.
+Run `node tests/shader-browser.mjs` with a server on port 5182 (or set
+`RATLANTIS_TEST_URL`) for the WebGL/toggle/reload/scene-transition check.
+
+Fitted costumes: edit attachment points in `src/art/costume-registration.js`;
+shared preview/world composition is in `src/art/costume-fit.js`. Full generated
+portraits/layers and prompts are listed in `FULL-GAME-REPORT.md`. Run
+`node tests/costume-browser.mjs` against port 5182 (or `RATLANTIS_TEST_URL`).

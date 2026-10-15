@@ -56,6 +56,15 @@ export function releaseAction(player, pointer, threshold) {
   return player.y - pointer.y >= threshold ? "jump" : "stop";
 }
 export function dropItem(state, item, target) {
-  // This section deliberately has no valid item recipients.
-  return { accepted: false, item, target, inventory: state.inventory };
+  const accepted =
+    target === "busker" &&
+    !state.flags.buskerFed &&
+    ["pizza", "bread"].includes(item) &&
+    state.inventory.includes(item);
+  if (accepted) {
+    state.inventory.splice(state.inventory.indexOf(item), 1);
+    state.flags.buskerFed = true;
+    state.singingRound = 0;
+  }
+  return { accepted, item, target, inventory: state.inventory };
 }

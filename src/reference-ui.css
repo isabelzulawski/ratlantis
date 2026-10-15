@@ -88,7 +88,11 @@ button:hover,
   min-height: 225px;
 }
 .character-bubble h2 {
-  font: 400 15px/1.65 "Palatino", "Book Antiqua", Georgia, serif;
+  font:
+    400 15px/1.65 "Palatino",
+    "Book Antiqua",
+    Georgia,
+    serif;
   letter-spacing: 0.25px;
   text-transform: uppercase;
   color: #455052;
@@ -108,7 +112,11 @@ button:hover,
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  font: 400 12px/1.5 "Palatino", "Book Antiqua", Georgia, serif;
+  font:
+    400 12px/1.5 "Palatino",
+    "Book Antiqua",
+    Georgia,
+    serif;
   letter-spacing: 0.3px;
   padding: 16px 30px;
   margin: 0;
@@ -147,7 +155,11 @@ button:hover,
   border: 0;
   border-radius: 0;
   padding: 38px 48px 40px;
-  font: 400 12px/1.6 "Palatino", "Book Antiqua", Georgia, serif;
+  font:
+    400 12px/1.6 "Palatino",
+    "Book Antiqua",
+    Georgia,
+    serif;
   text-transform: uppercase;
   color: #455052;
   letter-spacing: 0.25px;
@@ -169,8 +181,8 @@ button:hover,
   border-radius: 0;
   bottom: -38px;
   transform: translateX(-50%);
-  background: transparent url("/art/ui-thought-v2.webp") -98px -105px/215px 144px
-    no-repeat;
+  background: transparent url("/art/ui-thought-v2.webp") -98px -105px/215px
+    144px no-repeat;
   mask-image:
     radial-gradient(ellipse 11px 10px at 20px 8px, #000 90%, transparent 100%),
     radial-gradient(ellipse 8px 7px at 30px 21px, #000 90%, transparent 100%),
@@ -383,4 +395,15 @@ button:hover,
   .bag-panel #close {
     font-size: 9px;
   }
+}
+#overlay.inventory-dragging {
+  background: transparent;
+  pointer-events: none;
+}
+#overlay.inventory-dragging .panel {
+  opacity: 0.06;
+}
+#overlay.inventory-dragging .panel,
+#overlay.inventory-dragging .panel * {
+  pointer-events: none;
 }

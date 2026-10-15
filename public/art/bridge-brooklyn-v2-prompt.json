@@ -1,0 +1,6 @@
+{
+  "source": "bridge-brooklyn-v1.png",
+  "edit": "Remove only the little bridge pictogram beside the right-pointing arrow. Preserve arrow, architecture, composition, ledge position, nighttime palette and ink texture.",
+  "output": "bridge-brooklyn-v2.png",
+  "date": "2026-10-14"
+}

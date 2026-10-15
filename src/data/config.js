@@ -21,6 +21,13 @@ export const FURS = {
 };
 export const ITEMS = {
   pizza: { name: "Pizza piece", picture: "pizza" },
+  bread: { name: "Bread piece", picture: "bread", chapter: true },
+  ticket: {
+    name: "Ferry ticket",
+    picture: "ticket",
+    chapter: true,
+    readable: true,
+  },
   newspaper: {
     name: "Discarded newspaper",
     picture: "newspaper",
@@ -41,7 +48,10 @@ export const DIALOGUE = {
       "Ah yes, show biz! You need connections. Personally, the humans love me.",
     ],
     ["Rat", "They do?"],
-    ["Squirrel", "Of course, they bring me nuts. Very established relationship."],
+    [
+      "Squirrel",
+      "Of course, they bring me nuts. Very established relationship.",
+    ],
     [
       "Squirrel",
       "But you should see what they say about you rats. Check that lamppost to the right.",
@@ -64,7 +74,7 @@ export const DIALOGUE = {
   dockReplies: [
     "Ratlantis. Mind the deliveries.",
     "That entry pipe is too high to reach from here.",
-    "A retired singer in Brooklyn may be able to help.",
+    "A retired busker in Brooklyn may help. Take the maintenance ledge across the bridge, past the delivery depot.",
   ],
 };
 export const SCENES = {
@@ -141,6 +151,49 @@ export const SCENES = {
     ],
     exit: 1660,
     next: "neighborhood",
+  },
+  ferry: {
+    title: "Staten Island ferry · maintenance deck",
+    width: 1600,
+    spawn: [150, 485],
+    platforms: [[0, 535, 1600, 60]],
+  },
+  queens: {
+    title: "Queens · cabinet theater",
+    width: 1600,
+    spawn: [150, 485],
+    platforms: [[0, 535, 1600, 60]],
+  },
+  auditionPipe: {
+    title: "Manhattan · service conduit",
+    width: 1800,
+    spawn: [150, 485],
+    platforms: [[0, 535, 1800, 60]],
+  },
+  vent: {
+    title: "Audition-room vent",
+    width: 1200,
+    spawn: [140, 485],
+    platforms: [[0, 535, 1200, 60]],
+  },
+  auditionRoom: {
+    title: "Audition room · at the open vent",
+    width: 1200,
+    spawn: [190, 485],
+    platforms: [[0, 535, 335, 50]],
+  },
+  bridge: {
+    title: "Bridge to Brooklyn",
+    width: 2400,
+    spawn: [140, 485],
+    platforms: [[0, 535, 2400, 35]],
+    next: "brooklyn",
+  },
+  brooklyn: {
+    title: "Brooklyn · old busking spot",
+    width: 1600,
+    spawn: [150, 485],
+    platforms: [[0, 535, 1600, 60]],
   },
   neighborhood: {
     title: "Ratlantis · neighborhood",
