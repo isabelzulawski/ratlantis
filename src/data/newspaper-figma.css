@@ -1,0 +1,441 @@
+@font-face {
+  font-family: 'Labrada';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./fonts/Labrada-400-italic.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Labrada';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./fonts/Labrada-400-normal.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Labrada';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(./fonts/Labrada-700-normal.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Oranienbaum';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./fonts/Oranienbaum-400-normal.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Texturina';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(./fonts/Texturina-700-normal.ttf) format('truetype');
+}
+
+/* Newspaper art direction from Figma 7:18. Keep the live D3 marks and
+   existing controls; the newspaper's 1440 × 920 canvas scales as one sheet. */
+.newspaper-masthead .masthead-echo {
+  display: none;
+}
+.flippable-newspaper.living-newspaper {
+  --news-ink: #273333;
+  color: var(--news-ink);
+}
+.flippable-newspaper.living-newspaper .newspaper-masthead {
+  position: absolute;
+  inset: 78px 120px auto 127px;
+  height: 99px;
+  display: grid;
+  grid-template-columns: 592px 592px;
+  gap: 9px;
+  margin: 0;
+  padding: 20px 0 18px;
+  border: 0;
+  border-bottom: 1px solid #27333366;
+  text-align: center;
+}
+.flippable-newspaper.living-newspaper .newspaper-masthead .masthead-edition {
+  display: none;
+}
+.flippable-newspaper.living-newspaper .newspaper-masthead h1,
+.flippable-newspaper.living-newspaper .newspaper-masthead .masthead-echo {
+  display: block;
+  margin: 0;
+  padding: 0;
+  font: 700 54px/60px "Texturina", serif;
+  letter-spacing: 0;
+  color: var(--news-ink);
+}
+.flippable-newspaper.living-newspaper .paper-pages {
+  position: absolute;
+  inset: 0;
+  width: 1440px;
+  height: 920px;
+  pointer-events: none;
+}
+.flippable-newspaper.living-newspaper [data-page="0"] {
+  display: block;
+  position: relative;
+  width: 1440px;
+  height: 920px;
+  padding: 0;
+  pointer-events: auto;
+}
+.flippable-newspaper.living-newspaper [data-page="0"][hidden] {
+  display: none;
+}
+.living-newspaper [data-page="0"] .news-lead {
+  position: absolute;
+  left: 127px;
+  top: 184px;
+  width: 592px;
+  height: 580px;
+  padding: 0;
+}
+.living-newspaper [data-page="0"] .edition {
+  display: block;
+  height: 29px;
+  padding: 0;
+  font: 400 13px/18px "Labrada", serif;
+  letter-spacing: 0;
+  border-bottom: 1px solid #27333366;
+}
+.flippable-newspaper.living-newspaper [data-page="0"] .splash {
+  position: absolute;
+  left: 0;
+  top: 39px;
+  width: 592px;
+  margin: 0;
+  font: 400 54px/54px "Oranienbaum", serif;
+  letter-spacing: 0;
+  color: var(--news-ink);
+}
+.living-newspaper [data-page="0"] .news-action {
+  position: absolute;
+  left: 0;
+  top: 165px;
+  width: 592px;
+}
+.living-newspaper [data-page="0"] .ink-tabs {
+  gap: 10px;
+}
+.living-newspaper [data-page="0"] .ink-tabs button {
+  margin: 0;
+  padding: 9px 12px !important;
+  font: 700 20px/20px "Labrada", serif !important;
+  letter-spacing: 0;
+  border: 1px solid var(--news-ink) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--news-ink) !important;
+  transform: none !important;
+}
+/* The selected bar and aria-pressed state convey the active ranking. */
+.living-newspaper [data-page="0"] .ink-tabs button[aria-pressed="true"] {
+  border-color: #80532b !important;
+}
+.living-newspaper [data-page="0"] .editorial-rat {
+  right: 39px;
+  bottom: auto;
+  top: -119px;
+  filter: grayscale(1);
+  transform: none;
+}
+.living-newspaper [data-page="0"] .ink-detail {
+  position: absolute;
+  left: 0;
+  top: 269px;
+  width: 592px;
+  height: 102px;
+  min-height: 0;
+  padding: 13px 0 15px;
+  margin: 0;
+  border-block: 1px solid #27333366;
+  font: 400 24px/24px "Labrada", serif;
+}
+.flippable-newspaper.living-newspaper [data-page="0"] .news-correction {
+  position: absolute;
+  left: 0;
+  top: 384px;
+  width: 525px;
+  margin: 0;
+  font: 400 24px/21px "Labrada", serif;
+  color: var(--news-ink);
+}
+.living-newspaper [data-page="0"] .read-story {
+  position: absolute;
+  left: 0;
+  top: 506px;
+  margin: 0;
+  padding: 0 !important;
+  font: 700 24px/24px "Labrada", serif !important;
+  letter-spacing: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border: 0 !important;
+}
+.living-newspaper [data-page="0"] .news-graphic {
+  position: absolute;
+  left: 752px;
+  top: 214px;
+  width: 608px;
+  height: 540px;
+  padding: 0;
+  display: block;
+}
+.living-newspaper [data-page="0"] .graphic-top {
+  position: absolute;
+  left: 48px;
+  top: 37px;
+  width: 495px;
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  border: 0;
+  font: 700 24px/24px "Labrada", serif;
+  letter-spacing: 0;
+  text-align: center;
+}
+.living-newspaper [data-page="0"] #borough-chart {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 608px;
+  height: auto;
+}
+.flippable-newspaper.living-newspaper #borough-chart text,
+.flippable-newspaper.living-newspaper #borough-chart .tick text {
+  font-family: "Labrada", serif;
+  font-size: 17px;
+  fill: var(--news-ink);
+}
+.flippable-newspaper.living-newspaper #borough-chart .chart-axis:nth-of-type(2) text,
+.flippable-newspaper.living-newspaper #borough-chart .chart-title {
+  font-weight: 700;
+}
+.flippable-newspaper.living-newspaper #borough-chart .chart-title {
+  font-size: 19px;
+}
+.living-newspaper #borough-chart .news-bar {
+  stroke: var(--news-ink);
+  stroke-width: 1px;
+}
+.living-newspaper [data-page="0"] .graphic-caption {
+  position: absolute;
+  left: 74px;
+  top: 486px;
+  width: 444px;
+  margin: 0;
+  min-height: 0;
+  font: italic 400 16px/21px "Labrada", serif;
+}
+.flippable-newspaper.living-newspaper .paper-number {
+  position: absolute;
+  left: 360px;
+  top: -39px;
+  width: 400px;
+  font: 400 13px/18px "Labrada", serif;
+  text-align: center;
+}
+
+/* December and map editions share the first spread's printing area and type
+   while their contents flow to accommodate filters, legends and live details. */
+.flippable-newspaper.living-newspaper .living-page:not([data-page="0"]) {
+  position: relative;
+  display: block;
+  width: 1440px;
+  height: 920px;
+  padding: 0;
+  pointer-events: auto;
+}
+.flippable-newspaper.living-newspaper .living-page[hidden] {
+  display: none;
+}
+.living-newspaper .living-page:not([data-page="0"]) .news-lead {
+  position: absolute;
+  left: 127px;
+  top: 184px;
+  width: 592px;
+  height: 600px;
+  padding: 0;
+}
+.living-newspaper .living-page:not([data-page="0"]) .edition {
+  display: block;
+  flex-shrink: 0;
+  min-height: 29px;
+  padding: 0;
+  font: 400 13px/18px "Labrada", serif;
+  letter-spacing: 0;
+  border-bottom: 1px solid #27333366;
+}
+.flippable-newspaper.living-newspaper .living-page:not([data-page="0"]) .splash {
+  flex-shrink: 0;
+  margin: 10px 0 16px;
+  font: 400 54px/54px "Oranienbaum", serif;
+  letter-spacing: 0;
+  color: var(--news-ink);
+}
+.flippable-newspaper.living-newspaper .living-page:not([data-page="0"]) .news-deck,
+.flippable-newspaper.living-newspaper .living-page:not([data-page="0"]) .news-invitation {
+  margin: 0 0 14px;
+  font: italic 400 21px/26px "Labrada", serif;
+  color: var(--news-ink);
+}
+.living-newspaper .living-page:not([data-page="0"]) .news-action {
+  flex-shrink: 0;
+}
+.flippable-newspaper.living-newspaper .living-page:not([data-page="0"]) .news-correction {
+  margin: 8px 0 0;
+  font: 400 24px/26px "Labrada", serif;
+  color: var(--news-ink);
+}
+.living-newspaper .living-page:not([data-page="0"]) .news-correction:empty {
+  display: none;
+}
+.living-newspaper .living-page:not([data-page="0"]) .ink-detail {
+  margin: 8px 0 0;
+  padding: 12px 0;
+  min-height: 0;
+  font: 400 24px/26px "Labrada", serif;
+  border-block: 1px solid #27333366;
+}
+.living-newspaper .living-page:not([data-page="0"]) .news-graphic {
+  position: absolute;
+  left: 752px;
+  top: 244px;
+  width: 608px;
+  height: 550px;
+  padding: 0;
+  justify-content: flex-start;
+}
+.living-newspaper .living-page:not([data-page="0"]) .graphic-top {
+  flex-shrink: 0;
+  min-height: 0;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  font: 700 24px/26px "Labrada", serif;
+  letter-spacing: 0;
+  text-align: center;
+}
+.living-newspaper .comparison-heading {
+  margin-bottom: 8px;
+  font: 700 24px/26px "Labrada", serif;
+  letter-spacing: 0;
+}
+.living-newspaper .living-page:not([data-page="0"]) .graphic-top label,
+.living-newspaper .living-page:not([data-page="0"]) .graphic-top select {
+  font: 400 20px/24px "Labrada", serif;
+}
+.living-newspaper .living-page:not([data-page="0"]) .graphic-top select {
+  border: 1px solid var(--news-ink);
+  padding: 3px 8px;
+}
+.living-newspaper .living-page:not([data-page="0"]) .graphic-caption {
+  flex-shrink: 0;
+  min-height: 0;
+  margin: 8px 0 0;
+  font: italic 400 16px/21px "Labrada", serif;
+  color: var(--news-ink);
+}
+.living-newspaper .living-page:not([data-page="0"]) .read-story {
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin: 14px 0 0;
+  padding: 0 !important;
+  border: 0 !important;
+  font: 700 24px/26px "Labrada", serif !important;
+  letter-spacing: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.flippable-newspaper.living-newspaper #monthly-chart text,
+.flippable-newspaper.living-newspaper #monthly-chart .tick text {
+  font-family: "Labrada", serif;
+  font-size: 17px;
+  fill: var(--news-ink);
+}
+.living-newspaper #monthly-chart {
+  flex-shrink: 0;
+}
+.living-newspaper .living-page:not([data-page="0"]) .monthly-detail {
+  font-size: 20px;
+  line-height: 24px;
+  padding: 8px 0;
+}
+.living-newspaper .shock-number {
+  font: 700 64px/64px "Labrada", serif;
+  letter-spacing: 0;
+  color: var(--news-ink);
+}
+.living-newspaper .rate-definition {
+  font: 400 24px/26px "Labrada", serif;
+  color: var(--news-ink);
+}
+.living-newspaper .shock-number small {
+  font: 400 16px/20px "Labrada", serif;
+  color: var(--news-ink);
+  letter-spacing: 0;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal,
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal b,
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal span,
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal em {
+  font-family: "Labrada", serif;
+  color: var(--news-ink);
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal b {
+  font-size: 16px;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal span {
+  font-size: 20px;
+  line-height: 24px;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal strong {
+  font: 700 32px/38px "Labrada", serif;
+  color: var(--news-ink);
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal em {
+  font-size: 18px;
+  line-height: 24px;
+}
+.living-newspaper .map-edition-controls {
+  margin: 0 0 14px;
+  gap: 10px;
+}
+.living-newspaper .map-edition-controls button {
+  margin: 0;
+  padding: 9px 12px !important;
+  border: 1px solid var(--news-ink) !important;
+  background: transparent !important;
+  font: 700 20px/20px "Labrada", serif !important;
+  color: var(--news-ink) !important;
+}
+.living-newspaper .map-edition-controls button[aria-pressed="true"] {
+  border-color: #80532b !important;
+  background: #9c71341a !important;
+}
+.living-newspaper .squirrel-margin {
+  top: 45px;
+  font-family: "Labrada", serif;
+}
+.living-newspaper .squirrel-margin small {
+  font-family: "Labrada", serif;
+}
+
+/* Longer editorial copy needs the folio below the printed columns. */
+.flippable-newspaper.living-newspaper:not([data-paper-page="0"]) .paper-number {
+  top: 38px;
+}
+
+/* Keep every comparison line inside the scrap's opaque center. The source
+   image has transparent torn margins, so its outer box is not a cover area. */
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal {
+  inset: 27px 84px 30px;
+}
+.living-newspaper [data-page="1"] button.context-tab.loose-paper {
+  top: -36px;
+  height: 320px;
+}

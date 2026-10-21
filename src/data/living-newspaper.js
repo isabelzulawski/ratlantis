@@ -56,6 +56,7 @@ export class LivingNewspaper {
     this.pages = [...sheet.querySelectorAll(".living-page")];
     this.pages.forEach((p, i) => {
       const read = p.querySelector("[data-read]");
+      read.textContent = "Read the full story & sources";
       if (i > 0) p.querySelector(".news-graphic").append(read);
       read.onclick = () => this.read(i);
     });
@@ -88,7 +89,7 @@ export class LivingNewspaper {
     });
     this.setCorrection(
       0,
-      "Most findings and highest finding percentage are different headlines. Neither is a count of rats. Both reflect which properties were inspected and how often those inspections recorded rat activity.",
+      "Most findings and highest finding percentage are quite different headlines. Neither is a count of rats, but rather reflect which properties were inspected and how often those inspections recorded rat activity.",
     );
     this.setCorrection(
       1,
@@ -222,7 +223,7 @@ export class LivingNewspaper {
           `${d.borough}: ${number(d.active)} findings / ${number(d.total)} inspections; ${percent(d.rate)}. Select borough.`,
       )
       .attr("fill", (d) =>
-        d.borough === this.selected ? "#9c7134" : "#3c5865",
+        d.borough === this.selected ? "#9c7134" : "#d7d3ca",
       );
     bars
       .on("click", (_, d) => this.select(d.borough))
@@ -287,7 +288,7 @@ export class LivingNewspaper {
         `translate(${x(rate ? winner.rate : winner.active) - 20},${y(winner.borough) - 9})`,
       );
     this.pages[0].querySelector("[data-top]").textContent =
-      `THE 2025 ${rate ? "INITIAL INSPECTION PERCENTAGE" : "FINDING COUNT AT INITIAL INSPECTION"} CROWN: ${winner.borough.toUpperCase()}`;
+      `2025 ${rate ? "INITIAL INSPECTION PERCENTAGES" : "FINDING COUNTS AT INITIAL INSPECTION"}`;
     this.pages[0].querySelector("[data-caption]").textContent =
       "Click a bar to see its data and to carry that borough into the next article";
     this.sheet
@@ -398,7 +399,7 @@ export class LivingNewspaper {
       .y((d) => y(d.rate));
     // All-borough view uses one shared scale, labeled colors and distinct dashes.
     for (const item of series) {
-      const color = this.monthlyAll ? colors(item.borough) : "#8f4435";
+      const color = this.monthlyAll ? colors(item.borough) : "#9c7134";
       const path = svg
         .append("path")
         .datum(item.data)
@@ -506,7 +507,7 @@ export class LivingNewspaper {
       suppressClick = false;
     const place = (x, y) => {
       this.paperPosition = {
-        x: Math.max(-520, Math.min(650, x)),
+        x: Math.max(-600, Math.min(650, x)),
         y: Math.max(-440, Math.min(180, y)),
       };
       const pos = this.paperPosition;
@@ -562,7 +563,7 @@ export class LivingNewspaper {
       const covered =
         Math.hypot(this.paperPosition.x, this.paperPosition.y) < 100;
       // Click/tap and keyboard users can park it at the newspaper's outer edge.
-      place(covered ? -500 : 0, covered ? 150 : 0);
+      place(covered ? -560 : 0, covered ? 150 : 0);
     };
     paper.onkeydown = (e) => {
       const directions = {
@@ -735,7 +736,7 @@ export class LivingNewspaper {
       ctx.lineTo(x + 80, y + 85);
       ctx.lineWidth = 9;
       ctx.stroke();
-      ctx.font = "bold 16px Georgia";
+      ctx.font = "bold 16px Labrada, serif";
       ctx.textAlign = "center";
       ctx.lineWidth = 4;
       ctx.strokeStyle = "#f0e6ce";

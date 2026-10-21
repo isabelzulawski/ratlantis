@@ -16,14 +16,15 @@ try {
   await page.waitForFunction(() => window.cityRecords?.experience.model);
   await page.waitForTimeout(800);
   assert.equal(await page.locator(".news-bar").count(), 5);
-  assert.match(await page.locator('[data-top="0"]').innerText(), /QUEENS/);
+  assert.match(await page.locator('[data-top="0"]').innerText(), /INITIAL INSPECTION PERCENTAGES/);
   assert.match(
     await page.locator('[data-detail="0"]').innerText(),
     /1,883.*7,355/s,
   );
   await page.locator('[data-mode="active"]').click();
   await page.waitForTimeout(700);
-  assert.match(await page.locator('[data-top="0"]').innerText(), /BROOKLYN/);
+  assert.match(await page.locator('[data-top="0"]').innerText(), /FINDING COUNTS/);
+  assert.equal(await page.locator(".ranking-crown").evaluate(n => n.__data__.borough), "Brooklyn");
   assert.match(await page.locator('[data-detail="0"]').innerText(), /BROOKLYN/);
   const fills = await page.locator(".news-bar").evaluateAll((nodes) =>
     nodes.map((n) => ({
@@ -32,7 +33,7 @@ try {
     })),
   );
   assert.equal(fills.find((d) => d.borough === "Brooklyn").fill, "#9c7134");
-  assert.equal(fills.find((d) => d.borough === "Queens").fill, "#3c5865");
+  assert.equal(fills.find((d) => d.borough === "Queens").fill, "#d7d3ca");
   assert.ok(
     !(await page.locator('[data-page="0"]').innerText()).includes("One city."),
   );

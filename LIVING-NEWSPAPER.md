@@ -50,3 +50,19 @@ Generated with the built-in image_gen tool. Final alpha-preserving PNG: `public/
 ## Map comparison revision
 
 The decorative flap and duplicate layer checkboxes have been removed. Printed controls now switch clearly between inspection visits, rat-activity findings and both layers. Blue/red ink is stronger, and the map title and source totals follow the view. The magnifying glass now reports real visit counts, finding counts and their percentage inside its sampled circle. These are inspection events, not individual rats or a neighborhood population estimate. Empty circles say no mapped inspections. The glass magnifies by 1.9x, so counting uses a source-map radius of 68/1.9 pixels around the same center; all views use identical point coordinates. Layer images are cached to keep movement responsive.
+
+## Figma first-spread styling
+
+The borough spread follows the edited first frame in `https://www.figma.com/design/sndjuVNAylDIyXOZEs5U2q?node-id=7-18`: paired Texturina mastheads, an Oranienbaum headline, Labrada copy and controls, larger editorial type, pale outlined bars and the existing gold selected borough. `src/data/newspaper-figma.css` contains the scoped overrides. Fonts are bundled in `src/data/fonts/` with their SIL Open Font Licenses, so reading the newspaper does not require a font service. The paper background and rat sprite reuse the existing source artwork.
+
+The D3 charts, ranking crown, selected-borough propagation, reader, page turns, paper movement and map interactions remain live. The chart title follows the chosen measure; numerical values and denominators remain data-driven. The new layout applies only to the first spread. Verification: 19 unit tests, production build, and live browser checks for ranking changes, bar selection carried to the monthly view, reader/back, comparison reveal, all-borough filtering, map layers/keyboard lens, previous/next navigation and closing.
+
+## Matching December and map editions
+
+The second and third spreads now use the same paired Texturina mastheads, Oranienbaum headlines, Labrada editorial type, fine rules, underlined reader links and outlined controls as the first spread. Their contents remain in flowing columns so the monthly all-borough legend and live map details fit. The single-borough trend uses gold; all-borough colors/dashes and red/blue map encodings retain their existing meanings. Folios on these longer editions sit below the copy. Fonts and data are bundled locally; no new service is required.
+
+Verified after the styling extension: all 19 unit tests and the production build pass. Browser checks cover the covered/exposed comparison, keyboard paper reset, single/all-borough filtering, map layers and keyboard lens counts, reader/back, and page turns. The first spread's layout is unchanged.
+
+## Loose scrap coverage fix
+
+The comparison printing is inset into the opaque center of the torn scrap, and the cover is taller so the heading and final correction line stay concealed when reset. Dragging remains free in two dimensions. Click/tap now parks the scrap farther left, clearing the complete comparison; Home returns it to full coverage. Verified visually in the live newspaper for covered, dragged, parked and keyboard-reset states. The 19 unit tests and GitHub Pages production build pass.
