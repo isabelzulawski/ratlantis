@@ -87,7 +87,7 @@ export class SingingLesson {
       return;
     }
     this.card.querySelector(".lesson-round").textContent =
-      `Phrase ${round + 1} of 3 · ${SINGING.melodies[round].length} notes`;
+      `Phrase ${round + 1} of 3 (${SINGING.melodies[round].length} notes)`;
     this.setStatus("Watch and listen.");
     SINGING.melodies[round].forEach((note, i) =>
       this.later(
@@ -139,7 +139,7 @@ export class SingingLesson {
     if (note !== phrase[this.index]) {
       this.index = 0;
       this.lock(true);
-      this.setStatus("Nearly. No hurry—let’s listen to this phrase again.");
+      this.setStatus("Nearly. No hurry. Let’s listen to this phrase again.");
       this.later(() => this.demonstrate(), SINGING.retryMs);
       return;
     }

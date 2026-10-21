@@ -274,3 +274,6 @@
     max-width: 60%;
   }
 }
+/* Separate notes through spacing, never decorative bullet markers. */
+.records-method ul {list-style:none;padding-left:0;}
+.records-method li + li {margin-top:8px;}

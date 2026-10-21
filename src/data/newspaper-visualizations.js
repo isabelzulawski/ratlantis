@@ -6,7 +6,7 @@ import { assetUrl } from "../art/assets.js";
 
 // Parse the supplied CSV once; each original chart keeps its own row conversion.
 let csvPromise;
-function loadInspections(convertRow) {
+export function loadInspections(convertRow) {
   // Transfer gzip bytes, then parse the identical CSV. No filtering/preaggregation.
   csvPromise ??= (async () => {
     if (!("DecompressionStream" in window))
@@ -347,7 +347,7 @@ export async function makeMonthlyChart() {
         .append("title")
         .text(
           (point) =>
-            `${item.borough} — ${months[point.month - 1]} 2025\n` +
+            `${item.borough}: ${months[point.month - 1]} 2025\n` +
             `${d3.format(".1%")(point.proportion)} found rat activity\n` +
             `${d3.format(",")(point.positive)} findings / ` +
             `${d3.format(",")(point.total)} initial inspections`,

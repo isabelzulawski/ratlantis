@@ -79,7 +79,7 @@ export const DIALOGUE = {
 };
 export const SCENES = {
   street: {
-    title: "Times Square · street level",
+    title: "Times Square: street level",
     width: 2200,
     spawn: [130, 535],
     platforms: [
@@ -93,7 +93,7 @@ export const SCENES = {
     next: "downtown",
   },
   downtown: {
-    title: "Downtown · on the way",
+    title: "Downtown: on the way",
     width: 2200,
     spawn: [130, 535],
     platforms: [[0, 580, 2200, 90]],
@@ -108,7 +108,7 @@ export const SCENES = {
     next: "station",
   },
   station: {
-    title: "Broadway–Lafayette · entrance & platform",
+    title: "Broadway–Lafayette: entrance & platform",
     width: 1800,
     spawn: [110, 310],
     platforms: [
@@ -123,13 +123,13 @@ export const SCENES = {
     next: "ride",
   },
   ride: {
-    title: "Subway · in transit",
+    title: "Subway: in transit",
     width: 1200,
     spawn: [200, 535],
     platforms: [[0, 580, 1200, 90]],
   },
   arrivalStation: {
-    title: "Subway · arrival platform",
+    title: "Subway: arrival platform",
     width: 1350,
     spawn: [140, 535],
     platforms: [[0, 580, 1350, 90]],
@@ -143,7 +143,7 @@ export const SCENES = {
     platforms: [],
   },
   sewer: {
-    title: "Ratlantis · arrival",
+    title: "Ratlantis: arrival",
     width: 1800,
     spawn: [190, 485],
     platforms: [
@@ -155,19 +155,19 @@ export const SCENES = {
     next: "neighborhood",
   },
   ferry: {
-    title: "Staten Island ferry · maintenance deck",
+    title: "Staten Island ferry: maintenance deck",
     width: 1600,
     spawn: [150, 485],
     platforms: [[0, 535, 1600, 60]],
   },
   queens: {
-    title: "Queens · cabinet theater",
+    title: "Queens: cabinet theater",
     width: 1600,
     spawn: [150, 485],
     platforms: [[0, 535, 1600, 60]],
   },
   auditionPipe: {
-    title: "Manhattan · service conduit",
+    title: "Manhattan: service conduit",
     width: 1800,
     spawn: [150, 485],
     platforms: [[0, 535, 1800, 60]],
@@ -179,7 +179,7 @@ export const SCENES = {
     platforms: [[0, 535, 1200, 60]],
   },
   auditionRoom: {
-    title: "Audition room · at the open vent",
+    title: "Audition room: at the open vent",
     width: 1200,
     spawn: [190, 485],
     platforms: [[0, 535, 335, 50]],
@@ -192,13 +192,13 @@ export const SCENES = {
     next: "brooklyn",
   },
   brooklyn: {
-    title: "Brooklyn · old busking spot",
+    title: "Brooklyn: old busking spot",
     width: 1600,
     spawn: [150, 485],
     platforms: [[0, 535, 1600, 60], [1120, 490, 120, 45], [1220, 435, 120, 20], [1320, 380, 150, 20]],
   },
   neighborhood: {
-    title: "Ratlantis · neighborhood",
+    title: "Ratlantis: neighborhood",
     width: 2100,
     spawn: [130, 485],
     platforms: [

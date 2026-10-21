@@ -234,7 +234,7 @@ export class UI {
       const list = journal.querySelector(".journal-notes");
       list.replaceChildren();
       for (const text of notes.slice(journalPage * journalSize, journalPage * journalSize + journalSize)) {
-        const p = document.createElement("p"); p.textContent = `• ${text}`; list.append(p);
+        const p = document.createElement("p"); p.textContent = text; list.append(p);
       }
       if (!notes.length) list.textContent = "No notes yet.";
       const paging = journal.querySelector(".journal-paging");
@@ -348,7 +348,7 @@ export class UI {
     const h = document.createElement("aside");
     h.id = "hud";
     h.className = "hud";
-    h.innerHTML = `<div class="location">${title.split(" · ")[0]}</div><div><button id="bag" aria-label="Backpack"><img src="${itemPicture(this.scene, "backpack")}" alt=""><span>Backpack</span></button><button id="help" aria-label="Pause / Help">Pause / Help</button><button id="wardrobe">Wardrobe</button><button id="travel">Paths</button><button id="sound">Sound: ${this.scene.state.sound ? "on" : "off"}</button></div>`;
+    h.innerHTML = `<div class="location">${title.split(": ")[0]}</div><div><button id="bag" aria-label="Backpack"><img src="${itemPicture(this.scene, "backpack")}" alt=""><span>Backpack</span></button><button id="help" aria-label="Pause / Help">Pause / Help</button><button id="wardrobe">Wardrobe</button><button id="travel">Paths</button><button id="sound">Sound: ${this.scene.state.sound ? "on" : "off"}</button></div>`;
     if (this.scene.id === "downtown")
       h.querySelector(".location").style.visibility = "hidden";
     for (const event of ["pointerdown", "pointerup"])
@@ -372,7 +372,7 @@ export class UI {
     document.querySelector(".hint")?.remove();
     const hint = document.createElement("div");
     hint.className = "hint";
-    hint.textContent = "Hold to move · release above your rat to jump";
+    hint.textContent = "Hold to move. Release above your rat to jump.";
     hint.classList.add("first-hint");
     document.body.append(hint);
   }

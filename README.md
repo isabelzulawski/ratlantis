@@ -1,3 +1,7 @@
+## Living newspaper update — October 17
+
+The optional City Records now presents three interactive fictional newspaper spreads: a borough ranking crown that changes between finding counts and percentages, a pull-tab clipping revealing the December story’s inspection denominators, and a map with a movable magnifying glass and a flap revealing inspection coverage. The original full articles, captions and methodology remain available under “Read the full story & sources.” Real CSV data, game entry, squirrel/lamppost/backpack access and saved progress are preserved. See `LIVING-NEWSPAPER.md` for editable D3 files, data definitions, provisional creative details and verification. This supersedes the earlier text-heavy newspaper presentation below. Direct entry remains `/?data=newspaper`.
+
 ## Exploration and interface update — October 15
 
 Added forgiving crate steps and ledges in Times Square, Washington Square Park and Brooklyn. Brooklyn’s upper ledge holds the existing optional pendant, which joins the reusable wardrobe when collected. Journal notes are shortened for old and new saves and paginated inside the backpack. Click the player rat for a short current-story reminder; the first sewer landing also explains the accidental arrival. Completed director visits reopen costume selection without repeating onward directions. The illustrated shader is always enabled on WebGL, help uses the revised movement instructions, and character creation places Back left and Explore right.
