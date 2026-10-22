@@ -111,3 +111,31 @@ test("long object holds cannot masquerade as a click", () => {
   assert.equal(validObjectClick(press, target, pointer, false, 250), true);
   assert.equal(validObjectClick(press, target, pointer, false, 700), false);
 });
+
+test("blocked browser storage cannot crash load or save", () => {
+  const prior = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    get() { throw new Error("Storage blocked"); },
+  });
+  try {
+    assert.equal(load(), null);
+    assert.equal(save(fresh("Pip", "Gray")), false);
+  } finally {
+    if (prior) Object.defineProperty(globalThis, "localStorage", prior);
+    else delete globalThis.localStorage;
+  }
+});
+
+test("malformed saves cannot offer a crashing Continue route", () => {
+  for (const patch of [
+    { name: 42 }, { scene: "missing-scene" }, { fur: "missing-fur" },
+    { flags: [] }, { journal: [42] }, { inventory: [null] },
+    { visited: "queens" }, { accessories: {} }, { equippedAccessories: {} },
+    { securedObjects: "crate" }, { outfit: [] },
+    { singingRound: -1 }, { actingRound: 8 },
+  ]) {
+    const storage = { getItem: () => JSON.stringify({ ...fresh("Pip", "Gray"), ...patch }) };
+    assert.equal(load(storage), null, JSON.stringify(patch));
+  }
+});

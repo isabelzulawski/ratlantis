@@ -36,11 +36,12 @@ See `BUILD-REPORT.md` for the original opening's implementation notes.
 The README now includes the implemented Washington Square Park route and City Records methodology. See `PARK-DATA-REPORT.md` for the extension's creative decisions and validation.
 
 ## Local data presentation
-The current presentation is a static newspaper. D3 graphs and selection controls are disconnected for collaborative editing; see SECTION-POLISH.md for the retained source files. `tests/data-browser.mjs` verifies the static paper; `tests/data-browser-d3.mjs` is the previous interactive UI reference, not a current runnable acceptance check.
 
-Open the local server's `/?data=newspaper` URL for the Data Visualization class. This mode does not start a game or alter saves. Normal `/` is the adventure entry.
+Open `/?data=newspaper` for the interactive three-spread newspaper. This mode does not start the game or alter saves. D3 charts, map selections, borough filters and the paper scrap interaction are active. Normal `/` opens the adventure.
 
-Run `npm run data:refresh` to retrieve and preprocess real NYC records, or `npm run data:cached` to reproduce the existing cached snapshot. The game only loads local summaries. Run `node tests/data-browser.mjs` alongside the existing adventure browser check; `RATLANTIS_TEST_URL` selects a different local server.
+Run `node tests/living-newspaper-browser.mjs` against a running server. `RATLANTIS_TEST_URL` selects a different URL. The older `data-browser.mjs` and `data-browser-d3.mjs` describe retired versions and are not current acceptance checks.
+
+Run `npm run data:refresh` to retrieve and preprocess NYC records, or `npm run data:cached` to reproduce the cached snapshot. The published game loads local summaries and does not require a live data API.
 
 # GitHub Pages
 
@@ -49,10 +50,10 @@ In repository Settings → Pages, set Source to **GitHub Actions**. The live gam
 https://isabelzulawski.github.io/ratlantis/.
 
 The Pages build uses `/ratlantis/` as its asset base; local development continues to use `/`.
-To preview the Pages build locally, run `GITHUB_ACTIONS=true pnpm build` then
-`GITHUB_ACTIONS=true pnpm exec vite preview` and open `/ratlantis/` on the preview server.
+To preview the Pages build locally, run `GITHUB_ACTIONS=true npm run build` then
+`GITHUB_ACTIONS=true npx vite preview` and open `/ratlantis/` on the preview server.
 
-Current newspaper: open /?data=newspaper to preview the supplied three-page D3 component. See NEWSPAPER-INTEGRATION.md. Run `node tests/data-browser.mjs` with the dev server running to check it, or set RATLANTIS_TEST_URL to a production preview URL ending with /ratlantis/.
+
 
 Brooklyn chapter checks: `node tests/brooklyn-browser.mjs` while the local server runs (or set RATLANTIS_TEST_URL to a production preview). Editable dialogue, pitches and melodies are in src/data/brooklyn.js. See BROOKLYN-CHAPTER.md.
 
@@ -74,3 +75,12 @@ Fitted costumes: edit attachment points in `src/art/costume-registration.js`;
 shared preview/world composition is in `src/art/costume-fit.js`. Full generated
 portraits/layers and prompts are listed in `FULL-GAME-REPORT.md`. Run
 `node tests/costume-browser.mjs` against port 5182 (or `RATLANTIS_TEST_URL`).
+
+
+## Final readiness checks
+
+After `npm test` and `GITHUB_ACTIONS=true npm run build`, start the Pages preview with `GITHUB_ACTIONS=true npx vite preview --host 127.0.0.1 --port 5196`. For each browser check, set `RATLANTIS_TEST_URL=http://127.0.0.1:5196/ratlantis/`.
+
+Current browser scripts: `browser-check`, `brooklyn-browser`, `finale-browser`, `accessories-browser`, `costume-browser`, `arrival-browser`, `exploration-polish-browser`, `shader-browser`, `living-newspaper-browser`, `persistence-browser`, and `layout-browser` (all in `tests/`, with `.mjs` extensions). They use isolated Chrome contexts. Later-chapter tests seed state to target edge cases. The layout check does not certify touch gameplay. Desktop mouse is the supported prototype input.
+
+If browser storage is blocked, a new game remains playable but will not survive a reload. Pause & help reports save failure. Malformed saves return to Begin rather than offering a crashing Continue route.

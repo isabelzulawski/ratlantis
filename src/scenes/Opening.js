@@ -48,7 +48,7 @@ export class Opening extends Phaser.Scene {
     this.add.rectangle(600, 337, 1200, 675, 0x05101b, 0.15).setDepth(-10);
   }
   persist() {
-    if (!save(this.state)) this.saveFailed = true;
+    this.saveFailed = !save(this.state);
   }
   freeze() {
     this.pizzaControl?.cancel();

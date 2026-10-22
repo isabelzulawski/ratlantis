@@ -333,7 +333,7 @@ export class UI {
 
   help() {
     this.panel(
-      '<h2>Pause & help</h2><p>Hold the mouse button to move toward the pointer.</p><p>Release with the pointer above your rat to jump.</p><p>Release elsewhere to stop.</p><p>The cursor previews JUMP or STOP. Click objects to inspect. Open the backpack to drag items. Falls return you to safe ground. Progress saves automatically.</p><button id="resume">Resume</button><button id="title" class="secondary">Title screen</button>',
+      `<h2>Pause & help</h2><p>Hold the mouse button to move toward the pointer.</p><p>Release with the pointer above your rat to jump.</p><p>Release elsewhere to stop.</p><p>The cursor previews JUMP or STOP. Click objects to inspect. Open the backpack to drag items. Falls return you to safe ground. ${this.scene.saveFailed ? "Browser storage is unavailable. Keep this tab open to preserve this session. Progress will be lost when you close or reload it." : "Progress saves automatically."}</p><button id="resume">Resume</button><button id="title" class="secondary">Title screen</button>`,
     );
     this.root.querySelector("#resume").onclick = () => this.clear();
     this.root.querySelector("#title").onclick = () => {

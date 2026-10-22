@@ -14,8 +14,9 @@ try {
  const directorX=await p.evaluate(()=>ratlantis.director.x-ratlantis.cameras.main.scrollX);
  await p.mouse.click(directorX,510);
  await p.locator('.speech').waitFor();
- assert.match(await p.locator('.speech').innerText(), /CRAWL THROUGH THE PIPES BACK TO MANHATTAN/i);
+ assert.match(await p.locator('.speech').innerText(), /TRY ANYTHING ON THE RACK/i);
  await p.getByRole('button',{name:'Continue',exact:true}).click();
+ await p.locator('[data-close]').click();
  await p.evaluate(()=>ratlantis.enter('auditionPipe'));
  await p.waitForTimeout(300);await p.screenshot({path:'tests/quiet-conduit.png'});
  await p.evaluate(()=>{ratlantis.player.setPosition(1650,485);ratlantis.cameras.main.setScroll(600,0);});
