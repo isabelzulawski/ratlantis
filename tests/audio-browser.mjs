@@ -19,7 +19,8 @@ try {
  await jump();await p.waitForFunction(()=>window.jumpPlays===1);
  await p.waitForFunction(()=>ratlantis.player.body.blocked.down);
  await p.locator('#sound').click();
- assert.equal(await p.evaluate(()=>ratlantis.sound.mute),true);
+ // Phaser applies its Web Audio mute state on the next game update.
+ await p.waitForFunction(()=>ratlantis.sound.mute === true);
  await jump();await p.waitForTimeout(200);assert.equal(await p.evaluate(()=>window.jumpPlays),1);
  await p.locator('#sound').click();
  await p.evaluate(()=>ratlantis.enter('neighborhood'));
