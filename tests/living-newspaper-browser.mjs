@@ -61,6 +61,7 @@ try {
   await page.locator(".reader-back").click();
   await page.locator('.news-bar[aria-label^="Queens:"]').click();
   await page.locator(".paper-next").click();
+  await page.waitForFunction(()=>!cityRecords.turning);
   const tab = page.locator(".context-tab");
   await page.waitForFunction(
     () => document.querySelector(".loose-paper img")?.complete,
@@ -101,15 +102,9 @@ try {
     await page.evaluate(() => cityRecords.experience.paperPosition),
     resting,
   );
-  await tab.click();
-  assert.equal(await tab.getAttribute("aria-expanded"), "false");
-  await tab.press("Enter");
-  assert.equal(await page.locator(".context-reveal").isVisible(), true);
-  await tab.press("Home");
-  assert.equal(await tab.getAttribute("aria-expanded"), "false");
-  assert.equal(await page.evaluate(() => cityRecords.page), 1);
-  await tab.click();
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(850);
+  assert.equal(await tab.isVisible(), false);
+  assert.equal(await page.locator(".context-reveal").getAttribute("aria-hidden"), "false");
   assert.match(
     await page.locator(".context-reveal").innerText(),
     /110 findings/,
@@ -119,21 +114,19 @@ try {
     /2,400 inspections/,
   );
   await page.screenshot({ path: "tests/living-monthly.png" });
-  await page.locator('[aria-label="Monthly borough"]').selectOption("Brooklyn");
+  await page.locator('button[data-borough="Brooklyn"]').click();
   assert.match(
     await page.locator(".shock-number").innerText(),
-    /38.3%.*QUEENS/s,
+    /38%.*QUEENS/s,
   );
   assert.match(
     await page.locator(".context-reveal").innerText(),
     /QUEENS.*110 findings.*287 inspections/s,
   );
-  await page
-    .locator('[aria-label="Monthly borough"]')
-    .selectOption("Staten Island");
+  await page.locator('button[data-borough="Staten Island"]').click();
   assert.match(
     await page.locator(".shock-number").innerText(),
-    /38.3%.*QUEENS/s,
+    /38%.*QUEENS/s,
   );
   assert.match(
     await page.locator('[data-detail="1"]').innerText(),
@@ -143,7 +136,7 @@ try {
     await page.locator('[data-page="1"] .news-lead [data-detail]').count(),
     0,
   );
-  await page.locator('[aria-label="Monthly borough"]').selectOption("all");
+  await page.locator('button[data-borough="all"]').click();
   assert.equal(await page.locator(".monthly-series").count(), 5);
   assert.equal(await page.locator("#monthly-chart circle").count(), 60);
   assert.equal(await page.locator(".monthly-legend text").count(), 5);
@@ -155,14 +148,15 @@ try {
     /QUEENS.*110 findings.*287 initial inspections/s,
   );
   assert.equal(
-    await page.locator('[aria-label="Monthly borough"]').inputValue(),
-    "all",
+    await page.locator('button[data-borough="all"]').getAttribute('aria-pressed'),
+    "true",
   );
   await page.waitForTimeout(750);
   await page.screenshot({ path: "tests/living-all-boroughs.png" });
-  await page.locator('[aria-label="Monthly borough"]').selectOption("Queens");
+  await page.locator('button[data-borough="Queens"]').click();
   assert.equal(await page.locator(".monthly-series").count(), 1);
   await page.locator(".paper-next").click();
+  await page.waitForFunction(()=>!cityRecords.turning);
   await page.waitForFunction(() => !!window.cityRecords.experience.drawMap);
   assert.equal(await page.locator(".coverage-flap").count(), 0);
   const redImage = await page

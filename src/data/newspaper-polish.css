@@ -1,0 +1,365 @@
+/* Local tactile newspaper pass. Numbers remain real inspection statistics. */
+.living-newspaper button:not(:disabled):hover,
+.living-newspaper button:not(:disabled):focus-visible {
+  outline: 3px solid #b78432 !important;
+  outline-offset: 4px;
+  filter: drop-shadow(0 0 7px #c99b5488) !important;
+}
+.living-newspaper .news-bar:hover, .living-newspaper .news-bar:focus-visible,
+.living-newspaper circle[tabindex]:hover, .living-newspaper circle[tabindex]:focus-visible {
+  stroke: #b57c22; stroke-width: 4px; filter: drop-shadow(0 0 5px #b57c2288); cursor:pointer;
+}
+.living-newspaper #inspection-map:hover, .living-newspaper #inspection-map:focus-visible {
+  outline: 3px solid #b78432; outline-offset: 4px; box-shadow: 0 0 15px #b7843244;
+}
+.living-newspaper [data-page="0"] .news-graphic > .ink-detail {
+  left: 48px; top: 482px; width: 510px; height:auto; padding:10px 0;
+  font: 400 20px/24px "Labrada",serif; white-space:pre-line;
+}
+.living-newspaper [data-page="0"] .graphic-caption {top:440px;}
+.flippable-newspaper.living-newspaper [data-page="0"] .news-correction {top:300px; width:530px; line-height:28px;}
+.living-newspaper [data-page="0"] .read-story {top:490px;}
+.living-newspaper [data-page="0"] .editorial-rat {
+  width:210px; height:215px; top:280px; right:55px;
+  background-size: 680px 453px; opacity:.92; transform:rotate(-5deg);
+}
+.living-newspaper .news-graphic {display:flex; flex-direction:column;}
+.living-newspaper [data-page="2"] .news-graphic > .ink-detail {
+  order:2; font:400 20px/24px "Labrada",serif; padding:10px 0; min-height:0; white-space:pre-line;
+}
+.living-newspaper [data-page="2"] .news-graphic > .read-story {order:3; margin-top:10px;}
+.living-newspaper [data-page="2"] .map-stage {flex:none; height:355px;}
+.living-newspaper [data-page="2"] #inspection-map {height:355px; width:100%; object-fit:contain;}
+.living-newspaper .borough-buttons {display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
+.living-newspaper .borough-buttons button {
+  display:flex; align-items:center; gap:6px; border-radius:16px 5px 14px 5px!important;
+  padding:6px 9px!important; font:700 15px/18px "Labrada",serif!important;
+}
+.living-newspaper .borough-buttons button span {
+  width:25px; height:25px; border:1px solid currentColor; border-radius:50%; display:grid; place-items:center;
+}
+.living-newspaper .borough-buttons [aria-pressed="true"] {background:#b58b3f38!important; border-color:#855c24!important;}
+.living-newspaper [data-page="1"] .news-graphic {top:208px;}
+.living-newspaper [data-page="1"] #monthly-chart {max-height:315px;}
+.living-newspaper .shock-number.has-definition {
+  margin:22px 15px 18px; padding:16px 20px; width:310px; border:3px double #80532b;
+  border-radius:45% 9% 38% 8%; transform:rotate(-4deg); color:#80532b;
+  background:radial-gradient(ellipse,#f4d99e66,transparent 70%);
+}
+.living-newspaper .shock-number .rate-value {font:700 83px/1 "Labrada",serif; color:#80532b;}
+.living-newspaper .shock-number .rate-definition {font:italic 400 22px/25px "Labrada",serif;}
+.living-newspaper .shock-number small {margin-top:8px;}
+.living-newspaper .loose-paper[hidden] {display:none!important;}
+.living-newspaper .loose-paper:active img {filter:drop-shadow(3px 5px 3px #38261266);}
+.newspaper-runway {position:absolute; left:110px; right:90px; bottom:68px; height:95px; overflow:hidden; pointer-events:none; z-index:8;}
+.newspaper-walking-rat {
+  position:absolute; left:-110px; bottom:0; width:101px; height:95px;
+  background:url('/art/rat-poses-v2.webp') -92.15px 0 / 291.84px 194.56px no-repeat;
+  animation: newspaper-stroll 23s linear infinite, newspaper-stride .3s steps(1) infinite;
+  filter:drop-shadow(0 4px 2px #3b2b1944);
+}
+@keyframes newspaper-stroll {0%,10% {transform:translateX(0);} 85%,100% {transform:translateX(1400px);}}
+@keyframes newspaper-stride {0%,100% {background-position-x:-92.15px;} 50% {background-position-x:-192.85px;}}
+@media(prefers-reduced-motion:reduce) {
+  .newspaper-walking-rat {animation:none; transform:translateX(80px);}
+  .living-newspaper .paper-navigation button::after {transition:none;}
+}
+
+/* Keep the painted resting curls below the sheet's clipping edge. */
+.panel.newspaper-spread.flippable-newspaper.living-newspaper {
+  background-size:100% 116%; background-position:center top;
+}
+.living-newspaper .paper-navigation {left:50px;right:50px;bottom:17px;}
+.living-newspaper .paper-navigation button {
+  width:130px; height:62px; color:#5b4328; font:700 17px/20px "Labrada",serif;
+  text-shadow:none; text-decoration:underline; text-underline-offset:4px;
+}
+.living-newspaper .shock-number.has-definition {
+  grid-template-columns:245px 1fr; width:490px; margin:12px 0 8px; padding:12px 18px;
+  column-gap:10px; border-radius:32% 8% 30% 7%;
+}
+.living-newspaper .shock-number .rate-value {font-size:72px;letter-spacing:-2px;}
+.living-newspaper .shock-number .rate-definition {font-size:20px;line-height:23px;}
+.living-newspaper .shock-number small {font-size:14px;line-height:18px;margin-top:5px;}
+.living-newspaper [data-page="1"] .paper-pocket {height:200px;}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal {inset:16px 60px 10px;}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal span {font-size:18px;line-height:22px;}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal strong {font-size:28px;line-height:32px;}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal em {font-size:16px;line-height:20px;}
+.living-newspaper [data-page="1"] .news-correction {font-size:20px!important;line-height:24px!important;}
+.living-newspaper [data-page="2"] .map-stage {height:310px;}
+.living-newspaper [data-page="2"] #inspection-map {height:310px; width:auto;max-width:100%;margin:auto;object-fit:fill;}
+.living-newspaper [data-page="2"] .news-graphic > .ink-detail {flex-shrink:0;font-size:19px;line-height:23px;}
+.newspaper-runway {bottom:18px;}
+
+/* The large ink illustration sits beside the headline; the delivery workers
+   from the Ratlantis neighborhood carry parcels through the bottom margin. */
+.living-newspaper [data-page="0"] .editorial-rat {top:-130px;right:60px;width:214px;height:225px;}
+.newspaper-worker {position:absolute;left:-110px;bottom:0;width:101px;height:95px;animation:newspaper-stroll 26s linear infinite;}
+.newspaper-worker .newspaper-walking-rat {left:0;animation:newspaper-stride .3s steps(1) infinite;}
+.newspaper-worker .worker-parcel {
+  position:absolute;left:48px;top:56px;width:22px;height:13px;
+  background:url('/art/street-props-v3.webp') -35.14px -45.22px / 93.87px 62.58px no-repeat;
+  filter:drop-shadow(0 2px 1px #33241355);
+}
+.worker-1 {animation-delay:-7s;}
+.worker-1 .newspaper-walking-rat {filter:sepia(.45) brightness(.92) drop-shadow(0 3px 2px #33241344);}
+.worker-2 {animation-duration:31s;animation-delay:-19s;animation-direction:reverse;}
+.worker-2 .newspaper-walking-rat {transform:scaleX(-1);filter:grayscale(.5) brightness(.8) drop-shadow(0 3px 2px #33241344);}
+.worker-2 .worker-parcel {left:25px;}
+.worker-3 {animation-duration:22s;animation-delay:-13s;}
+@media(prefers-reduced-motion:reduce){
+ .newspaper-worker {animation:none;transform:translateX(160px);}
+ .worker-2 {transform:translateX(310px);}
+ .worker-3 {transform:translateX(460px);}
+ .newspaper-worker .newspaper-walking-rat {animation:none;transform:none;}
+ .worker-2 .newspaper-walking-rat {transform:scaleX(-1);}
+}
+
+.living-newspaper .editorial-crown {position:absolute;left:300px;top:710px;width:200px;height:125px;object-fit:contain;pointer-events:none;}
+.living-newspaper .map-reporter-rat {position:absolute;left:180px;top:405px;width:230px;height:230px;object-fit:contain;pointer-events:none;}
+
+/* Flat illustrated covers reveal the original paper corners on hover.
+   Both use the same coordinate system; no diagonal cutouts or pasted curls. */
+.living-newspaper .paper-navigation button::after {display:none!important;}
+.flat-corner-cover {
+ position:absolute;bottom:0;width:220px;height:190px;pointer-events:none;z-index:1;
+ background:url('/art/newspaper-flat-corners-v1.png') no-repeat;background-size:1440px 920px;
+ opacity:1;transition:opacity .38s ease;
+ mask-image:linear-gradient(to right,transparent,#000 25%),linear-gradient(to bottom,transparent,#000 20%);mask-composite:intersect;
+}
+.corner-right {right:0;background-position:right bottom;}
+.corner-left {left:0;background-position:left bottom;mask-image:linear-gradient(to left,transparent,#000 25%),linear-gradient(to bottom,transparent,#000 20%);}
+.living-newspaper:has(.paper-next:not(:disabled):hover) .corner-right,
+.living-newspaper:has(.paper-next:not(:disabled):focus-visible) .corner-right,
+.living-newspaper:has(.paper-previous:not(:disabled):hover) .corner-left,
+.living-newspaper:has(.paper-previous:not(:disabled):focus-visible) .corner-left {opacity:0;}
+.paper-turn-stage {position:absolute;inset:0;z-index:15;perspective:2400px;pointer-events:none;}
+.turning-leaf {position:absolute;top:0;bottom:0;width:720px;transform-style:preserve-3d;will-change:transform;}
+.turn-forward .turning-leaf {left:720px;transform-origin:left center;}
+.turn-backward .turning-leaf {left:0;transform-origin:right center;}
+.turn-face {position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;background:#eddcb2;}
+.turn-back {transform:rotateY(180deg);}
+.turn-snapshot {position:absolute;top:0;width:1440px;height:920px;background:transparent url('/art/newspaper-flat-corners-v1.png') center/100% 100% no-repeat;}
+.turn-forward .turn-front .turn-snapshot, .turn-backward .turn-back .turn-snapshot {left:-720px;}
+.turn-forward .turn-back .turn-snapshot, .turn-backward .turn-front .turn-snapshot {left:0;}
+.turn-old-under {position:absolute;inset:0;overflow:hidden;}
+.turn-forward .turn-old-under {clip-path:inset(0 50% 0 0);}
+.turn-backward .turn-old-under {clip-path:inset(0 0 0 50%);}
+.panel.newspaper-spread.flippable-newspaper.living-newspaper {background-image:none;}
+.newspaper-paper-base {position:absolute;inset:0;pointer-events:none;background:url('/art/newspaper-spread-v2.webp') center/100% 100% no-repeat;}
+.living-newspaper .paper-navigation {left:0;right:0;bottom:0;height:145px;}
+.living-newspaper .paper-navigation button {width:175px;height:145px;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 28px;transition:color .2s;}
+.living-newspaper .paper-navigation button:hover {outline:none!important;filter:none!important;color:transparent!important;}
+@media(prefers-reduced-motion:reduce){.flat-corner-cover {transition:none;}}
+.paper-turn-stage {perspective:5000px;}
+.turn-face {background:transparent;}
+/* Corner paint stays beneath the live ink and controls. */
+.living-newspaper .paper-pages {z-index:2;}
+
+.living-newspaper [data-page="1"] button.context-tab.loose-paper {top:-68px;}
+
+/* Press photographs sit in the story flow so the copy wraps around them. */
+.living-newspaper .newspaper-photo {
+ float:right;width:280px;height:280px;object-fit:cover;margin:0 0 16px 22px;
+ border:1px solid #443b2b; padding:4px; background:#d8c6a2;
+ filter:sepia(.15) contrast(.94);box-sizing:border-box;
+}
+.living-newspaper [data-page="0"] .news-lead {display:block;height:auto;}
+.flippable-newspaper.living-newspaper [data-page="0"] .splash {
+ position:static;width:auto;margin:10px 0 18px;font-size:54px;line-height:54px;
+}
+.living-newspaper [data-page="0"] .news-action {position:static;width:auto;}
+.living-newspaper [data-page="0"] .ink-tabs {display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;margin:0 0 26px;}
+.living-newspaper [data-page="0"] .ink-tabs button {font-size:18px!important;}
+.living-newspaper .photo-copy {display:flow-root;}
+.flippable-newspaper.living-newspaper [data-page="0"] .news-correction {
+ position:static;width:auto;margin:0;font-size:23px;line-height:29px;
+}
+.living-newspaper [data-page="0"] .read-story {position:static;display:block;margin-top:22px;}
+.living-newspaper [data-page="2"] .news-lead {display:block;}
+.flippable-newspaper.living-newspaper [data-page="2"] .news-correction {
+ font-size:21px;line-height:26px;margin:16px 0;
+}
+.living-newspaper [data-page="2"] .news-action {clear:both;padding-top:12px;}
+.living-newspaper [data-page="2"] .newspaper-photo {height:295px;}
+.living-newspaper [data-page="2"] .map-edition-controls {display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;}
+.living-newspaper [data-page="2"] .map-edition-controls button {font-size:18px!important;padding:8px 10px!important;}
+
+/* Set the December statistic like a printed pull quote, not a sticker. */
+.living-newspaper .shock-number.has-definition {
+ width:530px;box-sizing:border-box;grid-template-columns:220px 1fr;
+ margin:12px 0 8px;padding:12px 0 16px;column-gap:20px;
+ border:0;border-top:1px solid #27333399;border-bottom:3px double #27333399;
+ border-radius:0;transform:none;background:none;color:var(--news-ink);
+}
+.living-newspaper .shock-number .rate-value {color:var(--news-ink);font-size:78px;}
+.living-newspaper .shock-number .rate-definition {font-style:normal;}
+/* Borough choices use the same fine rectangular ink borders as other controls. */
+.living-newspaper .borough-buttons {gap:10px;max-width:530px;margin:0 auto;}
+.living-newspaper .borough-buttons button {
+ border:1px solid #27333399!important;border-radius:0!important;
+ padding:8px 12px!important;background:transparent!important;
+ color:var(--news-ink)!important;box-shadow:none!important;
+ font:700 16px/20px "Labrada",serif!important;
+}
+.living-newspaper .borough-buttons button span {display:none;}
+.living-newspaper .borough-buttons [aria-pressed="true"] {
+ background:#27333312!important;border-color:var(--news-ink)!important;
+ text-decoration:underline;text-underline-offset:4px;
+}
+
+/* A restrained extra-edition flourish, using ink and type rather than badges. */
+.living-newspaper .shock-number.has-definition {
+ position:relative;border-top:3px double #27333399;
+ background:linear-gradient(90deg,#80532b0c,transparent 75%);
+}
+.living-newspaper .shock-number .rate-value {
+ color:#80532b;text-shadow:1px 1px 0 #f2dfb5,-1px -1px 0 #f2dfb5,2px 2px 0 #80532b55;
+}
+.living-newspaper .shock-number small {letter-spacing:1px;}
+.living-newspaper .borough-buttons button {
+ transition:background .18s ease,color .18s ease,transform .18s ease;
+ border-top:2px solid #27333399!important;
+}
+.living-newspaper .borough-buttons button:hover {transform:translateY(-2px);background:#80532b16!important;}
+.living-newspaper .borough-buttons [aria-pressed="true"] {
+ background:#293331!important;color:#f4e4c0!important;
+ border-color:#293331!important;text-decoration:none;
+ box-shadow:inset 0 0 0 2px #f4e4c0,inset 0 0 0 3px #293331!important;
+}
+@media(prefers-reduced-motion:reduce){.living-newspaper .borough-buttons button {transition:none;}.living-newspaper .borough-buttons button:hover {transform:none;}}
+
+/* Match Isabel's revised photo and copy positions in the editable Figma spreads. */
+.living-newspaper [data-page="0"] .photo-copy {
+ position:absolute;left:0;top:231px;width:592px;height:280px;overflow:visible;
+}
+.living-newspaper [data-page="0"] .photo-copy .newspaper-photo {
+ position:absolute;left:287px;top:0;float:none;margin:0;width:280px;height:280px;
+}
+.flippable-newspaper.living-newspaper [data-page="0"] .news-correction {
+ position:absolute;left:-5px;top:33px;width:285px;margin:0;
+}
+.living-newspaper [data-page="0"] .read-story {position:absolute;left:0;top:554px;margin:0;}
+.living-newspaper [data-page="2"] .newspaper-photo {
+ position:absolute;left:266px;top:164px;float:none;margin:0;width:307px;height:322px;
+}
+.flippable-newspaper.living-newspaper [data-page="2"] .news-deck {
+ position:absolute;left:0;top:164px;width:252px;margin:0;
+}
+.living-newspaper [data-page="2"] .news-invitation {display:none;}
+.flippable-newspaper.living-newspaper [data-page="2"] .news-correction {
+ position:absolute;left:0;top:240px;width:252px;margin:0;
+}
+.living-newspaper [data-page="2"] .news-action {
+ position:absolute;left:0;top:510px;width:592px;padding:0;
+}
+
+/* Latest Figma composition: editorial photos left, controls above the charts. */
+.living-newspaper [data-page="0"] .news-action {position:absolute;left:713px;top:64px;width:510px;z-index:3;}
+.living-newspaper [data-page="0"] .photo-copy {top:163px;height:353px;}
+.living-newspaper [data-page="0"] .photo-copy .newspaper-photo {left:253px;width:314px;height:348px;}
+.flippable-newspaper.living-newspaper [data-page="0"] .news-correction {left:0;top:0;width:231px;}
+.living-newspaper [data-page="0"] .read-story {left:92px;top:548px;}
+.living-newspaper [data-page="0"] .graphic-top {position:absolute;left:43px;top:-46px;width:510px;}
+.living-newspaper [data-page="2"] .newspaper-photo {left:233px;width:340px;height:400px;}
+.flippable-newspaper.living-newspaper [data-page="2"] .news-deck {width:198px;}
+.flippable-newspaper.living-newspaper [data-page="2"] .news-correction {top:245px;width:198px;}
+.living-newspaper [data-page="2"] .news-action {left:680px;top:75px;width:550px;z-index:3;}
+.living-newspaper [data-page="2"] .news-lead > .read-story {position:absolute;left:118px;top:577px;margin:0;}
+.living-newspaper [data-page="2"] .news-graphic {top:210px;}
+.living-newspaper [data-page="2"] .map-stage {position:absolute;top:104px;left:0;width:608px;}
+.living-newspaper [data-page="2"] .graphic-caption {position:absolute;top:414px;margin:0;}
+.living-newspaper [data-page="2"] .news-graphic > .ink-detail {position:absolute;left:0;top:449px;width:608px;margin:0;}
+.living-newspaper [data-page="1"] .news-graphic {top:223px;}
+.living-newspaper [data-page="1"] .borough-buttons {margin-top:12px;}
+.living-newspaper [data-page="1"] #monthly-chart {position:absolute;top:152px;left:0;width:608px;height:315px;}
+.living-newspaper [data-page="1"] .graphic-caption {display:none;}
+.living-newspaper [data-page="1"] .news-graphic > .ink-detail {position:absolute;left:34px;top:467px;width:574px;margin:0;}
+.living-newspaper [data-page="1"] .news-graphic > .read-story {position:absolute;left:34px;top:532px;margin:0;}
+.living-newspaper [data-page="1"] button.context-tab.loose-paper {left:-63px;}
+
+/* One printed control treatment throughout; retain the paper's corner and scrap hit areas. */
+.living-newspaper button:not(.paper-next):not(.paper-previous):not(.loose-paper):not(.read-story) {
+ border:1px solid var(--news-ink)!important;border-radius:0!important;
+ background:transparent!important;color:var(--news-ink)!important;
+ box-shadow:none!important;text-shadow:none!important;text-decoration:none;
+ font:700 18px/20px "Labrada",serif!important;padding:8px 10px!important;
+ transform:none;letter-spacing:0;
+}
+.living-newspaper button[aria-pressed="true"]:not(.paper-next):not(.paper-previous) {
+ border-color:#80532b!important;background:#9c71341a!important;
+ color:var(--news-ink)!important;box-shadow:none!important;
+}
+.living-newspaper .borough-buttons button {font-size:16px!important;}
+.living-newspaper .borough-buttons button:hover {transform:none;}
+.living-newspaper .living-page[data-page="2"] .news-graphic {top:210px;}
+.living-newspaper .living-page[data-page="1"] .news-graphic {top:223px;}
+.living-newspaper [data-page="0"] .graphic-top {top:-26px;}
+
+/* Keep the selected fill stronger than the shared transparent button rule. */
+.living-newspaper button[aria-pressed="true"]:not(.paper-next):not(.paper-previous):not(.loose-paper):not(.read-story) {
+ background:#b58b3f38!important;border-color:#80532b!important;
+ color:var(--news-ink)!important;box-shadow:none!important;
+}
+
+/* December editorial note follows Isabel's inset Figma placement. */
+.flippable-newspaper.living-newspaper .living-page[data-page="1"] .news-correction {
+ position:absolute;left:60px;top:548px;width:491px;margin:0;
+ font-size:24px!important;line-height:26px!important;
+}
+.living-newspaper [data-page="1"] .december-rat-photo {
+ position:absolute;left:340px;top:44px;width:185px;height:115px;
+ object-fit:cover;object-position:center 63%;padding:4px;
+ border:1px solid #443b2b;background:#d8c6a2;box-sizing:border-box;
+ filter:sepia(.15) contrast(.94);
+}
+.living-newspaper [data-page="1"] .news-graphic > .read-story {top:550px;}
+.living-newspaper [data-page="1"] .december-rat-photo {
+ left:315px;top:54px;width:245px;height:92px;object-fit:cover;object-position:center;
+}
+
+/* A compact printed statistic and a calmer two-column comparison. */
+.living-newspaper [data-page="1"] .december-rat-photo {
+ left:260px;top:39px;width:270px;height:108px;
+}
+.living-newspaper .shock-number.has-definition {
+ grid-template-columns:180px 1fr;column-gap:24px;row-gap:4px;
+ padding:10px 0 13px;background:none;border-top:1px solid #27333366;
+ border-bottom:3px double #27333388;
+}
+.living-newspaper .shock-number small {
+ grid-column:1 / -1;grid-row:1;margin:0 0 2px;
+ font-size:14px;line-height:18px;letter-spacing:1.2px;
+}
+.living-newspaper .shock-number .rate-value {
+ grid-column:1;grid-row:2;font-size:72px;line-height:76px;
+ text-shadow:none;letter-spacing:-2px;
+}
+.living-newspaper .shock-number .rate-definition {
+ grid-column:2;grid-row:2;align-self:center;
+ font-size:22px;line-height:25px;max-width:290px;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal {
+ inset:14px 42px 8px;padding:0;background:none;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal b {
+ display:block;text-align:left;font-size:13px;line-height:18px;
+ letter-spacing:1.2px;margin:0 0 10px;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal > div {
+ display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:0;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal span {
+ text-align:left;font-size:18px;line-height:22px;padding:0;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal span + span {
+ border-left:1px solid #27333344;padding-left:28px;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal strong {
+ display:block;color:#80532b;font-size:36px;line-height:40px;margin:2px 0 4px;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal em {
+ display:block;text-align:left;font-size:17px;line-height:22px;margin-top:12px;
+}
+.living-newspaper [data-page="1"] .paper-pocket .context-reveal span {width:auto;min-width:0;}

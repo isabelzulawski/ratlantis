@@ -1,0 +1,5 @@
+{
+  "tool": "Built-in image_gen",
+  "prompt": "Edit target: the attached antique newspaper spread. Change ONLY the bottom-left and bottom-right folded dog-ear corners into FLAT unfolded paper corners. Preserve the exact overall framing, page proportions, vertical center crease, parchment color, worn irregular edges, stains and ink flecks elsewhere. Extend the existing aged parchment naturally into the two small corner areas, so the paper lies completely flat with NO folded triangles, NO raised edges and NO fold shadows there. Keep the same broad rectangular double-page silhouette with gently worn flat corners. No text or graphics. Background outside the paper must stay genuinely transparent. This will be used as the flat resting state of the SAME illustrated paper and must visually match its existing colors and texture.",
+  "source": "newspaper-spread-v2.webp"
+}

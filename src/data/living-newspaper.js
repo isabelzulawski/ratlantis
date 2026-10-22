@@ -21,7 +21,7 @@ const MONTHS = [
   "Dec",
 ];
 const number = d3.format(",");
-const percent = (n) => (n == null ? "No data" : d3.format(".1%")(n));
+const percent = (n) => (n == null ? "No data" : d3.format(".0%")(n));
 const duration = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650;
 const SPREADS = [
@@ -58,10 +58,24 @@ export class LivingNewspaper {
       const read = p.querySelector("[data-read]");
       read.textContent = "Read the full story & sources";
       if (i > 0) p.querySelector(".news-graphic").append(read);
+      if (i !== 1) p.querySelector(".news-graphic").append(p.querySelector("[data-detail]"));
       read.onclick = () => this.read(i);
     });
     this.sheet.querySelector('[data-action="0"]').innerHTML =
-      '<div class="ink-tabs"><button data-mode="active">MOST FINDINGS?</button><button data-mode="rate" aria-pressed="true">HIGHEST PERCENTAGE?</button></div><div class="editorial-rat" aria-hidden="true"></div>';
+      '<div class="ink-tabs"><button data-mode="active">MOST FINDINGS?</button><button data-mode="rate" aria-pressed="true">HIGHEST PERCENTAGE?</button></div>';
+    const portrait = document.createElement("img");
+    portrait.className = "newspaper-photo";
+    portrait.src = assetUrl("art/newspaper-rat-portrait-v1.png");
+    portrait.alt = "A backpack-wearing rat beside a bottle-cap crown, printed as a grainy newspaper photograph";
+    const copy = document.createElement("div");
+    copy.className = "photo-copy";
+    const correction = this.pages[0].querySelector(".news-correction");
+    correction.before(copy);
+    copy.append(portrait, correction);
+    const mapLead = this.pages[2].querySelector(".news-lead");
+    mapLead.querySelector(".news-deck").insertAdjacentHTML("beforebegin", `<img class="newspaper-photo" src="${assetUrl("art/newspaper-rat-street-v1.png")}" alt="Backpack-wearing rats exploring a city curb, printed as a grainy newspaper photograph">`);
+    mapLead.append(mapLead.querySelector(".news-action"));
+    mapLead.append(this.pages[2].querySelector(".read-story"));
     this.sheet.querySelectorAll("[data-mode]").forEach(
       (b) =>
         (b.onclick = () => {
@@ -74,9 +88,11 @@ export class LivingNewspaper {
           }
         }),
     );
+    this.sheet.insertAdjacentHTML("beforeend", '<div class="newspaper-runway" aria-hidden="true"><div class="newspaper-worker worker-1"><div class="newspaper-walking-rat"></div><span class="worker-parcel"></span></div><div class="newspaper-worker worker-2"><div class="newspaper-walking-rat"></div><span class="worker-parcel"></span></div><div class="newspaper-worker worker-3"><div class="newspaper-walking-rat"></div><span class="worker-parcel"></span></div></div>');
     this.contextPull = 0;
     this.sheet.querySelector('[data-action="1"]').innerHTML =
-      `<div class="shock-number">Loading…</div><div class="paper-pocket"><button class="context-tab loose-paper" aria-expanded="false" aria-controls="context-clipping" aria-label="Move loose paper aside to read the comparison" title="Drag the loose paper aside" aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight Home Enter"><img src="${assetUrl("art/newspaper-loose-scrap-v1.png")}" alt="" draggable="false"></button></div>`;
+      `<div class="shock-number">Loading…</div><div class="paper-pocket"><button class="context-tab loose-paper" aria-expanded="false" aria-controls="context-clipping" aria-label="Crumple and throw away the loose paper to read the comparison" aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight Home Enter"><img src="${assetUrl("art/newspaper-loose-scrap-v1.png")}" alt="" draggable="false"></button></div>`;
+    this.pages[1].querySelector(".news-lead").insertAdjacentHTML("beforeend", `<img class="december-rat-photo" src="${assetUrl("art/newspaper-december-rats-v1.png")}" alt="Two backpack-wearing rats beside a snowy city drain in a grainy newspaper photograph">`);
     this.setupLoosePaper();
     this.mapView = "findings";
     this.sheet.querySelector('[data-action="2"]').innerHTML =
@@ -93,9 +109,9 @@ export class LivingNewspaper {
     );
     this.setCorrection(
       1,
-      "A percentage needs its inspection count. These records alone cannot explain a rise.",
+      "Are rats really on the rise, or are inspectors simply finding them more often? The numbers leave that question unanswered.",
     );
-    this.setCorrection(2, "");
+    this.setCorrection(2, "The map shows inspection records, not a rat census. Compare where inspectors looked with where they recorded activity. A cluster of findings needs the context of inspection coverage.");
     this.loading = loadInspections((row) => row).then((rows) => {
       const model = summarizeNewspaper(rows);
       if (this.alive) this.model = model;
@@ -193,7 +209,7 @@ export class LivingNewspaper {
       .append("g")
       .attr("class", "chart-axis")
       .attr("transform", "translate(145,0)")
-      .call(d3.axisLeft(y).tickSize(0))
+      .call(d3.axisLeft(y).tickSize(0).tickPadding(18))
       .call((g) => g.select(".domain").remove());
     svg
       .append("text")
@@ -223,7 +239,7 @@ export class LivingNewspaper {
           `${d.borough}: ${number(d.active)} findings / ${number(d.total)} inspections; ${percent(d.rate)}. Select borough.`,
       )
       .attr("fill", (d) =>
-        d.borough === this.selected ? "#9c7134" : "#d7d3ca",
+        d.borough === this.selected ? "#9c7134" : "#d5c3aa",
       );
     bars
       .on("click", (_, d) => this.select(d.borough))
@@ -241,14 +257,6 @@ export class LivingNewspaper {
       .transition()
       .duration(duration())
       .attr("width", (d) => x(rate ? d.rate : d.active) - 145);
-    bars
-      .selectAll("title")
-      .data((d) => [d])
-      .join("title")
-      .text(
-        (d) =>
-          `${d.borough}: ${number(d.active)} / ${number(d.total)} inspections; ${percent(d.rate)}`,
-      );
     svg
       .selectAll(".bar-number")
       .data(data, (d) => d.borough)
@@ -307,24 +315,21 @@ export class LivingNewspaper {
   drawMonthly() {
     const page = this.pages[1],
       top = page.querySelector("[data-top]");
-    if (!top.querySelector("select")) {
-      top.innerHTML =
-        '<div class="comparison-heading">HOW DOES THE REST OF THE CITY COMPARE?</div><label>SHOW <select aria-label="Monthly borough"></select></label>';
-      // Chart details belong to the comparison, not the fixed Queens article.
+    if (!top.querySelector(".borough-buttons")) {
+      const symbols = {all:"✦", Bronx:"Bx", Brooklyn:"Bk", Manhattan:"M", Queens:"Q", "Staten Island":"SI"};
+      top.innerHTML = '<div class="comparison-heading">HOW DOES THE REST OF THE CITY COMPARE?</div><div class="borough-buttons" role="group" aria-label="Monthly borough">' +
+        ["all", ...ORDER].map(b => `<button data-borough="${b}" aria-pressed="false"><span aria-hidden="true">${symbols[b]}</span>${b === "all" ? "All boroughs" : b}</button>`).join("") + '</div>';
       const detail = page.querySelector('[data-detail="1"]');
       detail.classList.add("monthly-detail");
       page.querySelector("[data-caption]").after(detail);
-      top.querySelector("select").innerHTML =
-        '<option value="all">All boroughs</option>' +
-        ORDER.map((b) => `<option>${b}</option>`).join("");
-      top.querySelector("select").onchange = (e) => {
-        if (e.target.value === "all") {
-          this.monthlyAll = true;
-          this.drawMonthly();
-        } else this.select(e.target.value);
-      };
+      top.querySelectorAll("[data-borough]").forEach(button => {
+        button.onclick = () => {
+          if (button.dataset.borough === "all") { this.monthlyAll = true; this.drawMonthly(); }
+          else this.select(button.dataset.borough);
+        };
+      });
     }
-    top.querySelector("select").value = this.monthlyAll ? "all" : this.selected;
+    top.querySelectorAll("[data-borough]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.borough === (this.monthlyAll ? "all" : this.selected))));
     const series = (this.monthlyAll ? ORDER : [this.selected]).map(
       (borough) => ({
         borough,
@@ -347,7 +352,7 @@ export class LivingNewspaper {
     const queensDecember = this.model.monthly.Queens[11];
     page.querySelector(".shock-number").classList.add("has-definition");
     page.querySelector(".shock-number").innerHTML =
-      `<span class="rate-value">${percent(queensDecember.rate)}</span><span class="rate-definition">of initial inspections recorded rat activity</span><small>QUEENS<br>DECEMBER 2025</small>`;
+      `<span class="rate-value">${percent(queensDecember.rate)}</span><span class="rate-definition">of initial inspections recorded rat activity</span><small>QUEENS IN DECEMBER 2025</small>`;
     const svg = d3
       .select(page.querySelector("svg"))
       .attr("viewBox", this.monthlyAll ? "0 0 740 445" : "0 0 740 400");
@@ -450,12 +455,7 @@ export class LivingNewspaper {
             e.preventDefault();
             this.pickMonth(d);
           }
-        })
-        .append("title")
-        .text(
-          (d) =>
-            `${d.borough}: ${MONTHS[d.month - 1]}: ${number(d.active)} / ${number(d.total)} initial inspections; ${percent(d.rate)}`,
-        );
+        });
     }
     if (this.monthlyAll) {
       const legend = svg.append("g").attr("class", "monthly-legend");
@@ -545,9 +545,11 @@ export class LivingNewspaper {
     paper.onpointerup = (e) => {
       if (!drag || drag.id !== e.pointerId) return;
       suppressClick = drag.moved;
+      const discard = drag.moved && Math.hypot(this.paperPosition.x, this.paperPosition.y) > 65;
       drag = null;
       paper.releasePointerCapture(e.pointerId);
       pocket.classList.remove("pulling");
+      if (discard) this.discardPaper();
     };
     const cancel = () => {
       drag = null;
@@ -560,11 +562,9 @@ export class LivingNewspaper {
         suppressClick = false;
         return;
       }
-      const covered =
-        Math.hypot(this.paperPosition.x, this.paperPosition.y) < 100;
-      // Click/tap and keyboard users can park it at the newspaper's outer edge.
-      place(covered ? -560 : 0, covered ? 150 : 0);
+      this.discardPaper();
     };
+
     paper.onkeydown = (e) => {
       const directions = {
         ArrowLeft: [-35, 0],
@@ -585,6 +585,20 @@ export class LivingNewspaper {
       }
     };
   }
+  discardPaper() {
+    const paper = this.pages[1].querySelector(".loose-paper");
+    if (paper.hidden || paper.dataset.discarded) return;
+    paper.dataset.discarded = "true";
+    this.revealContext(100);
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) { paper.hidden = true; return; }
+    paper.disabled = true;
+    paper.querySelector("img").animate([
+      {transform:`translate(0px, 0px) scale(1) rotate(0deg)`, opacity:1},
+      {transform:`translate(35px, -30px) scale(.25,.35) rotate(45deg)`, offset:.45, borderRadius:"50%", opacity:1},
+      {transform:`translate(680px, -360px) scale(.06) rotate(290deg)`, opacity:0}
+    ], {duration:750, easing:"cubic-bezier(.4,0,.8,.3)"}).finished.then(() => { paper.hidden = true; }).catch(() => {});
+  }
   revealContext(value) {
     this.contextPull = value;
     const p = this.pages[1];
@@ -593,8 +607,8 @@ export class LivingNewspaper {
     paper.setAttribute(
       "aria-label",
       value >= 45
-        ? "Move loose paper back over the comparison"
-        : "Move loose paper aside to read the comparison",
+        ? "Crumple and throw away the loose paper"
+        : "Crumple and throw away the loose paper to read the comparison",
     );
     if (!this.model) return;
     let clipping = p.querySelector(".context-reveal");

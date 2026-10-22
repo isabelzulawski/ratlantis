@@ -224,7 +224,7 @@ export class UI {
   backpack() {
     const state = this.scene.state;
     this.panel(
-      `<h2>Backpack</h2><p class="footer">Drag an item onto a nearby target to use it. Click the newspaper to read it.</p><div id="items">${
+      `<p class="footer">Drag an item onto a nearby target to use it. Click the newspaper to read it.</p><div id="items">${
         state.inventory.length
           ? state.inventory
               .filter((id) => ITEMS[id])
@@ -240,15 +240,14 @@ export class UI {
     this.root.querySelector("#close").onclick = () => this.clear();
     const card = this.root.firstChild;
     card.classList.add("bag-panel");
-    const heading = card.querySelector("h2"),
-      items = card.querySelector("#items"),
+    const items = card.querySelector("#items"),
       notice = card.querySelector("#dropNotice"),
       journal = card.querySelector(".journal"),
       tip = card.querySelector(".footer"),
       close = card.querySelector("#close");
     const left = document.createElement("div");
     left.className = "bag-pocket";
-    left.append(heading, items, tip, notice);
+    left.append(items, tip, notice);
     const right = document.createElement("div");
     right.className = "bag-journal";
     right.append(journal);

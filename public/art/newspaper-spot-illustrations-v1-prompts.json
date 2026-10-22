@@ -1,0 +1,13 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "path": "public/art/newspaper-magnifying-rat-v1.png",
+      "prompt": "Use case: illustration-story. Asset: transparent spot illustration for an antique rat newspaper. The attached sprite sheet is STYLE AND CHARACTER REFERENCE ONLY. Create ONE full-body curious rat with the same natural rat proportions, rounded ears, small backpack and fine detailed fur, standing upright and holding a round brass magnifying glass in its front paws, looking through it toward the right. Entire rat, tail, feet and magnifying glass fully visible. Render as a delicate monochrome charcoal/sepia copperplate engraving, fine crosshatching, vintage newspaper ink, expressive but not cartoonish. Single isolated character, clean genuinely transparent background with no glow, no square backdrop, no paper, no text, no lettering, no border. Compact portrait composition with comfortable transparent margin. Do not include other poses or other rats."
+    },
+    {
+      "path": "public/art/newspaper-crown-v1.png",
+      "prompt": "Use case: illustration-story. Asset: a small newspaper spot illustration on genuine transparent background. Draw ONE charming slightly wonky three-point royal crown, antique brass/gold with tiny round tips, a couple small engraved jewel shapes and delicate crosshatching. Vintage copperplate newspaper engraving style, dark sepia ink with restrained muted ochre wash, tactile hand-drawn linework, matches an old whimsical newspaper about city rats. Simple strong silhouette readable at 150 pixels wide. Crown only, centered in a landscape composition, fully visible with modest transparent margins. No rat, no face, no lettering, no text, no backdrop, no white rectangle, no paper, no drop shadow, no watermark."
+    }
+  ]
+}
