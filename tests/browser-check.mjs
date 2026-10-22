@@ -256,7 +256,7 @@ for (const line of [
   );
   await page.getByRole("button", { name: "Continue", exact: true }).click();
 }
-await page.getByRole("button", { name: "Close City Records" }).click();
+assert.equal(await page.locator(".paper-pages").count(), 0, "The squirrel gift stays in the backpack without opening automatically");
 assert.deepEqual(await page.evaluate(() => ratlantis.state.inventory), [
   "pizza",
   "newspaper",

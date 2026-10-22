@@ -17,5 +17,5 @@ export function shortJournalNote(text) {
   return SHORT_NOTES.find(([pattern])=>pattern.test(text))?.[1] || text;
 }
 export function journalNotes(state) {
-  return [...new Set(state.journal.map(shortJournalNote))].reverse();
+  return [...new Set(state.journal.map(shortJournalNote))];
 }

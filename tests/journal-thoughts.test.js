@@ -6,7 +6,7 @@ test('old journal notes become brief without modifying saved history',()=>{
  const state={journal:['Met a retired busker in Brooklyn.','Ferry ticket received. Note on the back: “Ask for the rat with the mop.” Follow the ferry boarding passage at the right of the Brooklyn alcove.','Reached the audition-room vent.','The pipe leads to an open vent overlooking the audition room.']};
  const original=state.journal.slice(),notes=journalNotes(state);
  assert.deepEqual(state.journal,original);
- assert.equal(notes.length,3);
+ assert.deepEqual(notes,['Met the Brooklyn busker.','Ferry ticket: ask for the rat with the mop.','Found the audition-room vent.']);
  assert.ok(notes.includes('Met the Brooklyn busker.'));
  assert.ok(notes.includes('Ferry ticket: ask for the rat with the mop.'));
  assert.ok(notes.every(n=>n.length<65));

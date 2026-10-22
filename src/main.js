@@ -7,6 +7,8 @@ if (new URLSearchParams(location.search).get("data") === "newspaper") {
   window.cityRecords.open("newspaper");
 } else {
   async function startAdventure() {
+    const { setMusicContext } = await import("./audio.js");
+    setMusicContext("loading");
     document.querySelector("#overlay").innerHTML =
       '<section class="panel"><p id="loading-progress" role="status">Opening Ratlantis…</p></section>';
     const [{ default: Phaser }, { Opening }] = await Promise.all([

@@ -66,6 +66,7 @@ export class Pizza {
         text: "Pack a piece",
         action: () => {
           const added = collectPizza(s.state);
+          if (added) s.playPickup();
           s.persist();
           s.ui.message(
             added

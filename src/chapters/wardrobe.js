@@ -14,7 +14,7 @@ export function openWardrobe(s, rehearse = null) {
       )
       .join(
         "",
-      )}<h3>Found along the way</h3><div class="wardrobe-options">${(s.state.accessories || []).map((id) => `<button data-accessory="${id}">${id}</button>`).join("") || "<p>No accessories found yet.</p>"}<button data-clear-accessories>Remove accessories</button></div></div></div><p class="footer">Any outfit is welcome.</p>${rehearse ? "<button data-ready>Ready for rehearsal</button>" : ""}<button data-close>Close</button>`,
+      )}<h3>Found along the way</h3><div class="wardrobe-options">${(s.state.accessories || []).map((id) => `<button data-accessory="${id}">${id}</button>`).join("") || "<p>No accessories found yet.</p>"}<button data-clear-accessories>Remove accessories</button></div></div></div>${rehearse ? "<button data-ready>Ready for rehearsal</button>" : ""}<button data-close>Close</button>`,
     true,
   );
   card.classList.add("wardrobe-panel");

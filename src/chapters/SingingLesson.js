@@ -1,3 +1,4 @@
+import { audioPreferences, setAudioPreference } from "../audio.js";
 import { SINGING } from "../data/brooklyn.js";
 import { lessonRound, completeRound } from "./brooklyn-state.js";
 import "./singing.css";
@@ -15,7 +16,7 @@ export class SingingLesson {
     this.closed = false;
     this.index = 0;
     const card = this.ui.panel(
-      `<h2>A little voice practice</h2><p class="lesson-round"></p><p class="lesson-status" role="status"></p><div class="note-controls">${SINGING.notes.map((n, i) => `<button data-note="${i}" aria-label="Note ${n.label}"><span>${n.mark}</span>${n.label}</button>`).join("")}</div><div class="lesson-actions"><button data-replay>Listen again</button><button data-sound>Sound: ${this.scene.state.sound ? "on" : "off"}</button><button data-close>Practice later</button></div>`,
+      `<h2>A little voice practice</h2><p class="lesson-round"></p><p class="lesson-status" role="status"></p><div class="note-controls">${SINGING.notes.map((n, i) => `<button data-note="${i}" aria-label="Note ${n.label}"><span>${n.mark}</span>${n.label}</button>`).join("")}</div><div class="lesson-actions"><button data-replay>Listen again</button><button data-sound>Sound FX: ${audioPreferences.effects ? "on" : "off"}</button><button data-close>Practice later</button></div>`,
     );
     card.classList.add("singing-panel");
     this.card = card;
@@ -35,11 +36,12 @@ export class SingingLesson {
       .forEach((b) => (b.onclick = () => this.choose(+b.dataset.note)));
     card.querySelector("[data-replay]").onclick = () => this.demonstrate();
     card.querySelector("[data-sound]").onclick = () => {
-      this.scene.state.sound = !this.scene.state.sound;
+      setAudioPreference("effects", !audioPreferences.effects);
       this.scene.audioToggle();
       this.scene.persist();
+      this.ui.refreshAudioControls();
       card.querySelector("[data-sound]").textContent =
-        `Sound: ${this.scene.state.sound ? "on" : "off"}`;
+        `Sound FX: ${audioPreferences.effects ? "on" : "off"}`;
     };
     card.querySelector("[data-close]").onclick = () => {
       this.cancel();

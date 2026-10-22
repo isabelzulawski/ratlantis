@@ -27,7 +27,7 @@ try {
  await p.evaluate(()=>{ratlantis.state.flags={acting:true,wardrobe:true};ratlantis.state.journal=['Goal: try for a Broadway audition.','Next destination: Broadway–Lafayette station.','A park squirrel gave me a newspaper. I can read it from my backpack.','Lead: a retired busker in Brooklyn may help. Follow the bridge maintenance ledge past the delivery depot.','Met a retired busker in Brooklyn.','Skill learned: singing.','Ferry ticket received. Note on the back: “Ask for the rat with the mop.” Follow the ferry boarding passage at the right of the Brooklyn alcove.','Skill learned: dancing. Next: the electrical-cabinet theater in Queens.','Skill learned: acting. Crawl through the pipes back to Manhattan. Follow the warm light to the audition-room vent.'];});
  await p.locator('#bag').click();assert.equal(await p.locator('.journal-notes p').count(),4);
  assert.ok((await p.locator('.journal-notes').innerText()).length<220);
- await p.getByRole('button',{name:'Earlier notes',exact:true}).click();
+ await p.getByRole('button',{name:'Later notes',exact:true}).click();
  assert.ok(await p.locator('.journal-notes p').count());
  await p.screenshot({path:'tests/compact-journal.png'});
  await p.getByRole('button',{name:'Close backpack',exact:true}).click();

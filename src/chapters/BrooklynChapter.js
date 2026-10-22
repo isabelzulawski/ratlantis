@@ -21,7 +21,7 @@ export class BrooklynChapter {
             {
               text: "Pack it",
               action: () => {
-                collectBread(s.state);
+                if (collectBread(s.state)) s.playPickup();
                 s.persist();
                 s.bread?.destroy();
                 s.ui.clear();
@@ -94,18 +94,42 @@ export class BrooklynChapter {
       })),
       s.busker,
       "Busker",
+      "busker-greeting",
     );
+  }
+  canGiveFood() {
+    const s = this.scene;
+    if (s.id !== "brooklyn" || !s.busker || s.state.flags.buskerFed) return false;
+    const bounds = s.busker.getBounds(), camera = s.cameras.main;
+    // If the player can see and target him, the handoff should work. Requiring
+    // the protagonist to stand within a hidden radius rejected visible drops.
+    return bounds.right >= camera.scrollX && bounds.left <= camera.scrollX + camera.width &&
+      bounds.bottom >= camera.scrollY && bounds.top <= camera.scrollY + camera.height;
+  }
+  dropNotice(item) {
+    const s = this.scene;
+    if (s.id === "brooklyn" && ["pizza", "bread"].includes(item)) {
+      if (s.state.flags.buskerFed) return "He has already eaten. Close the backpack and talk to him to practice.";
+      return "Drop the food near the busker, or use Give to busker beneath the food.";
+    }
+    return "No suitable target here. The item returned to your backpack.";
+  }
+  give(item) {
+    const s = this.scene;
+    if (!this.canGiveFood() || !giveFood(s.state, item, "busker")) return false;
+    s.persist();
+    return true;
   }
   drop(item, x, y) {
     const s = this.scene;
     if (s.id !== "brooklyn" || !s.busker) return false;
     const bounds = s.busker.getBounds();
-    const nearby = Math.abs(s.player.body.center.x - s.busker.x) < 230;
-    if (!nearby || !bounds.contains(x, y)) return false;
-    if (!giveFood(s.state, item, "busker")) return false;
-    s.persist();
-    return true;
+    // Include the space around the rat, not just the narrow sprite silhouette.
+    if (x < bounds.left - 75 || x > bounds.right + 75 ||
+        y < bounds.top - 50 || y > bounds.bottom + 50) return false;
+    return this.give(item);
   }
+
   afterFood() {
     const s = this.scene;
     s.ui.message(BUSKER.thanks, () => this.talk(), s.busker, "Busker");
@@ -121,7 +145,7 @@ export class BrooklynChapter {
     let index = 0;
     const next = () => {
       if (index === BUSKER.gift.length) {
-        awardTicket(s.state);
+        if (awardTicket(s.state)) s.playPickup();
         s.persist();
         s.ui.clear();
         return;

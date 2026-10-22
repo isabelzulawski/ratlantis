@@ -15,7 +15,7 @@ export class Newspaper {
   open(view = "newspaper", after = null) {
     this.after = after;
     this.opened = true;
-    this.page = view === "trend" ? 1 : 0;
+    this.page = 0;
     if (this.ui) this.ui.panel("", true);
     else this.root.innerHTML = '<section class="panel"></section>';
     this.sheet = this.root.firstChild;

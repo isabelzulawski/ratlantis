@@ -11,6 +11,7 @@ const page = await browser.newPage({ viewport: { width: 1200, height: 675 } }),
   errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 await page.addInitScript(() => {
+  localStorage.setItem("ratlantis-audio-v1", JSON.stringify({music:false,effects:false}));
   if (!localStorage.getItem("ratlantis-opening-v1"))
     localStorage.setItem(
       "ratlantis-opening-v1",

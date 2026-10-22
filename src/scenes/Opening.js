@@ -1,3 +1,4 @@
+import { music, audioPreferences, setMusicContext } from "../audio.js";
 import { plotThought } from "../data/plot-thoughts.js";
 import Phaser from "phaser";
 import { installIllustratedLook } from "../rendering/IllustratedPipeline.js";
@@ -23,14 +24,17 @@ export class Opening extends Phaser.Scene {
         indicator.textContent = `Opening Ratlantis… ${Math.round(value * 100)}%`;
     });
     loadAssets(this);
+    this.load.audio("pickup-sound", assetUrl("audio/inventory-grab.wav"));
     this.load.audio("jump-sound", assetUrl("audio/little-fighter-jump.wav"));
-    this.load.audio("city-ambience", assetUrl("audio/city-life-ambient.mp3"));
+    this.load.audio("walking-sound", assetUrl("audio/walking-leaves-loop.mp3"));
   }
   create() {
     setupArtFrames(this);
     this.illustratedLook = installIllustratedLook(this);
-    this.cityAmbience = this.sound.add("city-ambience", { loop: true, volume: 0.3 });
-    this.jumpSound = this.sound.add("jump-sound", { volume: 0.5 });
+    this.music = music;
+    this.walkSound = this.sound.add("walking-sound", { loop: true, volume: 0.16 });
+    this.pickupSound = this.sound.add("pickup-sound", { volume: 0.18 });
+    this.jumpSound = this.sound.add("jump-sound", { volume: 0.2 });
     this.ui = new UI(this);
     this.chapter = new BrooklynChapter(this);
     this.finale = new FinalChapters(this);
@@ -42,8 +46,10 @@ export class Opening extends Phaser.Scene {
     window.ratlantis = this;
   }
   showTitleArt() {
-    this.cityAmbience?.stop();
+    setMusicContext("menu");
+    this.walkSound?.stop();
     this.jumpSound?.stop();
+    this.pickupSound?.stop();
     this.cameras.main.stopFollow();
     this.cameras.main.setBounds(0, 0, 1200, 675).setScroll(0, 0);
     this.add
@@ -57,6 +63,7 @@ export class Opening extends Phaser.Scene {
     this.saveFailed = !save(this.state);
   }
   freeze() {
+    this.walkSound?.stop();
     this.pizzaControl?.cancel();
     this.locked = true;
     this.held = false;
@@ -64,6 +71,7 @@ export class Opening extends Phaser.Scene {
     this.player?.body.setVelocityX(0);
   }
   resetWorld() {
+    this.walkSound?.stop();
     this.chapter?.cleanup();
     this.finale?.cleanup();
     this.pizzaControl?.cancel();
@@ -90,6 +98,7 @@ export class Opening extends Phaser.Scene {
     this.ui.cue = null;
   }
   enter(id, spawn = null) {
+    setMusicContext("game");
     this.resetWorld();
     this.id = id;
     this.state.scene = id;
@@ -183,6 +192,7 @@ export class Opening extends Phaser.Scene {
   transitionTo(id, spawn = null) {
     if (this.transitioning) return;
     this.transitioning = true;
+    setMusicContext("loading");
     this.freeze();
     this.cameras.main.fadeOut(160, 7, 18, 26);
     this.time.delayedCall(160, () => {
@@ -227,7 +237,7 @@ export class Opening extends Phaser.Scene {
       return;
     }
     this.ui.dialogue(
-      "An audition for a rat? Maybe I could try.",
+      "An audition for a rat?",
       DIALOGUE.billboard.map((text) => ({
         text,
         action: () => {
@@ -238,6 +248,7 @@ export class Opening extends Phaser.Scene {
         },
       })),
     );
+    this.ui.root.firstChild.classList.add("audition-dialogue");
   }
   tryStreetExit() {
     if (this.state.flags.audition) this.transitionTo("downtown");
@@ -353,7 +364,7 @@ export class Opening extends Phaser.Scene {
         .setDepth(13);
       this.ui.worldCue(this.dockworker, "You can’t park that here!", () =>
         this.ui.dialogue(
-          "That fall brought me here in a boat. I should ask where I am.",
+          "That fall brought me here.",
           DIALOGUE.dockChoices.map((text, i) => ({
             text,
             action: () =>
@@ -384,6 +395,7 @@ export class Opening extends Phaser.Scene {
                 "Dockworker",
               ),
           })),
+          null, null, "arrival-dialogue",
         ),
       );
       this.bindObject(
@@ -480,14 +492,13 @@ export class Opening extends Phaser.Scene {
     if (!this.state.flags.lamppostInvited || this.state.flags.newspaperReceived)
       return;
     this.conversation(DIALOGUE.squirrelAfterReading, () => {
-      collectNewspaper(this.state);
+      if (collectNewspaper(this.state)) this.playPickup();
       learn(
         this.state,
         "squirrel",
         "A park squirrel gave me a newspaper. I can read it from my backpack.",
       );
       this.persist();
-      this.ui.records.open("newspaper");
     });
   }
   tryParkExit() {
@@ -499,8 +510,12 @@ export class Opening extends Phaser.Scene {
   }
   drawCursor(p) {
     this.cursor.clear();
-    if (this.locked) return;
+    if (this.locked) {
+      this.game.canvas.style.cursor = "default";
+      return;
+    }
     const hit = this.input.hitTestPointer(this.input.activePointer).length > 0;
+    this.game.canvas.style.cursor = hit ? "pointer" : "default";
     const jump =
       !hit &&
       releaseAction(this.player, p, MOVEMENT.upwardThreshold) === "jump";
@@ -510,20 +525,44 @@ export class Opening extends Phaser.Scene {
       .lineStyle(1.3, jump ? 0xffd88d : 0xe5ddc5, 0.85)
       .strokeCircle(x, y, 9);
     if (hit) {
+      // A solid gold mouse badge and native hand distinguish interactions from
+      // the outlined directional arrow used for movement.
       this.cursor
-        .lineStyle(1.3, 0xffd88d)
-        .lineBetween(x - 3, y, x + 3, y)
-        .lineBetween(x, y - 3, x, y + 3);
-    } else if (jump) {
+        .fillStyle(0xffd88d, 0.98)
+        .fillCircle(x, y, 12)
+        .lineStyle(1.7, 0x172430, 1)
+        .strokeRoundedRect(x - 4, y - 6, 8, 12, 4)
+        .lineBetween(x - 4, y - 1, x + 4, y - 1)
+        .lineBetween(x, y - 6, x, y - 1)
+        .lineStyle(1.7, 0xffd88d, 1)
+        .lineBetween(x - 8, y - 12, x - 10, y - 15)
+        .lineBetween(x, y - 14, x, y - 17)
+        .lineBetween(x + 8, y - 12, x + 10, y - 15);
+    } else {
+      // Point from the rat toward the target, in world coordinates so scrolling
+      // does not change the direction shown by the cursor.
+      const dx = p.x - this.player.body.center.x;
+      const dy = p.y - this.player.body.center.y;
+      const length = Math.hypot(dx, dy);
+      if (length < MOVEMENT.stopRadius) {
+        this.cursor.fillStyle(0xe5ddc5, 0.85).fillRect(x - 2, y - 2, 4, 4);
+        return;
+      }
+      const ux = dx / length, uy = dy / length;
+      const tipX = x + ux * 5, tipY = y + uy * 5;
       this.cursor
-        .lineStyle(1.5, 0xffd88d)
-        .lineBetween(x, y + 4, x, y - 5)
-        .lineBetween(x, y - 5, x - 4, y - 1)
-        .lineBetween(x, y - 5, x + 4, y - 1);
-    } else this.cursor.fillStyle(0xe5ddc5, 0.85).fillRect(x - 2, y - 2, 4, 4);
+        .lineStyle(1.5, jump ? 0xffd88d : 0xe5ddc5)
+        .lineBetween(x - ux * 4, y - uy * 4, tipX, tipY)
+        .lineBetween(tipX, tipY, x + uy * 4, y - ux * 4)
+        .lineBetween(tipX, tipY, x - uy * 4, y + ux * 4);
+    }
   }
   update(time, delta) {
     if (!this.player) return;
+    const walking = audioPreferences.effects && !this.locked && !this.transitioning &&
+      this.player.body.blocked.down && Math.abs(this.player.body.velocity.x) > 15;
+    if (walking && !this.walkSound.isPlaying) this.walkSound.play();
+    else if (!walking && this.walkSound.isPlaying) this.walkSound.stop();
     this.ui.positionBubble();
     this.finale.update(time);
     const singing =
@@ -585,17 +624,46 @@ export class Opening extends Phaser.Scene {
     const b = this.player.body;
     this.player.x = Phaser.Math.Clamp(this.player.x, 30, this.def.width - 30);
     if (b.blocked.down) {
-      const stable = this.def.platforms.some(
-        ([x, y, w]) =>
-          Math.abs(b.bottom - y) < 3 &&
-          b.center.x > x + 10 &&
-          b.center.x < x + w - 10,
-      );
-      if (stable) this.safe = { x: this.player.x, y: this.player.y - 3 };
+      const standing = this.def.platforms.find(([x, y, w]) =>
+        Math.abs(b.bottom - y) < 3 && b.center.x >= x && b.center.x <= x + w);
+      if (standing) {
+        const [x, y, w] = standing;
+        const margin = b.halfWidth + 6;
+        const center = Phaser.Math.Clamp(b.center.x, x + margin, x + w - margin);
+        // Store a point above the surface, rather than an overhanging edge.
+        this.safe = {
+          x: this.player.x + center - b.center.x,
+          y: this.player.y + y - b.bottom - 2,
+        };
+        if (!this.jumping && Math.abs(b.velocity.x) > 0) {
+          const nextX = b.center.x + Math.sign(b.velocity.x) *
+            (margin + Math.abs(b.velocity.x) * Math.min(delta, 40) / 1000);
+          const landingBelow = this.def.platforms.some(([px, py, pw]) =>
+            nextX >= px && nextX <= px + pw && py >= b.bottom - 3 && py < MOVEMENT.recoveryY);
+          if (!landingBelow) {
+            // Stop at unsupported ledges. Lower stair treads and floors still
+            // count as landings, so walking down stairs stays natural.
+            const shift = center - b.center.x;
+            b.position.x += shift;
+            b.prev.x += shift;
+            b.prevFrame.x += shift;
+            b.updateCenter();
+            b.setVelocityX(0);
+          }
+        }
+      }
     }
-    if (this.player.y > MOVEMENT.recoveryY) {
-      this.player.setPosition(this.safe.x, this.safe.y);
-      b.setVelocity(0);
+    if (b.top > MOVEMENT.recoveryY || this.player.y > MOVEMENT.recoveryY) {
+      this.pizzaControl?.cancel();
+      this.walkSound?.stop();
+      // Reset the physics body AND previous position. Moving only the sprite
+      // leaves stale collision history that can miss one-way stair surfaces.
+      b.reset(this.safe.x, this.safe.y);
+      b.updateFromGameObject();
+      b.prev.copy(b.position);
+      b.prevFrame.copy(b.position);
+      b.autoFrame.copy(b.position);
+      b.setVelocity(0, 0);
       this.movement.reset();
     }
     const tug =
@@ -661,18 +729,22 @@ export class Opening extends Phaser.Scene {
     }
   }
   audioToggle() {
-    const enabled = Boolean(this.state?.sound);
-    this.sound.setMute(!enabled);
+    const enabled = audioPreferences.effects;
+    if (this.state) this.state.sound = enabled; // Legacy save compatibility.
+    this.pickupSound.setMute(!enabled);
+    this.jumpSound.setMute(!enabled);
+    this.walkSound.setMute(!enabled);
+    if (!enabled) { this.jumpSound.stop(); this.walkSound.stop(); this.pickupSound.stop(); }
+    if (this.effectsGain) this.effectsGain.gain.value = enabled ? 1 : 0;
     if (enabled) {
-      // Singing still uses synthesized pitches; ambience uses the supplied loop.
       try {
         this.audio ??= new AudioContext();
+        this.effectsGain ??= this.audio.createGain();
+        this.effectsGain.disconnect();
+        this.effectsGain.connect(this.audio.destination);
+        this.effectsGain.gain.value = 1;
         this.audio.resume().catch(() => {});
       } catch {}
-      if (!this.cityAmbience.isPlaying && !this.cityAmbience.isPaused)
-        this.cityAmbience.play();
-    } else {
-      this.jumpSound.stop();
     }
   }
   performPlayer(action) {
@@ -688,7 +760,7 @@ export class Opening extends Phaser.Scene {
       this.rat.facing = action === "left" ? -1 : 1;
   }
   playLessonNote(hz, duration) {
-    if (!this.state.sound) return;
+    if (!audioPreferences.effects) return;
     this.audioToggle();
     if (!this.audio) return;
     const oscillator = this.audio.createOscillator(),
@@ -697,14 +769,17 @@ export class Opening extends Phaser.Scene {
     oscillator.frequency.value = hz;
     const now = this.audio.currentTime;
     gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.09, now + 0.025);
+    gain.gain.linearRampToValueAtTime(0.065, now + 0.025);
     gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-    oscillator.connect(gain).connect(this.audio.destination);
+    oscillator.connect(gain).connect(this.effectsGain);
     oscillator.start(now);
     oscillator.stop(now + duration + 0.04);
   }
+  playPickup() {
+    if (audioPreferences.effects) this.pickupSound.play();
+  }
   squeak() {
-    if (!this.state.sound) return;
+    if (!audioPreferences.effects) return;
     this.jumpSound.play();
   }
 }

@@ -110,7 +110,7 @@ export class FinalChapters {
         s.ui.message("Something glints up there.");
         return;
       }
-      discoverAccessory(s.state, id);
+      if (discoverAccessory(s.state, id)) s.playPickup();
       s.persist();
       item.destroy();
       s.ui.message(
@@ -211,6 +211,7 @@ export class FinalChapters {
       })),
       s.director,
       "Director",
+      "acting-prompt",
     );
   }
   toPipe() {

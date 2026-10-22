@@ -512,3 +512,15 @@ label {
 .world-thought-cue[hidden] {
   display: none;
 }
+
+.audio-controls { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.title-panel .audio-controls button { font-size: 12px; min-width: 110px; padding: 8px 12px; }
+
+.audition-dialogue h2 { transform: translateY(8px); }
+
+.item .give-food { display: block; margin: 8px auto 0; padding: 7px 10px; font-size: 12px; }
+
+.arrival-dialogue h2, .busker-greeting h2 { transform: translateY(8px); }
+.arrival-dialogue h2 { font-size: clamp(16px, 2.3vw, 20px); white-space: nowrap; }
+
+.character-bubble.acting-prompt h2 { margin: 18px 0 0; }

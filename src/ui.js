@@ -1,3 +1,4 @@
+import { audioPreferences, setAudioPreference } from "./audio.js";
 import { journalNotes } from "./data/journal.js";
 import { FURS, DIALOGUE, ITEMS } from "./data/config.js";
 import { FUR_FILTER, itemPicture, assetUrl } from "./art/assets.js";
@@ -42,12 +43,35 @@ export class UI {
     this.root.innerHTML = `<section class="panel ${wide ? "wide" : ""}">${html}</section>`;
     return this.root.firstChild;
   }
+  audioControls() {
+    return `<div class="audio-controls"><button id="music">Music: ${audioPreferences.music ? "on" : "off"}</button><button id="sound">Sound FX: ${audioPreferences.effects ? "on" : "off"}</button></div>`;
+  }
+  refreshAudioControls() {
+    document.querySelectorAll("#music").forEach(button => {
+      button.textContent = `Music: ${audioPreferences.music ? "on" : "off"}`;
+    });
+    document.querySelectorAll("#sound, [data-sound]").forEach(button => {
+      button.textContent = `Sound FX: ${audioPreferences.effects ? "on" : "off"}`;
+    });
+  }
+  bindAudioControls(root) {
+    for (const [id, kind] of [["music", "music"], ["sound", "effects"]]) {
+      root.querySelector(`#${id}`).onclick = () => {
+        setAudioPreference(kind, !audioPreferences[kind]);
+        this.scene.audioToggle();
+        if (this.scene.state) this.scene.persist();
+        this.refreshAudioControls();
+      };
+    }
+  }
   title() {
     const existing = load();
     this.panel(
       `<h1><img class="wordmark" src="${assetUrl("art/title-wordmark-v2.webp")}" alt="Ratlantis"></h1>${existing ? '<button id="continue">Continue</button><button class="secondary" id="new">New Game</button>' : '<button id="new">Begin</button>'}`,
     );
     this.root.firstChild.classList.add("title-panel");
+    this.root.firstChild.insertAdjacentHTML("beforeend", this.audioControls());
+    this.bindAudioControls(this.root);
     this.root.querySelector("#continue")?.addEventListener("click", () => {
       this.scene.state = existing;
       this.clear();
@@ -105,11 +129,12 @@ export class UI {
       this.scene.enter("street");
     };
   }
-  dialogue(text, choices, target = null, speaker = null) {
+  dialogue(text, choices, target = null, speaker = null, className = "") {
     this.panel(
       `<p class="eyebrow">${this.scene.state.name.replace(/[<>&]/g, "")}</p><h2>${text}</h2><div class="choices">${choices.map((c, i) => `<button data-choice="${i}">${c.text}</button>`).join("")}</div>`,
     );
     this.root.firstChild.classList.add("speech", "character-bubble");
+    if (className) this.root.firstChild.classList.add(className);
     this.bubbleTarget = target;
     this.root.querySelector(".eyebrow").textContent =
       speaker || this.scene.state.name;
@@ -241,8 +266,8 @@ export class UI {
       paging.replaceChildren();
       if (notes.length > journalSize) {
         const newer = document.createElement("button"), older = document.createElement("button"), page = document.createElement("span");
-        newer.textContent = "←"; newer.setAttribute("aria-label", "Newer notes"); newer.disabled = journalPage === 0;
-        older.textContent = "→"; older.setAttribute("aria-label", "Earlier notes"); older.disabled = (journalPage + 1) * journalSize >= notes.length;
+        newer.textContent = "←"; newer.setAttribute("aria-label", "Earlier notes"); newer.disabled = journalPage === 0;
+        older.textContent = "→"; older.setAttribute("aria-label", "Later notes"); older.disabled = (journalPage + 1) * journalSize >= notes.length;
         page.textContent = `${journalPage + 1} / ${Math.ceil(notes.length / journalSize)}`;
         newer.onclick = () => {journalPage--; drawJournal();}; older.onclick = () => {journalPage++; drawJournal();};
         paging.append(newer, page, older);
@@ -253,6 +278,23 @@ export class UI {
     layout.className = "bag-layout";
     layout.append(left, right);
     card.replaceChildren(layout, close);
+    if (this.scene.chapter?.canGiveFood()) {
+      tip.textContent = "Click Give to busker below a food item, or drag it near him.";
+      for (const item of this.root.querySelectorAll('[data-item="bread"], [data-item="pizza"]')) {
+        const give = document.createElement("button");
+        give.textContent = "Give to busker";
+        give.className = "give-food";
+        give.onpointerdown = event => event.stopPropagation();
+        give.onclick = event => {
+          event.stopPropagation();
+          if (this.scene.chapter.give(item.dataset.item)) {
+            this.clear();
+            this.scene.chapter.afterFood();
+          }
+        };
+        item.append(give);
+      }
+    }
     this.root
       .querySelector("[data-item='newspaper']")
       ?.addEventListener("click", () => {
@@ -301,7 +343,7 @@ export class UI {
           this.scene.held = false;
           this.scene.objectPress = null;
           this.scene.inputBlockedUntil = performance.now() + 200;
-          if (!dragged) return;
+          if (!dragged || ev.type !== "pointerup") return;
           this.suppressReadUntil = performance.now() + 300;
           const rect = this.scene.game.canvas.getBoundingClientRect(),
             camera = this.scene.cameras.main;
@@ -315,6 +357,7 @@ export class UI {
             this.scene.chapter.afterFood();
           } else
             this.root.querySelector("#dropNotice").textContent =
+              this.scene.chapter?.dropNotice(el.dataset.item) ||
               "No suitable target here. The item returned to your backpack.";
         };
         window.addEventListener("pointermove", move);
@@ -348,7 +391,7 @@ export class UI {
     const h = document.createElement("aside");
     h.id = "hud";
     h.className = "hud";
-    h.innerHTML = `<div class="location">${title.split(": ")[0]}</div><div><button id="bag" aria-label="Backpack"><img src="${itemPicture(this.scene, "backpack")}" alt=""><span>Backpack</span></button><button id="help" aria-label="Pause / Help">Pause / Help</button><button id="wardrobe">Wardrobe</button><button id="travel">Paths</button><button id="sound">Sound: ${this.scene.state.sound ? "on" : "off"}</button></div>`;
+    h.innerHTML = `<div class="location">${title.split(": ")[0]}</div><div><button id="bag" aria-label="Backpack"><img src="${itemPicture(this.scene, "backpack")}" alt=""><span>Backpack</span></button><button id="help" aria-label="Pause / Help">Pause / Help</button><button id="wardrobe">Wardrobe</button><button id="travel">Paths</button><button id="music">Music: ${audioPreferences.music ? "on" : "off"}</button><button id="sound">Sound FX: ${audioPreferences.effects ? "on" : "off"}</button></div>`;
     if (this.scene.id === "downtown")
       h.querySelector(".location").style.visibility = "hidden";
     for (const event of ["pointerdown", "pointerup"])
@@ -362,13 +405,7 @@ export class UI {
     h.querySelector("#travel").onclick = () => this.scene.finale.map();
     h.querySelector("#bag").onclick = () => this.backpack();
     h.querySelector("#help").onclick = () => this.help();
-    h.querySelector("#sound").onclick = () => {
-      this.scene.state.sound = !this.scene.state.sound;
-      this.scene.audioToggle();
-      this.scene.persist();
-      h.querySelector("#sound").textContent =
-        `Sound: ${this.scene.state.sound ? "on" : "off"}`;
-    };
+    this.bindAudioControls(h);
     document.querySelector(".hint")?.remove();
     const hint = document.createElement("div");
     hint.className = "hint";
