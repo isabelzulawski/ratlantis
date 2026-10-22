@@ -1,8 +1,8 @@
 # Ratlantis
 
-*A small rat. A big city. A Broadway dream.*
+*A small rat in a big city with a Broadway dream!*
 
-Ratlantis is an illustrated browser adventure by Isabel Zulawski, set in New York City and the hidden rat society beneath it. A curious rat spots a Broadway audition advertisement and sets off to find its place on the stage. Along the way, everyday city infrastructure becomes a world of rat-sized homes, workplaces, and unexpected encounters.
+Ratlantis is an AI-illustrated browser adventure, set in New York City and the hidden rat society beneath it. A curious rat spots a Broadway audition advertisement and sets off to find its place on the stage. Along the way, everyday city infrastructure becomes a world of rat-sized homes, workplaces, and unexpected encounters.
 
 ## Play
 
@@ -10,7 +10,7 @@ Ratlantis is an illustrated browser adventure by Isabel Zulawski, set in New Yor
 
 **[Explore The City Records newspaper](https://isabelzulawski.github.io/rat-newspaper/)**
 
-For this midterm prototype, use a desktop or laptop with a mouse. Choose a new game to create your rat, or Continue to return to saved progress.
+Use a desktop or laptop with a mouse. Choose a new game to create your rat, or Continue to return to saved progress.
 
 ## How to play
 
@@ -41,8 +41,6 @@ The newspaper asks a related question: how does presentation shape what we belie
 ## About this prototype
 
 This midterm build includes the playable Level One route and its ending. Desktop mouse input is the supported interaction method; touch gameplay is not currently supported.
-
-For critique, feedback on navigation, interaction clarity, story pacing, and the relationship between the game and newspaper is especially useful.
 
 ## Credits and sources
 
