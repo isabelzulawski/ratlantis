@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import { installIllustratedLook } from "../rendering/IllustratedPipeline.js";
 import { validObjectClick } from "../interaction.js";
 import { SCENES, MOVEMENT, DIALOGUE } from "../data/config.js";
-import { loadAssets, setupArtFrames, FUR_TINT } from "../art/assets.js";
+import { loadAssets, setupArtFrames, FUR_TINT, assetUrl } from "../art/assets.js";
 import { RatVisual } from "../art/RatVisual.js";
 import { drawWorld, label, surface } from "../art/world.js";
 import { save, learn, releaseAction, collectNewspaper } from "../state.js";
@@ -23,10 +23,14 @@ export class Opening extends Phaser.Scene {
         indicator.textContent = `Opening Ratlantis… ${Math.round(value * 100)}%`;
     });
     loadAssets(this);
+    this.load.audio("jump-sound", assetUrl("audio/little-fighter-jump.wav"));
+    this.load.audio("city-ambience", assetUrl("audio/city-life-ambient.mp3"));
   }
   create() {
     setupArtFrames(this);
     this.illustratedLook = installIllustratedLook(this);
+    this.cityAmbience = this.sound.add("city-ambience", { loop: true, volume: 0.3 });
+    this.jumpSound = this.sound.add("jump-sound", { volume: 0.5 });
     this.ui = new UI(this);
     this.chapter = new BrooklynChapter(this);
     this.finale = new FinalChapters(this);
@@ -38,6 +42,8 @@ export class Opening extends Phaser.Scene {
     window.ratlantis = this;
   }
   showTitleArt() {
+    this.cityAmbience?.stop();
+    this.jumpSound?.stop();
     this.cameras.main.stopFollow();
     this.cameras.main.setBounds(0, 0, 1200, 675).setScroll(0, 0);
     this.add
@@ -655,26 +661,19 @@ export class Opening extends Phaser.Scene {
     }
   }
   audioToggle() {
-    if (["vent", "auditionRoom"].includes(this.id)) {
-      if (this.gain) this.gain.gain.value = 0;
-      return;
-    }
-    if (this.state.sound) {
+    const enabled = Boolean(this.state?.sound);
+    this.sound.setMute(!enabled);
+    if (enabled) {
+      // Singing still uses synthesized pitches; ambience uses the supplied loop.
       try {
         this.audio ??= new AudioContext();
-        this.audio.resume();
-        if (!this.ambient) {
-          this.ambient = this.audio.createOscillator();
-          this.gain = this.audio.createGain();
-          this.ambient.type = "sine";
-          this.ambient.frequency.value = 74;
-          this.gain.gain.value = 0.012;
-          this.ambient.connect(this.gain).connect(this.audio.destination);
-          this.ambient.start();
-        }
-        this.gain.gain.value = 0.012;
+        this.audio.resume().catch(() => {});
       } catch {}
-    } else if (this.gain) this.gain.gain.value = 0;
+      if (!this.cityAmbience.isPlaying && !this.cityAmbience.isPaused)
+        this.cityAmbience.play();
+    } else {
+      this.jumpSound.stop();
+    }
   }
   performPlayer(action) {
     const frame =
@@ -705,18 +704,7 @@ export class Opening extends Phaser.Scene {
     oscillator.stop(now + duration + 0.04);
   }
   squeak() {
-    if (!this.state.sound || !this.audio) return;
-    const o = this.audio.createOscillator(),
-      g = this.audio.createGain();
-    o.frequency.setValueAtTime(800, this.audio.currentTime);
-    o.frequency.exponentialRampToValueAtTime(
-      1200,
-      this.audio.currentTime + 0.07,
-    );
-    g.gain.setValueAtTime(0.02, this.audio.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, this.audio.currentTime + 0.1);
-    o.connect(g).connect(this.audio.destination);
-    o.start();
-    o.stop(this.audio.currentTime + 0.1);
+    if (!this.state.sound) return;
+    this.jumpSound.play();
   }
 }
