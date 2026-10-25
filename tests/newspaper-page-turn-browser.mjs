@@ -18,6 +18,21 @@ try{
  await p.screenshot({path:'tests/newspaper-mid-flip.png'});
  await p.waitForFunction(()=>!cityRecords.turning);assert.equal(await p.locator('.paper-turn-stage').count(),0);
  assert.equal(await p.evaluate(()=>cityRecords.page),1);
+ // The first map load must keep the outgoing left leaf covered until ready.
+ let releaseMap;
+ const mapGate=new Promise(resolve=>{releaseMap=resolve;});
+ await p.route('**/boroughs.geojson',async route=>{await mapGate;await route.continue();});
+ await p.locator('.paper-next').click();
+ await p.waitForTimeout(200);
+ assert.equal(await p.locator('.paper-turn-stage > .turn-snapshot [data-page="1"]').count(),1);
+ assert.equal(await p.locator('.turning-leaf').count(),0);
+ assert.equal(await p.evaluate(()=>cityRecords.turning),true);
+ releaseMap();
+ await p.locator('.turning-leaf').waitFor();
+ await p.waitForFunction(()=>!cityRecords.turning);
+ assert.equal(await p.evaluate(()=>cityRecords.page),2);
+ await p.locator('.paper-previous').click();await p.waitForFunction(()=>!cityRecords.turning);
+
  await p.locator('.paper-previous').click();await p.waitForFunction(()=>!cityRecords.turning);assert.equal(await p.evaluate(()=>cityRecords.page),0);
  await p.locator('.paper-next').click();await p.locator('.turning-leaf').waitFor();await p.locator('.paper-close').click();
  assert.equal(await p.locator('.paper-turn-stage').count(),0);

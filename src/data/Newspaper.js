@@ -79,6 +79,17 @@ export class Newspaper {
     const pages = [...this.sheet.querySelectorAll(".paper-pages > .paper-page")];
     const animate = direction && !matchMedia("(prefers-reduced-motion: reduce)").matches;
     const oldSnapshot = animate ? this.pageSnapshot(pages[this.page]) : null;
+    // Keep the outgoing spread visible while the next spread loads for the
+    // first time (the map fetch is asynchronous). Otherwise its left leaf
+    // flashes through before the turning sheet has been mounted.
+    const stage = animate ? document.createElement("div") : null;
+    if (stage) {
+      stage.className = `paper-turn-stage ${direction > 0 ? "turn-forward" : "turn-backward"}`;
+      stage.setAttribute("aria-hidden", "true");
+      stage.inert = true;
+      stage.append(oldSnapshot);
+      this.sheet.append(stage);
+    }
     this.page = next;
     this.sheet.dataset.paperPage = String(this.page);
     if (direction) this.sheet.scrollTop = 0;
@@ -96,10 +107,6 @@ export class Newspaper {
     Promise.resolve(ready).then(() => {
       if (!this.opened || this.sheet !== sheet) return;
       const nextSnapshot = this.pageSnapshot(pages[this.page]);
-      const stage = document.createElement("div");
-      stage.className = `paper-turn-stage ${direction > 0 ? "turn-forward" : "turn-backward"}`;
-      stage.setAttribute("aria-hidden", "true");
-      stage.inert = true;
       const under = document.createElement("div");
       under.className = "turn-old-under";
       under.append(oldSnapshot.cloneNode(true));
@@ -127,8 +134,10 @@ export class Newspaper {
         if (this.opened && this.sheet === sheet) updateControls();
       });
     }).catch(() => {
+      stage.remove();
+      if (!this.opened || this.sheet !== sheet) return;
       this.turning = false;
-      if (this.opened && this.sheet === sheet) updateControls();
+      updateControls();
     });
   }
 
