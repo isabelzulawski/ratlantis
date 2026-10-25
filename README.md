@@ -56,3 +56,9 @@ This midterm build includes the playable Level One route and its ending. Desktop
 - [Story and full Level One plot](STORY.md) **Spoilers**
 - [Development and local setup](DEVELOPMENT.md)
 - [Original design notes and revision history](DESIGN-NOTES.md)
+
+## Reviewing the newspaper code
+
+Start with [How the newspaper uses data](NEWSPAPER-DATA-GUIDE.md) for the input file, loading and calculation flow, current snapshot audit, limitations, active versus retained code, and styling order.
+
+After installing dependencies, run `node scripts/audit-newspaper-data.mjs` to verify the CSV and its gzip copy without changing them.

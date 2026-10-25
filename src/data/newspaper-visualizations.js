@@ -1,6 +1,7 @@
-// Isabel's D3 visualizations, integrated without changing calculations or filters.
-// Edit chart scales, marks, labels and hover titles in the three functions below.
-// The game wrapper calls a function only after its page is visible.
+// Current entry: loadInspections() loads the bundled CSV once.
+// Chart builders later in this file are retained earlier implementations.
+// Active charts: living-newspaper.js. Calculations: living-newspaper-model.js.
+// Data lineage and verification: NEWSPAPER-DATA-GUIDE.md.
 import * as d3 from "d3";
 import { assetUrl } from "../art/assets.js";
 
@@ -27,6 +28,7 @@ export function loadInspections(convertRow) {
   return csvPromise.then((rows) => rows.map(convertRow));
 }
 
+// Retained earlier chart builders; not called by the current newspaper wrapper.
 export async function makeBoroughChart() {
   try {
     // STEP 1: Load the CSV.

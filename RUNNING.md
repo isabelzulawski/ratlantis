@@ -33,7 +33,7 @@ The production files are in `dist/`. Serve that directory using a static web ser
 - `tests/browser-check.mjs`: browser integration checks. Currently uses macOS Chrome at its standard installation path; change `executablePath` for another platform. Run while the dev server is running with `node tests/browser-check.mjs`.
 
 See `BUILD-REPORT.md` for the original opening's implementation notes.
-The README now includes the implemented Washington Square Park route and City Records methodology. See `PARK-DATA-REPORT.md` for the extension's creative decisions and validation.
+The README is an audience introduction. Current City Records methodology is in NEWSPAPER-DATA-GUIDE.md. See `PARK-DATA-REPORT.md` for the extension's creative decisions and validation.
 
 ## Local data presentation
 
@@ -41,7 +41,7 @@ Open `/?data=newspaper` for the interactive three-spread newspaper. This mode do
 
 Run `node tests/living-newspaper-browser.mjs` against a running server. `RATLANTIS_TEST_URL` selects a different URL. The older `data-browser.mjs` and `data-browser-d3.mjs` describe retired versions and are not current acceptance checks.
 
-Run `npm run data:refresh` to retrieve and preprocess NYC records, or `npm run data:cached` to reproduce the cached snapshot. The published game loads local summaries and does not require a live data API.
+The current newspaper loads the bundled initial-inspection CSV (normally its gzip copy), not the older JSON summary and not a live data API. Run `node scripts/audit-newspaper-data.mjs` to check the current data. `npm run data:refresh` and `npm run data:cached` belong to the earlier acquisition/JSON-summary pipeline; they do not regenerate the CSV used by the current newspaper. See [NEWSPAPER-DATA-GUIDE.md](NEWSPAPER-DATA-GUIDE.md) before replacing data.
 
 # GitHub Pages
 

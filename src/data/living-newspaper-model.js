@@ -10,6 +10,13 @@ export const ORDER = [
 const MONTHS = Array.from({ length: 12 });
 // Same supplied CSV, filters and denominator as Isabel's original visualizations.
 // Unknown / empty outcomes remain in total; they are not labelled negative.
+/**
+ * Convert the already filtered 2025 Initial CSV into chart inputs.
+ * No source acquisition, inspection-type filtering or deduplication happens here.
+ * active is a result-label match; unknown outcomes still count in the denominator.
+ * Rates retain full precision; empty months return null rather than zero.
+ * Verify the input with scripts/audit-newspaper-data.mjs.
+ */
 export function summarizeNewspaper(rows) {
   const converted = rows.map((row) => {
     const date = row["INSPECTION DATE"].trim();

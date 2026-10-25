@@ -1,3 +1,5 @@
+> **Historical implementation notes.** Read [NEWSPAPER-DATA-GUIDE.md](NEWSPAPER-DATA-GUIDE.md) for the current dataset, code entry points, styling and interactions. The revisions below preserve development history. Earlier descriptions of pull tabs, parked scraps, automatic opening and hover tooltips are superseded.
+
 # Isabel’s newspaper integration
 
 The component supplied in Desktop/newspaper is now the game’s readable newspaper. Article wording, numerical values, captions, source notes and explanations are preserved. The supplied `rats_2025_initial.csv` is copied byte for byte to `public/data/rats_2025_initial.csv`. It contains 144,314 initial inspection visits; this intentionally replaces the earlier static spread’s 144,313-row snapshot. No extra deduplication or substitute dataset is applied to Isabel’s code.

@@ -1,3 +1,5 @@
+> **Historical implementation notes.** Read [NEWSPAPER-DATA-GUIDE.md](NEWSPAPER-DATA-GUIDE.md) for the current dataset, code entry points, styling and interactions. The revisions below preserve development history. Earlier descriptions of pull tabs, parked scraps, automatic opening and hover tooltips are superseded.
+
 # The City Records: living newspaper
 
 This optional newspaper now leads with three short fictional editorial spreads. The existing worn two-leaf artwork and folded-corner page controls remain. Each spread has a single tactile discovery; the full supplied article and source notes are available through **Read the full story & sources**. No quest, skill, or travel gate has been added.

@@ -1,6 +1,8 @@
-// Isabel's interactive editorial layer. D3 marks remain live and data-driven.
-// Edit headlines / interaction prompts in SPREADS; chart calculations below.
-// Original full articles and source notes are retained in the reader drawer.
+// Current interactive newspaper: D3 SVG charts, Canvas map and reader.
+// Data flow: loadInspections() -> summarizeNewspaper() -> this.model.
+// See NEWSPAPER-DATA-GUIDE.md for lineage, denominator and active code entry points.
+// Headlines are in SPREADS; full written articles are in newspaper-articles.js.
+// Review written figures if replacing the CSV: prose is not generated from data.
 import * as d3 from "d3";
 import { loadInspections } from "./newspaper-visualizations.js";
 import { assetUrl } from "../art/assets.js";

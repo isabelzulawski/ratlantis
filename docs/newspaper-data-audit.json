@@ -1,0 +1,433 @@
+{
+  "source": "public/data/rats_2025_initial.csv",
+  "sha256": "9fdac060a70685420562bc167fb50a65973f66151dc39a05729683dec5b831d9",
+  "gzipMatchesCsv": true,
+  "fields": [
+    "INSPECTION DATE",
+    "INSPECTION TYPE",
+    "RESULT",
+    "BOROUGH",
+    "LATITUDE",
+    "LONGITUDE"
+  ],
+  "visits": 144314,
+  "findings": 25678,
+  "inspectionTypes": {
+    "Initial": 144314
+  },
+  "results": {
+    "Passed": 110039,
+    "Failed for Rat Activity": 19433,
+    "Failed for Other Reason": 8597,
+    "Failed for Rat Activity and Other Reason": 6245
+  },
+  "boroughs": [
+    {
+      "borough": "Bronx",
+      "total": 30326,
+      "active": 5939,
+      "rate": 0.19583855437578315
+    },
+    {
+      "borough": "Brooklyn",
+      "total": 57893,
+      "active": 10058,
+      "rate": 0.17373430293817904
+    },
+    {
+      "borough": "Manhattan",
+      "total": 47603,
+      "active": 7726,
+      "rate": 0.16230069533432767
+    },
+    {
+      "borough": "Queens",
+      "total": 7355,
+      "active": 1883,
+      "rate": 0.25601631543167913
+    },
+    {
+      "borough": "Staten Island",
+      "total": 1137,
+      "active": 72,
+      "rate": 0.0633245382585752
+    }
+  ],
+  "monthly": {
+    "Bronx": [
+      {
+        "month": 1,
+        "total": 2771,
+        "active": 618,
+        "rate": 0.2230241789967521
+      },
+      {
+        "month": 2,
+        "total": 1843,
+        "active": 461,
+        "rate": 0.2501356483993489
+      },
+      {
+        "month": 3,
+        "total": 2314,
+        "active": 446,
+        "rate": 0.19273984442523767
+      },
+      {
+        "month": 4,
+        "total": 3812,
+        "active": 684,
+        "rate": 0.1794333683105981
+      },
+      {
+        "month": 5,
+        "total": 2966,
+        "active": 553,
+        "rate": 0.18644639244774106
+      },
+      {
+        "month": 6,
+        "total": 1721,
+        "active": 358,
+        "rate": 0.20801859384079024
+      },
+      {
+        "month": 7,
+        "total": 2560,
+        "active": 490,
+        "rate": 0.19140625
+      },
+      {
+        "month": 8,
+        "total": 3131,
+        "active": 515,
+        "rate": 0.16448419035451933
+      },
+      {
+        "month": 9,
+        "total": 2976,
+        "active": 536,
+        "rate": 0.18010752688172044
+      },
+      {
+        "month": 10,
+        "total": 2268,
+        "active": 540,
+        "rate": 0.23809523809523808
+      },
+      {
+        "month": 11,
+        "total": 1869,
+        "active": 337,
+        "rate": 0.1803103263777421
+      },
+      {
+        "month": 12,
+        "total": 2095,
+        "active": 401,
+        "rate": 0.19140811455847256
+      }
+    ],
+    "Brooklyn": [
+      {
+        "month": 1,
+        "total": 3822,
+        "active": 699,
+        "rate": 0.18288854003139718
+      },
+      {
+        "month": 2,
+        "total": 5573,
+        "active": 818,
+        "rate": 0.14677911358334828
+      },
+      {
+        "month": 3,
+        "total": 5062,
+        "active": 1053,
+        "rate": 0.20802054523903596
+      },
+      {
+        "month": 4,
+        "total": 6674,
+        "active": 1084,
+        "rate": 0.1624213365298172
+      },
+      {
+        "month": 5,
+        "total": 5472,
+        "active": 916,
+        "rate": 0.16739766081871346
+      },
+      {
+        "month": 6,
+        "total": 6865,
+        "active": 989,
+        "rate": 0.1440640932265113
+      },
+      {
+        "month": 7,
+        "total": 7568,
+        "active": 1240,
+        "rate": 0.1638477801268499
+      },
+      {
+        "month": 8,
+        "total": 3930,
+        "active": 752,
+        "rate": 0.19134860050890584
+      },
+      {
+        "month": 9,
+        "total": 3571,
+        "active": 841,
+        "rate": 0.23550826099131897
+      },
+      {
+        "month": 10,
+        "total": 3172,
+        "active": 712,
+        "rate": 0.2244640605296343
+      },
+      {
+        "month": 11,
+        "total": 3230,
+        "active": 453,
+        "rate": 0.14024767801857585
+      },
+      {
+        "month": 12,
+        "total": 2954,
+        "active": 501,
+        "rate": 0.16960054163845634
+      }
+    ],
+    "Manhattan": [
+      {
+        "month": 1,
+        "total": 4575,
+        "active": 639,
+        "rate": 0.13967213114754098
+      },
+      {
+        "month": 2,
+        "total": 3206,
+        "active": 534,
+        "rate": 0.16656269494697443
+      },
+      {
+        "month": 3,
+        "total": 4753,
+        "active": 708,
+        "rate": 0.1489585524931622
+      },
+      {
+        "month": 4,
+        "total": 3531,
+        "active": 615,
+        "rate": 0.17417162276975362
+      },
+      {
+        "month": 5,
+        "total": 3512,
+        "active": 583,
+        "rate": 0.166002277904328
+      },
+      {
+        "month": 6,
+        "total": 3810,
+        "active": 630,
+        "rate": 0.16535433070866143
+      },
+      {
+        "month": 7,
+        "total": 3849,
+        "active": 662,
+        "rate": 0.17199272538321642
+      },
+      {
+        "month": 8,
+        "total": 4212,
+        "active": 716,
+        "rate": 0.16999050332383667
+      },
+      {
+        "month": 9,
+        "total": 4116,
+        "active": 701,
+        "rate": 0.17031098153547133
+      },
+      {
+        "month": 10,
+        "total": 3925,
+        "active": 809,
+        "rate": 0.20611464968152865
+      },
+      {
+        "month": 11,
+        "total": 3166,
+        "active": 528,
+        "rate": 0.16677195198989261
+      },
+      {
+        "month": 12,
+        "total": 4948,
+        "active": 601,
+        "rate": 0.12146321746160064
+      }
+    ],
+    "Queens": [
+      {
+        "month": 1,
+        "total": 313,
+        "active": 90,
+        "rate": 0.28753993610223644
+      },
+      {
+        "month": 2,
+        "total": 452,
+        "active": 145,
+        "rate": 0.32079646017699115
+      },
+      {
+        "month": 3,
+        "total": 496,
+        "active": 177,
+        "rate": 0.35685483870967744
+      },
+      {
+        "month": 4,
+        "total": 668,
+        "active": 195,
+        "rate": 0.29191616766467066
+      },
+      {
+        "month": 5,
+        "total": 407,
+        "active": 132,
+        "rate": 0.32432432432432434
+      },
+      {
+        "month": 6,
+        "total": 536,
+        "active": 124,
+        "rate": 0.23134328358208955
+      },
+      {
+        "month": 7,
+        "total": 595,
+        "active": 173,
+        "rate": 0.2907563025210084
+      },
+      {
+        "month": 8,
+        "total": 2400,
+        "active": 433,
+        "rate": 0.18041666666666667
+      },
+      {
+        "month": 9,
+        "total": 578,
+        "active": 169,
+        "rate": 0.29238754325259514
+      },
+      {
+        "month": 10,
+        "total": 411,
+        "active": 94,
+        "rate": 0.22871046228710462
+      },
+      {
+        "month": 11,
+        "total": 212,
+        "active": 41,
+        "rate": 0.19339622641509435
+      },
+      {
+        "month": 12,
+        "total": 287,
+        "active": 110,
+        "rate": 0.3832752613240418
+      }
+    ],
+    "Staten Island": [
+      {
+        "month": 1,
+        "total": 60,
+        "active": 8,
+        "rate": 0.13333333333333333
+      },
+      {
+        "month": 2,
+        "total": 55,
+        "active": 5,
+        "rate": 0.09090909090909091
+      },
+      {
+        "month": 3,
+        "total": 66,
+        "active": 3,
+        "rate": 0.045454545454545456
+      },
+      {
+        "month": 4,
+        "total": 97,
+        "active": 13,
+        "rate": 0.13402061855670103
+      },
+      {
+        "month": 5,
+        "total": 97,
+        "active": 10,
+        "rate": 0.10309278350515463
+      },
+      {
+        "month": 6,
+        "total": 195,
+        "active": 3,
+        "rate": 0.015384615384615385
+      },
+      {
+        "month": 7,
+        "total": 120,
+        "active": 4,
+        "rate": 0.03333333333333333
+      },
+      {
+        "month": 8,
+        "total": 124,
+        "active": 10,
+        "rate": 0.08064516129032258
+      },
+      {
+        "month": 9,
+        "total": 121,
+        "active": 8,
+        "rate": 0.06611570247933884
+      },
+      {
+        "month": 10,
+        "total": 107,
+        "active": 3,
+        "rate": 0.028037383177570093
+      },
+      {
+        "month": 11,
+        "total": 53,
+        "active": 3,
+        "rate": 0.05660377358490566
+      },
+      {
+        "month": 12,
+        "total": 42,
+        "active": 2,
+        "rate": 0.047619047619047616
+      }
+    ]
+  },
+  "mappedVisits": 140764,
+  "mappedFindings": 24815,
+  "excludedFromMap": 3550,
+  "equalSixFieldRowsBeyondFirst": 54,
+  "duplicateCaution": "Equal retained fields do not prove duplicate events. No rows were removed."
+}
